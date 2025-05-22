@@ -1,0 +1,182 @@
+.description-block {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  margin: 0rem auto;
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.description-text {
+  font-size: clamp(1rem, 1.3vw, 1.4rem);
+  color: #dddddd;
+  line-height: 1.6;
+  text-align: justify;
+  max-width: 50rem;
+  margin: 1.5rem auto;
+}
+
+.description-image {
+  display: block;
+  margin: 2rem auto;
+  width: 100%;
+  height: auto;
+  max-width: 960px; /* исходно под 2560×1440 */
+  border-radius: 0.75rem;
+  border: 2px solid #888;
+  background-color: #1e1e2f;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+  transition: max-width 0.3s ease;
+}
+
+.description-textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.875rem;
+  font-size: 1rem;
+  margin: 1.5rem auto;
+  border-radius: 0.5rem;
+  border: 1px solid #aaa;
+  background-color: #2c2c3c;
+  color: white;
+  resize: vertical;
+  text-align: justify;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+
+.description-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.description-button {
+  padding: 0.625rem 1.5rem;
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
+  background-color: #ffcc00;
+  color: #000;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.description-button:hover {
+  background-color: #e6b800;
+}
+
+.description-timer {
+  font-size: 1rem;
+  color: #cccccc;
+  margin-bottom: 1rem;
+}
+
+/* 💻 Full HD */
+@media (max-width: 1920px) {
+  .description-text {
+    max-width: 44rem;
+  }
+
+  .description-textarea {
+    max-width: 36rem;
+  }
+}
+
+/* 💻 1600px */
+@media (max-width: 1600px) {
+  .description-text {
+    font-size: clamp(0.95rem, 1.1vw, 1.25rem);
+    max-width: 40rem;
+  }
+
+  .description-textarea {
+    max-width: 34rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* 💻 1366px */
+@media (max-width: 1366px) {
+  .description-text {
+    font-size: clamp(0.9rem, 1vw, 1.1rem);
+    max-width: 38rem;
+  }
+
+  .description-textarea {
+    max-width: 32rem;
+    font-size: 0.9rem;
+  }
+
+  .description-button {
+    font-size: 0.95rem;
+    padding: 0.5rem 1.25rem;
+  }
+}
+
+/* 📱 Мобильные */
+@media (max-width: 768px) {
+  .description-block {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  .description-text {
+    font-size: 0.95rem;
+    text-align: left;
+  }
+
+  .description-textarea {
+    width: 100%;
+  }
+
+  .description-button {
+    width: 100%;
+  }
+}
+
+/* ↓ Full HD (1920×1080) */
+@media (max-width: 1920px) {
+  .description-image {
+    max-width: 720px;
+  }
+}
+
+/* ↓ 1600×900 */
+@media (max-width: 1600px) {
+  .description-image {
+    max-width: 540px;
+  }
+}
+
+/* ↓ 1366×768 */
+@media (max-width: 1366px) {
+  .description-image {
+    max-width: 405px;
+  }
+}
+
+/* ↓ Мобильные */
+@media (max-width: 768px) {
+  .description-image {
+    max-width: 100%;
+    margin: 1rem 0;
+  }
+}

@@ -1,0 +1,276 @@
+body {
+  margin: 0rem auto;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(to bottom right, #1e1e2f, #2a2a40);
+  color: #ffffff;
+}
+
+.semantic-container {
+  padding: 2rem 3vw;
+}
+
+.semantic-header-stack {
+  max-width: 1232px;
+  margin: 0 auto 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.thankyou-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.semantic-thankyou,
+.semantic-metrics {
+  max-width: 1232px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.semantic-thankyou h2 {
+  text-align: center;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+}
+
+.thankyou-info p {
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  color: #dddddd;
+  margin: 0.3rem 0;
+}
+
+.thankyou-info strong {
+  color: #ffcc00;
+  margin-right: 0.5rem;
+}
+
+.semantic-metrics h3 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #ffcc00;
+  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.75rem;
+}
+
+.metric {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: clamp(1rem, 1vw, 1.05rem);
+  line-height: 1.6;
+}
+
+.metric span:first-child {
+  color: #ccc;
+  font-weight: 500;
+  max-width: 60%;
+}
+
+.metric span:last-child {
+  color: #fff;
+  text-align: right;
+  max-width: 38%;
+  word-break: break-word;
+}
+
+.highlight-index {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1rem;
+  margin-top: 1rem;
+  justify-content: space-between;
+  color: #ffcc00;
+  font-weight: bold;
+  font-size: clamp(1.1rem, 1.3vw, 1.3rem);
+}
+
+.semantic-canvases {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.semantic-canvases canvas {
+  flex: 1 1 280px;
+  max-width: 600px;
+  min-width: 300px;
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  border: 2px solid #888;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.semantic-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.semantic-details > div {
+  flex: 1 1 480px;
+  min-width: 300px;
+  max-width: 600px;
+  line-height: 1.5;
+  text-align: left;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.semantic-dictionary {
+  background-color: rgba(255, 255, 255, 0.04);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.semantic-dictionary h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #ffcc00;
+}
+
+.category-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.category-number {
+  font-weight: bold;
+  color: #ffcc00;
+  margin-right: 0.75rem;
+  min-width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.category-words {
+  flex: 1;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.category-words span {
+  margin-right: 0.25rem;
+}
+
+.semantic-usertext {
+  background-color: rgba(255, 255, 255, 0.04);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.semantic-usertext h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #ffcc00;
+}
+
+.usertext-box {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #eee;
+  text-align: justify;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.usertext-box span {
+  margin-right: 0.2rem;
+}
+
+.highlight {
+  background-color: #ffcc00;
+  color: #000;
+  font-weight: bold;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  display: inline;
+  line-height: 1.6;
+}
+
+/* Scrollbar */
+.semantic-dictionary::-webkit-scrollbar,
+.semantic-usertext::-webkit-scrollbar,
+.usertext-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.semantic-dictionary::-webkit-scrollbar-thumb,
+.semantic-usertext::-webkit-scrollbar-thumb,
+.usertext-box::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+}
+
+/* 💻 1024px ↓ */
+@media (max-width: 1024px) {
+  .semantic-container {
+    padding: 1.5rem 2vw;
+  }
+
+  .semantic-header-stack {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
+  .semantic-details > div {
+    flex: 1 1 100%;
+  }
+}
+
+/* 📱 Мобильные ↓ */
+@media (max-width: 600px) {
+  h2, h3 {
+    font-size: 5vw;
+  }
+
+  .semantic-metrics {
+    padding: 1rem;
+  }
+
+  .semantic-canvases {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .semantic-details {
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+
+  .semantic-details > div {
+    min-width: 100%;
+  }
+
+  .semantic-dictionary,
+  .semantic-usertext {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .semantic-details p {
+    font-size: 0.95rem;
+  }
+}

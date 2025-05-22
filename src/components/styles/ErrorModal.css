@@ -1,0 +1,75 @@
+.error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(10, 10, 20, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.error-window {
+  background-color: #2a2a40;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+  max-width: 26rem; /* 416px */
+  width: 90%;
+  color: #ffffff;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.error-title {
+  color: #ff4444;
+  margin-bottom: 1rem;
+  font-size: clamp(1.4rem, 2vw, 1.6rem);
+}
+
+.error-message {
+  color: #dddddd;
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.error-button {
+  padding: 0.625rem 1.5rem;
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
+  background-color: #ffcc00;
+  color: #000;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.error-button:hover {
+  background-color: #e6b800;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 📱 Мобильные */
+@media (max-width: 480px) {
+  .error-window {
+    padding: 1.25rem;
+  }
+
+  .error-button {
+    width: 100%;
+  }
+}

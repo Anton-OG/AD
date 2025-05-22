@@ -1,0 +1,307 @@
+[
+  {
+    "name": "Afghanistan",
+    "code": "AF",
+    "flagUrl": "https://flagcdn.com/w40/af.png"
+  },
+  {
+    "name": "Albania",
+    "code": "AL",
+    "flagUrl": "https://flagcdn.com/w40/al.png"
+  },
+  {
+    "name": "Algeria",
+    "code": "DZ",
+    "flagUrl": "https://flagcdn.com/w40/dz.png"
+  },
+  {
+    "name": "Andorra",
+    "code": "AD",
+    "flagUrl": "https://flagcdn.com/w40/ad.png"
+  },
+  {
+    "name": "Angola",
+    "code": "AO",
+    "flagUrl": "https://flagcdn.com/w40/ao.png"
+  },
+  {
+    "name": "Argentina",
+    "code": "AR",
+    "flagUrl": "https://flagcdn.com/w40/ar.png"
+  },
+  {
+    "name": "Armenia",
+    "code": "AM",
+    "flagUrl": "https://flagcdn.com/w40/am.png"
+  },
+  {
+    "name": "Australia",
+    "code": "AU",
+    "flagUrl": "https://flagcdn.com/w40/au.png"
+  },
+  {
+    "name": "Austria",
+    "code": "AT",
+    "flagUrl": "https://flagcdn.com/w40/at.png"
+  },
+  {
+    "name": "Azerbaijan",
+    "code": "AZ",
+    "flagUrl": "https://flagcdn.com/w40/az.png"
+  },
+  {
+    "name": "Belarus",
+    "code": "BY",
+    "flagUrl": "https://flagcdn.com/w40/by.png"
+  },
+  {
+    "name": "Belgium",
+    "code": "BE",
+    "flagUrl": "https://flagcdn.com/w40/be.png"
+  },
+  {
+    "name": "Bosnia and Herzegovina",
+    "code": "BA",
+    "flagUrl": "https://flagcdn.com/w40/ba.png"
+  },
+  {
+    "name": "Brazil",
+    "code": "BR",
+    "flagUrl": "https://flagcdn.com/w40/br.png"
+  },
+  {
+    "name": "Bulgaria",
+    "code": "BG",
+    "flagUrl": "https://flagcdn.com/w40/bg.png"
+  },
+  {
+    "name": "Canada",
+    "code": "CA",
+    "flagUrl": "https://flagcdn.com/w40/ca.png"
+  },
+  {
+    "name": "China",
+    "code": "CN",
+    "flagUrl": "https://flagcdn.com/w40/cn.png"
+  },
+  {
+    "name": "Croatia",
+    "code": "HR",
+    "flagUrl": "https://flagcdn.com/w40/hr.png"
+  },
+  {
+    "name": "Czech Republic",
+    "code": "CZ",
+    "flagUrl": "https://flagcdn.com/w40/cz.png"
+  },
+  {
+    "name": "Denmark",
+    "code": "DK",
+    "flagUrl": "https://flagcdn.com/w40/dk.png"
+  },
+  {
+    "name": "Egypt",
+    "code": "EG",
+    "flagUrl": "https://flagcdn.com/w40/eg.png"
+  },
+  {
+    "name": "Estonia",
+    "code": "EE",
+    "flagUrl": "https://flagcdn.com/w40/ee.png"
+  },
+  {
+    "name": "Finland",
+    "code": "FI",
+    "flagUrl": "https://flagcdn.com/w40/fi.png"
+  },
+  {
+    "name": "France",
+    "code": "FR",
+    "flagUrl": "https://flagcdn.com/w40/fr.png"
+  },
+  {
+    "name": "Georgia",
+    "code": "GE",
+    "flagUrl": "https://flagcdn.com/w40/ge.png"
+  },
+  {
+    "name": "Germany",
+    "code": "DE",
+    "flagUrl": "https://flagcdn.com/w40/de.png"
+  },
+  {
+    "name": "Greece",
+    "code": "GR",
+    "flagUrl": "https://flagcdn.com/w40/gr.png"
+  },
+  {
+    "name": "Hungary",
+    "code": "HU",
+    "flagUrl": "https://flagcdn.com/w40/hu.png"
+  },
+  {
+    "name": "Iceland",
+    "code": "IS",
+    "flagUrl": "https://flagcdn.com/w40/is.png"
+  },
+  {
+    "name": "India",
+    "code": "IN",
+    "flagUrl": "https://flagcdn.com/w40/in.png"
+  },
+  {
+    "name": "Indonesia",
+    "code": "ID",
+    "flagUrl": "https://flagcdn.com/w40/id.png"
+  },
+  {
+    "name": "Iran",
+    "code": "IR",
+    "flagUrl": "https://flagcdn.com/w40/ir.png"
+  },
+  {
+    "name": "Iraq",
+    "code": "IQ",
+    "flagUrl": "https://flagcdn.com/w40/iq.png"
+  },
+  {
+    "name": "Ireland",
+    "code": "IE",
+    "flagUrl": "https://flagcdn.com/w40/ie.png"
+  },
+  {
+    "name": "Israel",
+    "code": "IL",
+    "flagUrl": "https://flagcdn.com/w40/il.png"
+  },
+  {
+    "name": "Italy",
+    "code": "IT",
+    "flagUrl": "https://flagcdn.com/w40/it.png"
+  },
+  {
+    "name": "Japan",
+    "code": "JP",
+    "flagUrl": "https://flagcdn.com/w40/jp.png"
+  },
+  {
+    "name": "Kazakhstan",
+    "code": "KZ",
+    "flagUrl": "https://flagcdn.com/w40/kz.png"
+  },
+  {
+    "name": "Latvia",
+    "code": "LV",
+    "flagUrl": "https://flagcdn.com/w40/lv.png"
+  },
+  {
+    "name": "Lithuania",
+    "code": "LT",
+    "flagUrl": "https://flagcdn.com/w40/lt.png"
+  },
+  {
+    "name": "Mexico",
+    "code": "MX",
+    "flagUrl": "https://flagcdn.com/w40/mx.png"
+  },
+  {
+    "name": "Moldova",
+    "code": "MD",
+    "flagUrl": "https://flagcdn.com/w40/md.png"
+  },
+  {
+    "name": "Netherlands",
+    "code": "NL",
+    "flagUrl": "https://flagcdn.com/w40/nl.png"
+  },
+  {
+    "name": "New Zealand",
+    "code": "NZ",
+    "flagUrl": "https://flagcdn.com/w40/nz.png"
+  },
+  {
+    "name": "North Macedonia",
+    "code": "MK",
+    "flagUrl": "https://flagcdn.com/w40/mk.png"
+  },
+  {
+    "name": "Norway",
+    "code": "NO",
+    "flagUrl": "https://flagcdn.com/w40/no.png"
+  },
+  {
+    "name": "Poland",
+    "code": "PL",
+    "flagUrl": "https://flagcdn.com/w40/pl.png"
+  },
+  {
+    "name": "Portugal",
+    "code": "PT",
+    "flagUrl": "https://flagcdn.com/w40/pt.png"
+  },
+  {
+    "name": "Romania",
+    "code": "RO",
+    "flagUrl": "https://flagcdn.com/w40/ro.png"
+  },
+  {
+    "name": "Russia",
+    "code": "RU",
+    "flagUrl": "https://flagcdn.com/w40/ru.png"
+  },
+  {
+    "name": "Serbia",
+    "code": "RS",
+    "flagUrl": "https://flagcdn.com/w40/rs.png"
+  },
+  {
+    "name": "Slovakia",
+    "code": "SK",
+    "flagUrl": "https://flagcdn.com/w40/sk.png"
+  },
+  {
+    "name": "Slovenia",
+    "code": "SI",
+    "flagUrl": "https://flagcdn.com/w40/si.png"
+  },
+  {
+    "name": "South Korea",
+    "code": "KR",
+    "flagUrl": "https://flagcdn.com/w40/kr.png"
+  },
+  {
+    "name": "Spain",
+    "code": "ES",
+    "flagUrl": "https://flagcdn.com/w40/es.png"
+  },
+  {
+    "name": "Sweden",
+    "code": "SE",
+    "flagUrl": "https://flagcdn.com/w40/se.png"
+  },
+  {
+    "name": "Switzerland",
+    "code": "CH",
+    "flagUrl": "https://flagcdn.com/w40/ch.png"
+  },
+  {
+    "name": "Turkey",
+    "code": "TR",
+    "flagUrl": "https://flagcdn.com/w40/tr.png"
+  },
+  {
+    "name": "Ukraine",
+    "code": "UA",
+    "flagUrl": "https://flagcdn.com/w40/ua.png"
+  },
+  {
+    "name": "United Kingdom",
+    "code": "GB",
+    "flagUrl": "https://flagcdn.com/w40/gb.png"
+  },
+  {
+    "name": "United States",
+    "code": "US",
+    "flagUrl": "https://flagcdn.com/w40/us.png"
+  }
+]

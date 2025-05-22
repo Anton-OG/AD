@@ -1,0 +1,159 @@
+.info-block {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  margin: 0rem auto;
+  max-width: 62.5rem; /* 1000px */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.info-paragraph {
+  font-size: clamp(1rem, 1.3vw, 1.4rem);
+  line-height: 1.6;
+  color: #dddddd;
+  text-align: justify;
+  max-width: 50rem;
+  margin: 1rem auto;
+}
+
+.info-image {
+  display: block;
+  margin: 2rem auto;
+  width: 100%;
+  height: auto;
+  max-width: 960px; /* базово под 2560×1440 */
+  border-radius: 0.75rem;
+  border: 2px solid #888;
+  background-color: #1e1e2f;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+  transition: max-width 0.3s ease;
+}
+
+.info-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.info-button {
+  padding: 0.625rem 1.5rem;
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
+  background-color: #ffcc00;
+  color: #000;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 0.5rem;
+}
+
+.info-button:hover {
+  background-color: #e6b800;
+}
+
+/* 💻 Full HD */
+@media (max-width: 1920px) {
+  .info-block {
+    max-width: 56rem;
+    padding: 2rem;
+  }
+
+  .info-paragraph {
+    max-width: 44rem;
+  }
+}
+
+/* 💻 1600px */
+@media (max-width: 1600px) {
+  .info-block {
+    max-width: 50rem;
+    padding: 1.75rem;
+  }
+
+  .info-paragraph {
+    font-size: clamp(0.95rem, 1.1vw, 1.25rem);
+  }
+}
+
+/* 💻 1366px */
+@media (max-width: 1366px) {
+  .info-block {
+    max-width: 44rem;
+    padding: 1.5rem;
+  }
+
+  .info-paragraph {
+    font-size: clamp(0.9rem, 1vw, 1.1rem);
+  }
+
+  .info-button {
+    font-size: 0.95rem;
+    padding: 0.5rem 1.25rem;
+  }
+}
+
+/* 📱 Мобильные */
+@media (max-width: 768px) {
+  .info-block {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  .info-paragraph {
+    font-size: 0.95rem;
+    text-align: left;
+  }
+
+  .info-button {
+    width: 100%;
+  }
+}
+
+
+/* ↓ Full HD (1920×1080) */
+@media (max-width: 1920px) {
+  .info-image {
+    max-width: 720px;
+  }
+}
+
+/* ↓ 1600×900 */
+@media (max-width: 1600px) {
+  .info-image {
+    max-width: 540px;
+  }
+}
+
+/* ↓ 1366×768 */
+@media (max-width: 1366px) {
+  .info-image {
+    max-width: 405px;
+  }
+}
+
+/* ↓ Мобильные */
+@media (max-width: 768px) {
+  .info-image {
+    max-width: 100%;
+    margin: 1rem 0;
+  }
+}
+
