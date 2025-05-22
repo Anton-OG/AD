@@ -1,5 +1,5 @@
 body {
-  margin: 0rem auto;
+  margin: 0 auto;
   font-family: 'Segoe UI', Arial, sans-serif;
   background: linear-gradient(to bottom right, #1e1e2f, #2a2a40);
   color: #ffffff;
@@ -90,6 +90,7 @@ body {
   font-size: clamp(1.1rem, 1.3vw, 1.3rem);
 }
 
+/* 🎯 Canvas images */
 .semantic-canvases {
   display: flex;
   flex-wrap: wrap;
@@ -101,16 +102,45 @@ body {
 
 .semantic-canvases canvas {
   flex: 1 1 280px;
-  max-width: 600px;
-  min-width: 300px;
   width: 100%;
   height: auto;
+  max-width: 960px;
   border-radius: 0.5rem;
   border: 2px solid #888;
   background-color: white;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  transition: max-width 0.3s ease;
 }
 
+/* ↓ Full HD (1920×1080) */
+@media (max-width: 1920px) {
+  .semantic-canvases canvas {
+    max-width: 720px;
+  }
+}
+
+/* ↓ 1600x900 */
+@media (max-width: 1600px) {
+  .semantic-canvases canvas {
+    max-width: 540px;
+  }
+}
+
+/* ↓ 1366x768 */
+@media (max-width: 1366px) {
+  .semantic-canvases canvas {
+    max-width: 405px;
+  }
+}
+
+/* ↓ Мобильные */
+@media (max-width: 768px) {
+  .semantic-canvases canvas {
+    max-width: 100%;
+  }
+}
+
+/* 📖 Details */
 .semantic-details {
   display: flex;
   flex-wrap: wrap;
@@ -120,15 +150,16 @@ body {
 }
 
 .semantic-details > div {
-  flex: 1 1 480px;
-  min-width: 300px;
-  max-width: 600px;
+  flex: 1 1 100%;
+  min-width: 0;
+  max-width: 100%;
   line-height: 1.5;
   text-align: left;
   overflow-wrap: break-word;
   word-break: break-word;
 }
 
+/* 📚 Dictionary */
 .semantic-dictionary {
   background-color: rgba(255, 255, 255, 0.04);
   padding: 1.5rem;
@@ -165,12 +196,18 @@ body {
   flex: 1;
   line-height: 1.6;
   word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .category-words span {
+  display: inline;
   margin-right: 0.25rem;
+  word-break: break-word;
+  white-space: normal;
 }
 
+/* 🧠 User Text */
 .semantic-usertext {
   background-color: rgba(255, 255, 255, 0.04);
   padding: 1.5rem;
@@ -191,12 +228,16 @@ body {
   line-height: 1.7;
   color: #eee;
   text-align: justify;
-  white-space: normal;
   word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .usertext-box span {
+  display: inline;
   margin-right: 0.2rem;
+  word-break: break-word;
+  white-space: normal;
 }
 
 .highlight {
@@ -223,7 +264,7 @@ body {
   border-radius: 10px;
 }
 
-/* 💻 1024px ↓ */
+/* ⬇ 1024 */
 @media (max-width: 1024px) {
   .semantic-container {
     padding: 1.5rem 2vw;
@@ -233,13 +274,9 @@ body {
     max-width: 100%;
     padding: 0 1rem;
   }
-
-  .semantic-details > div {
-    flex: 1 1 100%;
-  }
 }
 
-/* 📱 Мобильные ↓ */
+/* ⬇ 600px */
 @media (max-width: 600px) {
   h2, h3 {
     font-size: 5vw;
