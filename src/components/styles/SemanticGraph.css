@@ -136,8 +136,10 @@ body {
 /* ↓ Мобильные */
 @media (max-width: 768px) {
   .semantic-canvases canvas {
-    max-width: 100%;
-  }
+  max-width: 100% !important;
+  width: 100% !important;
+  height: auto !important;
+}
 }
 
 /* 📖 Details */
