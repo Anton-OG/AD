@@ -140,7 +140,7 @@
 
   .description-text {
     font-size: 0.95rem;
-    text-align: left;
+     text-align: justify;
   }
 
   .description-textarea {

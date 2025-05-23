@@ -3,25 +3,25 @@ import '../components/styles/SemanticGraph.css';
 import t1 from '../assets/t1.jpg';
 
 const rawDictionary = [
-  [1, ['girl', 'girls', 'sister', 'sibling', 'young lady', 'lass', 'maiden', 'miss', 'damsel', 'gal', 'child', 'kid', 'daughter', 'minor', 'youth', 'schoolgirl', 'teen', 'tween', 'female child', 'juvenile', 'little girl']],
-  [2, ['taking', 'asking', 'finger', 'saying', 'quiet', 'trying', 'laughing', 'disaster', 'action', 'gesture', 'signal', 'motion', 'indicating', 'warning', 'hushing', 'communicating', 'miming', 'shushing', 'silencing', 'alerting']],
-  [3, ['jar', 'jars', 'container', 'pot', 'vessel', 'jug', 'canister', 'tin', 'flask', 'bottle', 'tub', 'box', 'receptacle', 'drum', 'storage jar', 'food jar']],
-  [4, ['shelf', 'shelves', 'cupboard', 'ledge', 'tier', 'rack', 'storage', 'closet', 'cabinet', 'alcove', 'compartment', 'locker', 'wall unit', 'kitchen shelf']],
-  [5, ['cookies', 'cookie', 'biscuits', 'snacks', 'confections', 'treats', 'pastries', 'sweets', 'crackers', 'dessert', 'candy', 'goodies', 'munchies', 'baked goods', 'edibles']],
-  [6, ['handing', 'passing', 'giving', 'transferring', 'distributing', 'conveying', 'presenting', 'dispensing', 'delivering', 'offering', 'providing', 'yielding', 'sharing']],
-  [7, ['stealing', 'taking', 'reaching', 'thievery', 'pilfering', 'larceny', 'burglary', 'embezzlement', 'appropriation', 'acquiring', 'snatching', 'purloining', 'looting', 'shoplifting', 'grabbing']],
-  [8, ['stool', 'falling', 'dropping', 'descending', 'sinking', 'tumbling', 'plummeting', 'seat', 'ottoman', 'footstool', 'bench', 'hassock', 'stepstool', 'stepladder', 'furniture']],
-  [9, ['legged', 'wobbling', 'shaking', 'trembling', 'swaying', 'rocking', 'tottering', 'unstable', 'unsteady', 'teetering', 'shaky', 'insecure', 'loose leg']],
-  [10, ['boy', 'brother', 'himself', "he's", 'lad', 'youth', 'youngster', 'kid', 'chap', 'son', 'schoolboy', 'toddler', 'male child']],
-  [11, ['mother', 'woman', "woman's", 'lady', 'ignoring', 'daydreaming', 'she', "she's", 'mom', 'mum', 'parent', 'maternal', 'female', 'dame', 'adult', 'madam', 'mommy', 'ma', 'mama', 'housewife']],
-  [12, ['sanding', 'washing', 'doing', 'buffing', 'polishing', 'cleansing', 'cleaning', 'rinsing', 'laundering', 'performing', 'executing', 'carrying', 'undertaking', 'scrubbing', 'scouring', 'brushing', 'drying', 'wiping']],
-  [13, ['plate', 'dish', 'platter', 'saucer', 'serving', 'tray', 'bowl', 'crockery', 'tableware', 'china', 'ceramic plate']],
-  [14, ['blast', 'floor', 'feet', 'puddle', 'water', 'wetting', 'surface', 'flooring', 'limbs', 'extremities', 'splash', 'aqua', 'h2o', 'moisture', 'liquid', 'fluid', 'moistening', 'damping', 'spill', 'overflow', 'leak', 'flood']],
-  [15, ['sink', "sink's", 'overflowing', 'spilling', 'basin', 'washbasin', 'drain', 'lavatory', 'kitchen sink', 'flooding', 'flooded', 'backed up']],
-  [16, ['faucet', 'kitchen', 'tap', 'spigot', 'valve', 'spout', 'outlet', 'hydrant', 'nozzle', 'water flow', 'running water']],
-  [17, ['window', 'aperture', 'pane', 'opening', 'casement', 'glazing', 'lattice', 'glass panel', 'windowpane']],
-  [18, ['curtains', 'drapes', 'drape', 'blinds', 'coverings', 'hangings', 'shades', 'valance', 'sheers', 'window treatments']],
-  [19, ['dishes', 'drying', 'dirty', 'plates', 'utensils', 'cookware', 'tableware', 'crockery', 'desiccating', 'draining', 'cutlery', 'flatware', 'dish rack', 'air-drying']]
+  [1, ['girl', 'sister', 'kid', 'child', 'daughter', 'schoolgirl', 'female child', 'young girl', 'juvenile']],
+  [2, ['shushing', 'silencing', 'warning', 'gesturing', 'alerting', 'signaling', 'pointing', 'communicating']],
+  [3, ['jar', 'container', 'canister', 'tub', 'bottle', 'tin', 'storage jar', 'food jar', 'vessel']],
+  [4, ['shelf', 'cupboard', 'cabinet', 'storage', 'closet', 'compartment', 'wall unit', 'kitchen shelf']],
+  [5, ['cookies', 'biscuits', 'snacks', 'treats', 'sweets', 'baked goods', 'goodies', 'pastries']],
+  [6, ['handing', 'passing', 'giving', 'offering', 'sharing', 'delivering', 'presenting']],
+  [7, ['stealing', 'taking', 'reaching', 'snatching', 'grabbing', 'pilfering', 'thieving']],
+  [8, ['stool', 'stepstool', 'ladder', 'bench', 'footstool', 'seat', 'unsteady base']],
+  [9, ['wobbling', 'unsteady', 'teetering', 'unstable', 'shaky', 'swaying', 'rocking']],
+  [10, ['boy', 'brother', 'kid', 'child', 'male child', 'schoolboy', 'youngster']],
+  [11, ['mother', 'woman', 'lady', 'mom', 'housewife', 'female', 'adult', 'parent']],
+  [12, ['washing', 'drying', 'cleaning', 'wiping', 'rinsing', 'scrubbing', 'polishing']],
+  [13, ['plate', 'dish', 'ceramic plate', 'tableware', 'crockery', 'platter', 'china']],
+  [14, ['water', 'puddle', 'spill', 'overflow', 'flood', 'wet floor', 'liquid', 'splash']],
+  [15, ['sink', 'basin', 'washbasin', 'overflowing sink', 'drain', 'flooded sink']],
+  [16, ['faucet', 'tap', 'spigot', 'valve', 'nozzle', 'running water']],
+  [17, ['window', 'pane', 'glass', 'windowpane', 'casement']],
+  [18, ['curtains', 'drapes', 'blinds', 'window coverings', 'hangings']],
+  [19, ['dishes', 'dirty dishes', 'tableware', 'drying rack', 'plates', 'cups', 'cup','utensils']]
 ];
 
 const dictionary = new Map();
