@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../components/styles/SemanticGraph.css';
 import t1 from '../assets/t1.jpg';
 
@@ -45,29 +45,21 @@ function analyzeText(rawText) {
   const clean = rawText.toLowerCase().replace(/[^\w\s]/g, '');
   const words = clean.split(/\s+/);
   const found = words.map(w => dictionary.get(w)).filter(Boolean);
-
-  const transitions = found.reduce((sum, curr, i, arr) => {
-    if (i === 0) return sum;
-    return sum + (getQuadrant(curr) !== getQuadrant(arr[i - 1]) ? 1 : 0);
-  }, 0);
-
+  const transitions = found.reduce((sum, curr, i, arr) =>
+    i === 0 ? sum : sum + (getQuadrant(curr) !== getQuadrant(arr[i - 1]) ? 1 : 0), 0);
   const unique = [...new Set(found)];
-  const allNumbers = [...new Set(rawDictionary.map(([n]) => n))];
-  const missing = allNumbers.filter(v => !unique.includes(v));
+  const allNumbers = rawDictionary.map(([n]) => n);
+  const missing = allNumbers.filter(n => !unique.includes(n));
   const density = unique.length > 1 ? (2 * (found.length - 1)) / (unique.length * (unique.length - 1)) : 0;
-
   const distance = found.slice(1).reduce((sum, cur, i) => {
     const prev = found[i];
-    const d = Math.hypot(
+    return sum + Math.hypot(
       coordinates[cur - 1][0] - coordinates[prev - 1][0],
       coordinates[cur - 1][1] - coordinates[prev - 1][1]
     );
-    return sum + d;
   }, 0);
-
   const w1 = 2, w2 = 3, w3 = 1;
   const index = (w1 * transitions + w2 * found.length + w3 * (1 - missing.length / allNumbers.length)) / 3;
-
   return { found, transitions, missing, density, distance, index, words };
 }
 
@@ -84,18 +76,31 @@ function highlightWords(text, wordsToHighlight) {
 
 export default function SemanticGraph({ userText, gender, age, country, time }) {
   const canvasRef = useRef();
-  const leftCanvasRef = useRef();
   const { found, transitions, missing, density, distance, index, words } = analyzeText(userText);
   const matchedWordsSet = new Set(words);
-
+  const [animationTrigger, setAnimationTrigger] = useState(0);
   useEffect(() => {
-    const ctx = leftCanvasRef.current.getContext('2d');
-    const img = new Image();
-    img.src = t1;
-    img.onload = () => {
-      leftCanvasRef.current.width = img.width;
-      leftCanvasRef.current.height = img.height;
+  const canvas = canvasRef.current;
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  img.src = t1;
+
+  let animationFrameId = null;
+
+  img.onload = () => {
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    let stepIndex = 1;
+    let progress = 0;
+    const speed = 0.01;
+    let drawnSegments = [];
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
+
+      // Точки
       ctx.font = 'bold 12px Arial';
       coordinates.forEach(([x, y], i) => {
         const isStart = found[0] === i + 1;
@@ -114,132 +119,130 @@ export default function SemanticGraph({ userText, gender, age, country, time }) 
         ctx.textBaseline = 'middle';
         ctx.fillText(`${i + 1}`, x, y);
       });
-    };
-  }, [found]);
 
-  useEffect(() => {
-    const ctx = canvasRef.current.getContext('2d');
-    const img = new Image();
-    img.src = t1;
-    img.onload = () => {
-      canvasRef.current.width = img.width;
-      canvasRef.current.height = img.height;
-      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-      ctx.font = 'bold 14px Arial';
-      coordinates.forEach(([x, y], i) => {
-        ctx.fillStyle = 'red';
-        ctx.beginPath();
-        ctx.arc(x, y, 8, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.fillStyle = 'white';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(`${i + 1}`, x, y);
-      });
-
-      if (found.length > 0) {
-        const [startX, startY] = coordinates[found[0] - 1];
-        ctx.fillStyle = 'green';
-        ctx.font = 'bold 18px Arial';
-        ctx.fillText('Start', startX - 20, startY - 20);
-      }
-
-      if (found.length > 1) {
-        const [endX, endY] = coordinates[found[found.length - 1] - 1];
-        ctx.fillStyle = 'magenta';
-        ctx.font = 'bold 18px Arial';
-        ctx.fillText('Finish', endX + 10, endY + 10);
-      }
-
+      // Готовые отрезки
       ctx.strokeStyle = 'blue';
       ctx.lineWidth = 1;
-      for (let i = 1; i < found.length; i++) {
-        const [x1, y1] = coordinates[found[i - 1] - 1];
-        const [x2, y2] = coordinates[found[i] - 1];
+      drawnSegments.forEach(([x1, y1, x2, y2]) => {
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
+        ctx.stroke();
+      });
+
+      // Анимация текущей стрелки
+      if (stepIndex < found.length) {
+        const [x1, y1] = coordinates[found[stepIndex - 1] - 1];
+        const [x2, y2] = coordinates[found[stepIndex] - 1];
+        const currentX = x1 + (x2 - x1) * progress;
+        const currentY = y1 + (y2 - y1) * progress;
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(currentX, currentY);
         ctx.stroke();
 
         const angle = Math.atan2(y2 - y1, x2 - x1);
         const arrowLength = 10;
         ctx.beginPath();
-        ctx.moveTo(x2, y2);
-        ctx.lineTo(x2 - arrowLength * Math.cos(angle - 0.3), y2 - arrowLength * Math.sin(angle - 0.3));
-        ctx.moveTo(x2, y2);
-        ctx.lineTo(x2 - arrowLength * Math.cos(angle + 0.3), y2 - arrowLength * Math.sin(angle + 0.3));
+        ctx.moveTo(currentX, currentY);
+        ctx.lineTo(currentX - arrowLength * Math.cos(angle - 0.3), currentY - arrowLength * Math.sin(angle - 0.3));
+        ctx.moveTo(currentX, currentY);
+        ctx.lineTo(currentX - arrowLength * Math.cos(angle + 0.3), currentY - arrowLength * Math.sin(angle + 0.3));
         ctx.stroke();
+
+        progress += speed;
+        if (progress >= 1) {
+          drawnSegments.push([x1, y1, x2, y2]);
+          progress = 0;
+          stepIndex++;
+        }
+
+        animationFrameId = requestAnimationFrame(animate);
       }
-    };
-  }, [userText, found]);
+    }
+
+    animate();
+  };
+
+  return () => cancelAnimationFrame(animationFrameId);
+}, [userText, found, animationTrigger]); // 👈 добавлено animationTrigger
+
 
   return (
     <div className="semantic-container">
-      <div className="semantic-thankyou">
-        <h2>Thank you for your participation!</h2>
-        <div className="thankyou-info">
-          <p><strong>Sex:</strong> {gender}</p>
-          <p><strong>Age:</strong> {age}</p>
-          <p>
-            <strong>Country:</strong>{' '}
-            {country?.flagUrl && (
-              <img
-                src={country.flagUrl}
-                alt={country.label}
-                style={{ width: '20px', height: '14px', marginRight: '6px', verticalAlign: 'middle', borderRadius: '2px' }}
-              />
-            )}
-            {country?.label}
-          </p>
-          <p><strong>Time to complete:</strong> {time} seconds</p>
-        </div>
-      </div>
+  <div className="semantic-thankyou">
+    <h2>Thank you for your participation!</h2>
+    <div className="thankyou-info">
+      <p><strong>Sex:</strong> {gender}</p>
+      <p><strong>Age:</strong> {age}</p>
+      <p>
+        <strong>Country:</strong>{' '}
+        {country?.flagUrl && (
+          <img
+            src={country.flagUrl}
+            alt={country.label}
+            style={{ width: '20px', height: '14px', marginRight: '6px', verticalAlign: 'middle', borderRadius: '2px' }}
+          />
+        )}
+        {country?.label}
+      </p>
+      <p><strong>Time to complete:</strong> {time} seconds</p>
+    </div>
+  </div>
 
-      <div className="semantic-metrics">
-        <h3>Analysis Results</h3>
-        <div className="metric"><span>🧠 Found categories:</span><span>{found.join(', ')}</span></div>
-        <div className="metric"><span>🔄 Transitions between fields:</span><span>{transitions}</span></div>
-        <div className="metric"><span>📉 Missing categories:</span><span>{missing.join(', ')}</span></div>
-        <div className="metric"><span>📈 Graph density:</span><span>{density.toFixed(3)}</span></div>
-        <div className="metric"><span>📏 Path distance:</span><span>{distance.toFixed(1)}</span></div>
-        <div className="metric highlight-index">
-          <strong>Cognitive impairment index:</strong>
-          <strong>{index.toFixed(2)}</strong>
-        </div>
-      </div>
+  <div className="semantic-metrics">
+    <h3>Analysis Results</h3>
+    <div className="metric"><span>🧠 Found categories:</span><span>{found.join(', ')}</span></div>
+    <div className="metric"><span>🔄 Transitions between fields:</span><span>{transitions}</span></div>
+    <div className="metric"><span>📉 Missing categories:</span><span>{missing.join(', ')}</span></div>
+    <div className="metric"><span>📈 Graph density:</span><span>{density.toFixed(3)}</span></div>
+    <div className="metric"><span>📏 Path distance:</span><span>{distance.toFixed(1)}</span></div>
+    <div className="metric highlight-index">
+      <strong>Cognitive impairment index:</strong>
+      <strong>{index.toFixed(2)}</strong>
+    </div>
+  </div>
 
-      <div className="semantic-canvases">
-        <canvas ref={leftCanvasRef} />
-        <canvas ref={canvasRef} />
-      </div>
+  <div className="semantic-graph-wrapper">
+  <canvas ref={canvasRef} />
+  <div className="replay-button-wrapper">
+    <button
+      className="replay-button"
+      onClick={() => setAnimationTrigger(prev => prev + 1)}
+    >
+      🔁 Повторить анимацию
+    </button>
+  </div>
+</div>
 
-      <div className="semantic-details">
-        <div className="semantic-dictionary">
-          <h3>Category dictionary</h3>
-          {rawDictionary.map(([num, wordList]) => (
-            <div key={num} className="category-row">
-              <div className="category-number">{num}:</div>
-              <div className="category-words">
-                {wordList.map((w, i) => (
-                  <span
-                    key={i}
-                    className={matchedWordsSet.has(w.toLowerCase()) ? 'highlight' : ''}
-                  >
-                    {w + (i < wordList.length - 1 ? ', ' : '')}
-                  </span>
-                ))}
-              </div>
-            </div>
+<div className="semantic-details">
+  <div className="semantic-dictionary">
+    <h3>Category dictionary</h3>
+    {rawDictionary.map(([num, wordList]) => (
+      <div key={num} className="category-row">
+        <div className="category-number">{num}:</div>
+        <div className="category-words">
+          {wordList.map((w, i) => (
+            <span
+              key={i}
+              className={matchedWordsSet.has(w.toLowerCase()) ? 'highlight' : ''}
+            >
+              {w + (i < wordList.length - 1 ? ', ' : '')}
+            </span>
           ))}
         </div>
-
-        <div className="semantic-usertext">
-          <h3>Your text</h3>
-          <div className="usertext-box">
-            {highlightWords(userText, [...dictionary.keys()])}
-          </div>
-        </div>
       </div>
+    ))}
+  </div>
+
+  <div className="semantic-usertext">
+    <h3>Your text</h3>
+    <div className="usertext-box">
+      {highlightWords(userText, [...dictionary.keys()])}
     </div>
+  </div>
+</div>
+</div>
   );
 }

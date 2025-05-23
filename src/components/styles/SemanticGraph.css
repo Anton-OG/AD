@@ -1,3 +1,4 @@
+/* Общий стиль страницы */
 body {
   margin: 0;
   font-family: 'Segoe UI', Arial, sans-serif;
@@ -6,6 +7,7 @@ body {
   overflow-x: hidden;
 }
 
+/* Контейнер всего компонента */
 .semantic-container {
   padding: 2rem 1.5rem;
   box-sizing: border-box;
@@ -13,11 +15,12 @@ body {
   margin: 0 auto;
 }
 
-.semantic-header-stack {
-  margin-bottom: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+/* Заголовок и блок информации об участнике */
+.semantic-thankyou h2 {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .thankyou-info {
@@ -26,18 +29,6 @@ body {
   align-items: center;
   text-align: center;
   gap: 0.5rem;
-}
-
-.semantic-thankyou,
-.semantic-metrics {
-  box-sizing: border-box;
-}
-
-.semantic-thankyou h2 {
-  font-size: clamp(1.5rem, 2.2vw, 2rem);
-  color: #ffffff;
-  margin-bottom: 1rem;
-  text-align: center;
 }
 
 .thankyou-info p {
@@ -49,6 +40,11 @@ body {
 .thankyou-info strong {
   color: #ffcc00;
   margin-right: 0.5rem;
+}
+
+/* Блок с метриками */
+.semantic-metrics {
+  margin-top: 2rem;
 }
 
 .semantic-metrics h3 {
@@ -93,18 +89,42 @@ body {
   justify-content: space-between;
 }
 
-.semantic-canvases {
+.semantic-graph-wrapper {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  margin: 2rem 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
-.semantic-canvases canvas {
-  flex: 1 1 300px;
-  max-width: 600px;
+.replay-button-wrapper {
+  margin-top: 1.5rem; /* отступ от canvas */
+  margin-bottom: 2rem; /* отступ от блоков Category/UserText */
+  text-align: center;
+}
+
+.replay-button {
+  background-color: #ffcc00;
+  color: #000;
+  font-weight: bold;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  transition: background-color 0.3s;
+}
+
+.replay-button:hover {
+  background-color: #e6b800;
+}
+
+
+
+.semantic-graph-wrapper canvas {
+  max-width: 100%;
   width: 100%;
+  max-width: 700px;
   height: auto;
   border-radius: 10px;
   border: 2px solid #888;
@@ -112,17 +132,20 @@ body {
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
+/* Две колонки: слева словарь, справа текст */
 .semantic-details {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   gap: 2rem;
   justify-content: center;
+  align-items: flex-start;
   margin-bottom: 2rem;
 }
 
 .semantic-details > div {
   flex: 1 1 480px;
-  min-width: 280px;
+  min-width: 300px;
   max-width: 100%;
   padding: 1rem;
   box-sizing: border-box;
@@ -131,6 +154,34 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+.semantic-dictionary {
+  order: 1;
+  max-height: 26rem;         /* около 9 строк по ~2rem */
+  overflow-y: auto;
+  padding-right: 0.5rem;     /* чтобы скролл не перекрывал текст */
+  scrollbar-width: thin;
+}
+
+.semantic-dictionary::-webkit-scrollbar {
+  width: 6px;
+}
+
+.semantic-dictionary::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.semantic-dictionary::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.semantic-usertext {
+  order: 2;
+  flex: 1 1 600px;
+  min-height: 26rem;  /* 👈 чтобы выровнять с .semantic-dictionary */
+}
+
+/* Заголовки блоков */
 .semantic-dictionary h3,
 .semantic-usertext h3 {
   text-align: center;
@@ -138,6 +189,7 @@ body {
   color: #ffcc00;
 }
 
+/* Отображение словаря */
 .category-row {
   display: flex;
   flex-wrap: wrap;
@@ -164,6 +216,7 @@ body {
   margin-right: 0.25rem;
 }
 
+/* Блок текста пользователя */
 .usertext-box {
   font-size: 1rem;
   line-height: 1.6;
@@ -176,6 +229,7 @@ body {
   margin-right: 0.2rem;
 }
 
+/* Подсветка найденных слов */
 .highlight {
   background-color: #ffcc00;
   color: #000;
@@ -184,25 +238,20 @@ body {
   border-radius: 0.25rem;
 }
 
+/* Адаптив: мобильная версия */
 @media (max-width: 768px) {
-  .semantic-canvases {
+  .semantic-details {
     flex-direction: column;
     gap: 1.5rem;
   }
 
-  .semantic-canvases canvas {
-    max-width: 95%;
-    margin: 0 auto;
-  }
-
-  .semantic-details {
-    flex-direction: column;
-    padding: 0;
-  }
-
   .semantic-details > div {
     width: 100%;
-    padding: 1rem;
+  }
+
+  .category-row {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .metric {
@@ -218,10 +267,5 @@ body {
   .category-words {
     font-size: 0.95rem;
     line-height: 1.5;
-  }
-/*  */
-  .category-row {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }
