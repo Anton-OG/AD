@@ -93,34 +93,53 @@ export default function SemanticGraph({ userText, gender, age, country, time }) 
 
     let stepIndex = 1;
     let progress = 0;
-    const speed = 0.01;
+    const speed = 0.004;
     let drawnSegments = [];
 
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
 
-      // Точки
-      ctx.font = 'bold 12px Arial';
+      // Рисуем все точки
       coordinates.forEach(([x, y], i) => {
         const isStart = found[0] === i + 1;
         const isFinish = found[found.length - 1] === i + 1;
+
+        // Цвет кружка
         ctx.fillStyle = isStart ? 'green' : isFinish ? 'magenta' : 'red';
         ctx.beginPath();
         ctx.arc(x, y, 8, 0, 2 * Math.PI);
         ctx.fill();
+
+        // Обводка
         if (isStart || isFinish) {
           ctx.lineWidth = 2;
           ctx.strokeStyle = 'black';
           ctx.stroke();
         }
+
+        // Номер точки
         ctx.fillStyle = 'white';
+        ctx.font = 'bold 12px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(`${i + 1}`, x, y);
+
+        // Подписи start и finish
+        if (isStart) {
+          ctx.fillStyle = 'green';
+          ctx.font = 'bold 14px Arial';
+          ctx.textAlign = 'left';
+          ctx.fillText('Start', x + 12, y - 12);
+        } else if (isFinish) {
+          ctx.fillStyle = 'magenta';
+          ctx.font = 'bold 14px Arial';
+          ctx.textAlign = 'left';
+          ctx.fillText('Finish', x + 12, y - 12);
+        }
       });
 
-      // Готовые отрезки
+      // Рисуем завершённые отрезки
       ctx.strokeStyle = 'blue';
       ctx.lineWidth = 1;
       drawnSegments.forEach(([x1, y1, x2, y2]) => {
@@ -130,7 +149,7 @@ export default function SemanticGraph({ userText, gender, age, country, time }) 
         ctx.stroke();
       });
 
-      // Анимация текущей стрелки
+      // Анимируем текущую стрелку
       if (stepIndex < found.length) {
         const [x1, y1] = coordinates[found[stepIndex - 1] - 1];
         const [x2, y2] = coordinates[found[stepIndex] - 1];
@@ -142,13 +161,20 @@ export default function SemanticGraph({ userText, gender, age, country, time }) 
         ctx.lineTo(currentX, currentY);
         ctx.stroke();
 
+        // Стрелка
         const angle = Math.atan2(y2 - y1, x2 - x1);
         const arrowLength = 10;
         ctx.beginPath();
         ctx.moveTo(currentX, currentY);
-        ctx.lineTo(currentX - arrowLength * Math.cos(angle - 0.3), currentY - arrowLength * Math.sin(angle - 0.3));
+        ctx.lineTo(
+          currentX - arrowLength * Math.cos(angle - 0.3),
+          currentY - arrowLength * Math.sin(angle - 0.3)
+        );
         ctx.moveTo(currentX, currentY);
-        ctx.lineTo(currentX - arrowLength * Math.cos(angle + 0.3), currentY - arrowLength * Math.sin(angle + 0.3));
+        ctx.lineTo(
+          currentX - arrowLength * Math.cos(angle + 0.3),
+          currentY - arrowLength * Math.sin(angle + 0.3)
+        );
         ctx.stroke();
 
         progress += speed;
@@ -162,8 +188,11 @@ export default function SemanticGraph({ userText, gender, age, country, time }) 
       }
     }
 
-    animate();
+    animate(); // ✅ Вызов один раз
   };
+
+
+
 
   return () => cancelAnimationFrame(animationFrameId);
 }, [userText, found, animationTrigger]); // 👈 добавлено animationTrigger
@@ -172,7 +201,7 @@ export default function SemanticGraph({ userText, gender, age, country, time }) 
   return (
     <div className="semantic-container">
   <div className="semantic-thankyou">
-    <h2>Thank you for your participation!</h2>
+    <h2>Thanks for helping us with our research!</h2>
     <div className="thankyou-info">
       <p><strong>Sex:</strong> {gender}</p>
       <p><strong>Age:</strong> {age}</p>
@@ -192,17 +221,35 @@ export default function SemanticGraph({ userText, gender, age, country, time }) 
   </div>
 
   <div className="semantic-metrics">
-    <h3>Analysis Results</h3>
-    <div className="metric"><span>🧠 Found categories:</span><span>{found.join(', ')}</span></div>
-    <div className="metric"><span>🔄 Transitions between fields:</span><span>{transitions}</span></div>
-    <div className="metric"><span>📉 Missing categories:</span><span>{missing.join(', ')}</span></div>
-    <div className="metric"><span>📈 Graph density:</span><span>{density.toFixed(3)}</span></div>
-    <div className="metric"><span>📏 Path distance:</span><span>{distance.toFixed(1)}</span></div>
-    <div className="metric highlight-index">
-      <strong>Cognitive impairment index:</strong>
-      <strong>{index.toFixed(2)}</strong>
+  <h3>Test Analysis Summary</h3>
+  <div className="metrics-table">
+    <div className="metric-row">
+      <span className="metric-label">🧠 Found categories:</span>
+      <span className="metric-value">{found.join(', ')}</span>
+    </div>
+    <div className="metric-row">
+      <span className="metric-label">🔄 Transitions between fields:</span>
+      <span className="metric-value">{transitions}</span>
+    </div>
+    <div className="metric-row">
+      <span className="metric-label">📉 Missing categories:</span>
+      <span className="metric-value">{missing.join(', ')}</span>
+    </div>
+    <div className="metric-row">
+      <span className="metric-label">📈 Graph density:</span>
+      <span className="metric-value">{density.toFixed(3)}</span>
+    </div>
+    <div className="metric-row">
+      <span className="metric-label">📏 Path distance:</span>
+      <span className="metric-value">{distance.toFixed(1)}</span>
     </div>
   </div>
+
+  <div className="highlight-index-box">
+    <span className="highlight-index-label">Cognitive impairment index:</span>
+    <span className="highlight-index-value">{index.toFixed(2)}</span>
+  </div>
+</div>  
 
   <div className="semantic-graph-wrapper">
   <canvas ref={canvasRef} />
@@ -211,14 +258,14 @@ export default function SemanticGraph({ userText, gender, age, country, time }) 
       className="replay-button"
       onClick={() => setAnimationTrigger(prev => prev + 1)}
     >
-      🔁 Повторить анимацию
+      🔁 Replay animation
     </button>
   </div>
 </div>
 
 <div className="semantic-details">
   <div className="semantic-dictionary">
-    <h3>Category dictionary</h3>
+    <h3>Semantic Word Groups</h3>
     {rawDictionary.map(([num, wordList]) => (
       <div key={num} className="category-row">
         <div className="category-number">{num}:</div>

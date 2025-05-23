@@ -46,7 +46,7 @@ export default function UserDetailsForm({ onSubmit }) {
 
   return (
     <div className="user-block fade-in">
-      <h1>Your Basic Information</h1>
+      <h1>About You</h1>
       <form onSubmit={handleSubmit} className="user-form">
         <div className="user-group">
           <label>Sex:</label>
@@ -69,7 +69,7 @@ export default function UserDetailsForm({ onSubmit }) {
         </div>
 
         <div className="user-group">
-          <label>Age:</label>
+          <label>Enter your age:</label>
           <input
             type="number"
             min="1"
@@ -82,7 +82,7 @@ export default function UserDetailsForm({ onSubmit }) {
         </div>
 
         <div className="user-group">
-          <label>Country:</label>
+          <label>Select your country:</label>
           <Select
             options={countryOptions}
             value={country}
@@ -102,6 +102,9 @@ export default function UserDetailsForm({ onSubmit }) {
         <div className="user-button-container">
           <button type="submit" className="user-button">Continue</button>
         </div>
+        <p className="user-privacy-note">
+          This information will be used solely for research purposes and will remain anonymous.
+        </p>
       </form>
 
       {showError && (

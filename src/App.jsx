@@ -8,15 +8,30 @@ import DescriptionTest from './components/DescriptionTest';
 import CompletionModal from './components/CompletionModal';
 import SemanticGraph from './components/SemanticGraph';
 
-import { submitUserData } from './submitData'; // ← Добавлено
+import LanguageModal from './components/LanguageModal';
+import LanguageUnavailableModal from './components/LanguageUnavailableModal';
+
+import { submitUserData } from './submitData';
 
 function App() {
+  const [language, setLanguage] = useState(null);
+  const [showUnavailableModal, setShowUnavailableModal] = useState(false);
+
   const [step, setStep] = useState(1);
   const [description, setDescription] = useState('');
   const [elapsedTime, setElapsedTime] = useState(0);
   const [showModal, setShowModal] = useState(false);
+
   const timerRef = useRef(null);
   const userDataRef = useRef({});
+
+  const handleLanguageSelect = (lang) => {
+    if (lang === 'sk') {
+      setShowUnavailableModal(true);
+    } else {
+      setLanguage(lang);
+    }
+  };
 
   const handleNext = () => setStep((prev) => prev + 1);
 
@@ -28,8 +43,6 @@ function App() {
   const handleFinish = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     setShowModal(true);
-
-    // 🔥 Отправка данных в Firebase
     submitUserData({
       gender: userDataRef.current.gender,
       age: userDataRef.current.age,
@@ -46,6 +59,23 @@ function App() {
       timerRef.current = null;
     }
   }, [step]);
+
+  // Показываем сообщение, если выбран словацкий язык
+  if (showUnavailableModal) {
+    return (
+      <LanguageUnavailableModal
+        onClose={() => {
+          setShowUnavailableModal(false);
+          setLanguage('en'); // продолжить на английском
+        }}
+      />
+    );
+  }
+
+  // Показываем выбор языка
+  if (!language) {
+    return <LanguageModal onSelectLanguage={handleLanguageSelect} />;
+  }
 
   return (
     <div className="app-container">

@@ -102,6 +102,17 @@
   background-color: #e6b800;
 }
 
+.user-privacy-note {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #cccccc;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+
 /* 💻 Full HD */
 @media (max-width: 1920px) {
   .user-form {

@@ -50,16 +50,24 @@ export default function DescriptionTest({
 
   return (
     <div className="description-block fade-in">
-      <h1>Picture Description Task</h1>
+      <h1>Tell Us What You See</h1>
+
+      {/* 📄 Потом пояснение */}
+      <p className="description-text">
+        Describe everything you see in the picture — people, actions, objects, and interactions. 
+        Use full sentences. The more details, the better.
+      </p>
+
+      <p className="description-text" style={{ marginTop: '12px' }}>
+        There are no right or wrong answers. Just describe what you see as clearly as you can.
+        Your response will help us better understand how people perceive everyday situations.
+      </p>
+
 
       {/* 🖼 Сначала изображение */}
       <img src={t1} alt="Cognitive test" className="description-image" />
 
-      {/* 📄 Потом пояснение */}
-      <p className="description-text">
-        Look closely at the image above. Please describe everything you see — actions, people, objects, and interactions.
-        Use full sentences. The more detailed your description, the better.
-      </p>
+      
 
       {/* ✍ Поле ввода */}
       <textarea

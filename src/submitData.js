@@ -13,8 +13,8 @@ export async function submitUserData({ gender, age, country, description, time }
       time,
       createdAt: Timestamp.now()
     });
-    console.log("✅ Данные успешно записаны в Firestore");
+    console.log("✅ Data successfully written to Firestore");
   } catch (error) {
-    console.error("❌ Ошибка при записи в Firestore:", error);
+    console.error("❌ Error when writing to Firestore:", error);
   }
 }
