@@ -1,7 +1,10 @@
-export async function submitUserData({ gender, age, country, description, time, language }) {
+  // src/submitData.js
+  import { db } from './firebase';
+  import { collection, addDoc, Timestamp } from 'firebase/firestore';
+
+  export async function submitUserData({ gender, age, country, description, time, language }) {
   try {
     const groupPath = language === 'sk' ? 'group_sk' : 'group_en';
-
     await addDoc(collection(db, groupPath), {
       gender,
       age: Number(age),
@@ -11,9 +14,8 @@ export async function submitUserData({ gender, age, country, description, time, 
       time,
       createdAt: Timestamp.now()
     });
-
-    console.log(`✅ Data successfully written to ${groupPath}`);
+    console.log(`✅ Data written to ${groupPath}`);
   } catch (error) {
-    console.error("❌ Error when writing to Firestore:", error);
+    console.error("❌ Firestore write error:", error);
   }
 }
