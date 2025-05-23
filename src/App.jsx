@@ -26,12 +26,8 @@ function App() {
   const userDataRef = useRef({});
 
   const handleLanguageSelect = (lang) => {
-    if (lang === 'sk') {
-      setShowUnavailableModal(true);
-    } else {
-      setLanguage(lang);
-    }
-  };
+  setLanguage(lang);
+};
 
   const handleNext = () => setStep((prev) => prev + 1);
 
