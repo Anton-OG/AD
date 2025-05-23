@@ -45,10 +45,11 @@ function App() {
     setShowModal(true);
     submitUserData({
       gender: userDataRef.current.gender,
-      age: userDataRef.current.age,
-      country: userDataRef.current.country,
-      description,
-      time: elapsedTime
+  age: userDataRef.current.age,
+  country: userDataRef.current.country,
+  description,
+  time: elapsedTime,
+  language // ⬅️ передаём в функцию
     });
   };
 
