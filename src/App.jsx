@@ -14,7 +14,7 @@ import LanguageUnavailableModal from './components/LanguageUnavailableModal';
 import { submitUserData } from './submitData';
 
 function App() {
-  const [language, setLanguage] = useState(null);
+  const [language, setLanguage] = useState(null); // 'en' or 'sk'
   const [showUnavailableModal, setShowUnavailableModal] = useState(false);
 
   const [step, setStep] = useState(1);
@@ -25,9 +25,13 @@ function App() {
   const timerRef = useRef(null);
   const userDataRef = useRef({});
 
+  // Выбор языка (с предупреждением для sk)
   const handleLanguageSelect = (lang) => {
-  setLanguage(lang);
-};
+    setLanguage(lang); // сохраняем реальный выбор
+    if (lang === 'sk') {
+      setShowUnavailableModal(true); // показываем предупреждение
+    }
+  };
 
   const handleNext = () => setStep((prev) => prev + 1);
 
@@ -39,13 +43,14 @@ function App() {
   const handleFinish = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     setShowModal(true);
+
     submitUserData({
       gender: userDataRef.current.gender,
       age: userDataRef.current.age,
       country: userDataRef.current.country,
       description,
       time: elapsedTime,
-      language: language || 'en'
+      language // важное: передаём выбранный язык, даже если интерфейс на en
     });
   };
 
@@ -57,19 +62,16 @@ function App() {
     }
   }, [step]);
 
-  // Показываем сообщение, если выбран словацкий язык
+  // Модалка: словацкая версия пока недоступна
   if (showUnavailableModal) {
     return (
       <LanguageUnavailableModal
-        onClose={() => {
-          setShowUnavailableModal(false);
-          setLanguage('en'); // продолжить на английском
-        }}
+        onClose={() => setShowUnavailableModal(false)}
       />
     );
   }
 
-  // Показываем выбор языка
+  // Сначала — выбор языка
   if (!language) {
     return <LanguageModal onSelectLanguage={handleLanguageSelect} />;
   }
