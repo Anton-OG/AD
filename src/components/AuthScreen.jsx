@@ -8,7 +8,7 @@ import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 // === reuse your country select exactly like in UserDetailsForm ===
 import Select from 'react-select';
-import selectStyles from './stylesselectStyles.js';
+import selectStyles from './styles/selectStyles.js';  
 import countries from '../data/countries.json';
 
 function toOptions(list) {
