@@ -1,45 +1,45 @@
 import React, { useState, useEffect, useRef } from 'react';
+import './App.css';
 
-import ResearchInfo from './ResearchInfo.jsx';
-import UserDetailsForm from './UserDetailsForm.jsx';
-import DescriptionTest from './DescriptionTest.jsx';
-import SemanticGraph from './SemanticGraph.jsx';
-import CompletionModal from './CompletionModal.jsx';
+import ResearchInfo from './components/ResearchInfo.jsx';
+import UserDetailsForm from './components/UserDetailsForm.jsx';
+import DescriptionTest from './components/DescriptionTest.jsx';
+import CompletionModal from './components/CompletionModal.jsx';
+import SemanticGraph from './components/SemanticGraph.jsx';
 
-// Экран логина/регистрации
-import AuthScreen from './AuthScreen.jsx';
+// новый экран авторизации/регистрации
+import AuthScreen from './components/AuthScreen.jsx';
 
 import { submitUserData } from './submitData.js';
 
 function App() {
-  // Язык фиксируем на английском
+  // язык фиксируем на английском, без выбора
   const [language] = useState('en');
 
-  // Шаги:
-  // 1 — Авторизация/регистрация
-  // 2 — Информация об исследовании
-  // 3 — Анкета
-  // 4 — Описание (таймер)
-  // 5 — Семантический граф (результаты)
+  // шаги:
+  // 1 — AuthScreen
+  // 2 — ResearchInfo
+  // 3 — UserDetailsForm
+  // 4 — DescriptionTest
+  // 5 — SemanticGraph
   const [step, setStep] = useState(1);
-
   const [description, setDescription] = useState('');
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [showCompleted, setShowCompleted] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const timerRef = useRef(null);
-  const userDataRef = useRef({ gender: '', age: '', country: '' });
+  const userDataRef = useRef({});
 
-  const next = () => setStep((s) => s + 1);
+  const handleNext = () => setStep((prev) => prev + 1);
 
   const handleUserDetailsSubmit = ({ gender, age, country }) => {
     userDataRef.current = { gender, age, country };
-    next();
+    handleNext();
   };
 
-  const handleFinishDescription = () => {
+  const handleFinish = () => {
     if (timerRef.current) clearInterval(timerRef.current);
-    setShowCompleted(true);
+    setShowModal(true);
 
     submitUserData({
       gender: userDataRef.current.gender,
@@ -47,13 +47,12 @@ function App() {
       country: userDataRef.current.country,
       description,
       time: elapsedTime,
-      language,
+      language
     });
   };
 
   useEffect(() => {
     if (step === 4) {
-      // Сброс перед началом описания
       setDescription('');
       setElapsedTime(0);
       timerRef.current = null;
@@ -62,15 +61,9 @@ function App() {
 
   return (
     <div className="app-container">
-      {step === 1 && (
-        <AuthScreen
-          onAuthed={() => {
-            next();
-          }}
-        />
-      )}
+      {step === 1 && <AuthScreen onAuthed={handleNext} />}
 
-      {step === 2 && <ResearchInfo onNext={next} />}
+      {step === 2 && <ResearchInfo onNext={handleNext} />}
 
       {step === 3 && <UserDetailsForm onSubmit={handleUserDetailsSubmit} />}
 
@@ -81,7 +74,7 @@ function App() {
           elapsedTime={elapsedTime}
           setElapsedTime={setElapsedTime}
           timerRef={timerRef}
-          onSubmit={handleFinishDescription}
+          onSubmit={handleFinish}
         />
       )}
 
@@ -95,12 +88,12 @@ function App() {
         />
       )}
 
-      {showCompleted && (
+      {showModal && (
         <CompletionModal
           elapsedTime={elapsedTime}
           onClose={() => {
-            setShowCompleted(false);
-            setStep(5);
+            setShowModal(false);
+            handleNext();
           }}
         />
       )}
