@@ -1,25 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import ResearchInfo from './ResearchInfo';
-import UserDetailsForm from './UserDetailsForm';
-import DescriptionTest from './DescriptionTest';
-import SemanticGraph from './SemanticGraph';
-import CompletionModal from './CompletionModal';
+import ResearchInfo from './ResearchInfo.jsx';
+import UserDetailsForm from './UserDetailsForm.jsx';
+import DescriptionTest from './DescriptionTest.jsx';
+import SemanticGraph from './SemanticGraph.jsx';
+import CompletionModal from './CompletionModal.jsx';
 
-// Экран авторизации/регистрации (добавьте файл AuthScreen.jsx в корень src рядом с остальными)
-import AuthScreen from './AuthScreen';
+// Экран логина/регистрации
+import AuthScreen from './AuthScreen.jsx';
 
-import { submitUserData } from './submitData';
+import { submitUserData } from './submitData.js';
 
 function App() {
-  // Язык фиксирован: английский, выбора больше нет
+  // Язык фиксируем на английском
   const [language] = useState('en');
 
   // Шаги:
   // 1 — Авторизация/регистрация
-  // 2 — Информация о исследовании
-  // 3 — Анкета пользователя
-  // 4 — Текстовое описание (таймер)
+  // 2 — Информация об исследовании
+  // 3 — Анкета
+  // 4 — Описание (таймер)
   // 5 — Семантический граф (результаты)
   const [step, setStep] = useState(1);
 
