@@ -2,20 +2,20 @@
    SemanticGraph — compact, responsive layout
    ========================= */
 
-/* Корневой контейнер компонента */
+/* Root container of the component */
 .semantic-container{
   max-width: 1280px;
   margin: 0 auto;
   box-sizing: border-box;
 
-  /* Верхняя зона: метрики + граф — две колонки */
+  /* Top area: metrics + graph — two columns */
   display: grid;
   grid-template-columns: 1fr 560px;
   gap: 16px;
   align-items: start;
 }
 
-/* Общая карточная подложка */
+/* General card background */
 .card-block{
   background: rgba(255,255,255,.04);
   border: 1px solid rgba(255,255,255,.08);
@@ -24,10 +24,10 @@
   padding: 1rem 1.1rem;
 }
 
-/* ===== Метрики (левая колонка) ===== */
+/* ===== Metrics (left column) ===== */
 .semantic-metrics{
   grid-column: 1;
-  margin-top: 0; /* поднимаем ближе к верху */
+  margin-top: 0; /* move closer to the top */
 }
 .semantic-metrics h3{
   font-size: clamp(1.2rem, 1.6vw, 1.5rem);
@@ -67,7 +67,7 @@
 .highlight-index-label{ opacity:.95; }
 .highlight-index-value{ font-size: 1.2rem; }
 
-/* ===== Граф (правая колонка) ===== */
+/* ===== Graph (right column) ===== */
 .semantic-graph-wrapper{
   grid-column: 2;
   margin-top: 0;
@@ -78,7 +78,7 @@
 }
 .semantic-graph-wrapper canvas{
   width: 100%;
-  height: auto;            /* масштаб в колонке */
+  height: auto;            /* scale in column */
   border-radius: 10px;
   border: 2px solid #888;
   background: #fff;
@@ -97,7 +97,7 @@
 }
 .replay-button:hover{ background:#e6b800; }
 
-/* ===== Нижняя секция: словарь + текст (две колонки) ===== */
+/* ===== Bottom section: dictionary + text (two columns) ===== */
 .semantic-io{
   grid-column: 1 / -1;
   display: grid;
@@ -106,7 +106,7 @@
   margin-top: 16px;
 }
 
-/* Внешние карточки — без overflow, чтобы не было двойного скролла */
+/* Outer cards — no overflow to avoid double scroll */
 .dictionary-block,
 .usertext-block{
   background: rgba(255,255,255,.04);
@@ -114,8 +114,8 @@
   border-radius: 12px;
   padding: 1rem 1.25rem;
   box-shadow: 0 2px 8px rgba(0,0,0,.2);
-  overflow: visible;     /* важно */
-  max-height: none;      /* важно */
+  overflow: visible;     /* important */
+  max-height: none;      /* important */
 }
 .dictionary-block h3,
 .usertext-block h3{
@@ -124,7 +124,7 @@
   margin: 0 0 10px 0;
 }
 
-/* Прокрутка только внутри этих контейнеров */
+/* Scroll only inside these containers */
 .semantic-dictionary,
 .usertext-box{
   max-height: 380px;
@@ -132,7 +132,7 @@
   padding-right: 6px;
 }
 
-/* Список словаря */
+/* Dictionary list */
 .category-row{
   display: flex;
   gap: 8px;
@@ -147,7 +147,7 @@
 }
 .category-words{ color:#fff; word-break: break-word; }
 
-/* Текст пользователя + подсветки */
+/* User text + highlights */
 .usertext-box{
   font-size: 1rem;
   line-height: 1.6;
@@ -163,7 +163,7 @@
   border-radius: .25rem;
 }
 
-/* Небольшой косметический скроллбар */
+/* Small cosmetic scrollbar */
 .semantic-dictionary::-webkit-scrollbar,
 .usertext-box::-webkit-scrollbar{ width: 8px; }
 .semantic-dictionary::-webkit-scrollbar-thumb,
@@ -176,7 +176,7 @@
   background: rgba(255,255,255,.28);
 }
 
-/* ===== Адаптив ===== */
+/* ===== Responsive ===== */
 @media (max-width: 1200px){
   .semantic-container{
     grid-template-columns: 1fr 460px;
@@ -184,7 +184,7 @@
 }
 @media (max-width: 980px){
   .semantic-container{
-    grid-template-columns: 1fr; /* всё в одну колонку */
+    grid-template-columns: 1fr; /* all in one column */
   }
   .semantic-graph-wrapper{ grid-column: 1; }
   .semantic-io{ grid-template-columns: 1fr; }
