@@ -36,7 +36,6 @@ function App() {
     submitUserData({
       gender: userDataRef.current.gender,
       age: userDataRef.current.age,
-      country: userDataRef.current.country,
       description,
       time: elapsedTime,
       language,
@@ -76,7 +75,7 @@ function App() {
               userText={description}
               gender={userDataRef.current.gender}
               age={userDataRef.current.age}
-              country={userDataRef.current.country}
+              
               time={elapsedTime}
             />
           )}

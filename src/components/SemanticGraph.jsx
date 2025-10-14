@@ -75,7 +75,7 @@ function highlightWords(text, vocab) {
   );
 }
 
-export default function SemanticGraph({ userText = '', gender, age, country, time }) {
+export default function SemanticGraph({ userText = '', gender, age, time }) {
   const canvasRef = useRef(null);
   const [animSeed, setAnimSeed] = useState(0);
 
@@ -182,17 +182,7 @@ export default function SemanticGraph({ userText = '', gender, age, country, tim
         <div className="thankyou-info">
           <p><strong>Sex:</strong> {gender}</p>
           <p><strong>Age:</strong> {age}</p>
-          <p>
-            <strong>Country:</strong>{' '}
-            {country?.flagUrl && (
-              <img
-                src={country.flagUrl}
-                alt={country.label}
-                style={{ width: 20, height: 14, marginRight: 6, verticalAlign: 'middle', borderRadius: 2 }}
-              />
-            )}
-            {country?.label}
-          </p>
+         
           <p><strong>Time to complete:</strong> {time} seconds</p>
         </div>
       </div>
