@@ -10,7 +10,7 @@ import MyTests from './MyTests.jsx'
 import { submitUserData, updateTestNumbers } from '../submitData.js';
 
 export default function Dashboard({ user }) {
-  const [tab, setTab] = useState('info');          // слева: Info / New test / My test cases
+  const [tab, setTab] = useState('info');          // left: Info / New test / My test cases
   const [wizardStep, setWizardStep] = useState(0); // New test: 0=Info, 1=Describe, 2=Results
   const [description, setDescription] = useState('');
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -70,7 +70,7 @@ export default function Dashboard({ user }) {
 
   return (
     <div className="dash">
-      {/* Левое меню */}
+      {/* Left menu */}
       <aside className="dash-sidebar">
         <nav className="dash-menu">
           <button className="dash-item" data-active={tab === 'info'} onClick={() => setTab('info')}>
@@ -86,11 +86,11 @@ export default function Dashboard({ user }) {
         <div className="dash-user">User: {name}</div>
       </aside>
 
-      {/* Центральная область */}
+      {/* Central area */}
       <section className="dash-content">
         {tab === 'info' && (
           <div className="tab-wrap">
-            {/* WelcomeScreen как Info; кнопка Continue скрыта стилем в Dashboard.css */}
+            {/* WelcomeScreen as Info; Continue button is hidden by style in Dashboard.css */}
             <WelcomeScreen onNext={() => {}} />
           </div>
         )}
@@ -123,7 +123,7 @@ export default function Dashboard({ user }) {
                 elapsedTime={elapsedTime}
                 onClose={() => {
                   setShowModal(false);
-                  setWizardStep(2); // перейти на результаты
+                  setWizardStep(2); // go to results
                 }}
               />
             )}

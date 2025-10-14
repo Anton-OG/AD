@@ -1,7 +1,7 @@
 // Header.jsx
 import React from 'react';
 import './styles/Header.css';
-import logo from '../assets/2.png'; // <— импорт
+import logo from '../assets/2.png'; 
 
 export default function Header({ user, onLogout }) {
   const name = user?.displayName || user?.email || 'User';

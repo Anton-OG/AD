@@ -1,4 +1,4 @@
-/* Карточка-обёртка */
+/* Wrapper card */
 .info-block{
   background: rgba(255,255,255,.04);
   border: 1px solid rgba(255,255,255,.08);
@@ -8,7 +8,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,.2);
 }
 
-/* Заголовок */
+/* Title */
 .info-title{
   margin: 0 0 16px 0;
   text-align: center;
@@ -16,7 +16,7 @@
   font-size: clamp(1.3rem, 1.9vw, 1.9rem);
 }
 
-/* Две колонки: текст слева, картинка справа */
+/* Two columns: text on the left, image on the right */
 .info-grid{
   display: grid;
   grid-template-columns: 1.15fr 1fr;
@@ -24,7 +24,7 @@
   align-items: start;
 }
 
-/* Текст */
+/* Text */
 .info-text{
   color: #e8e8e8;
   font-size: 16px;
@@ -32,7 +32,7 @@
 }
 .info-text p{ margin: 0 0 10px 0; }
 
-/* Картинка справа */
+/* Image on the right */
 .info-media{
   display: grid;
   place-items: center;
@@ -45,7 +45,7 @@
   box-shadow: 0 4px 24px rgba(0,0,0,.25);
 }
 
-/* Кнопка снизу по центру */
+/* Button at the bottom, centered */
 .info-actions{
   display: flex;
   justify-content: center;
@@ -68,7 +68,7 @@
 }
 .info-button:active{ transform: translateY(1px); }
 
-/* Адаптив: на узких экранах — одна колонка */
+/* Responsive: one column on narrow screens */
 @media (max-width: 900px){
   .info-grid{ grid-template-columns: 1fr; }
 }

@@ -13,7 +13,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [authReady, setAuthReady] = useState(false);
 
-  // авто-логаут по бездействию (30 минут)
+  
   const inactivityRef = useRef(null);
   const IDLE_MS = 30 * 60 * 1000;
   const activityEvents = ['mousemove','keydown','click','scroll','touchstart','visibilitychange'];

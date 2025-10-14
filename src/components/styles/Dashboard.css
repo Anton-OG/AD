@@ -1,14 +1,12 @@
-
-
 .dash{
   
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 16px;
-  min-height: calc(100dvh - 120px); /* примерно под шапку+футер */
+  min-height: calc(100dvh - 120px); /* approximately for header+footer */
 }
 
-/* ==== Левое меню ==== */
+/* ==== Left menu ==== */
 .dash-sidebar{
   background: rgba(255,255,255,.04);
   border: 1px solid rgba(255,255,255,.06);
@@ -74,7 +72,7 @@
   font-size: 16px; 
 }
 
-/* ==== Контент ==== */
+/* ==== Content ==== */
 .dash-content{
   background: rgba(255,255,255,.035);
   border: 1px solid rgba(255,255,255,.06);
@@ -87,26 +85,26 @@
   height: 100%;
 }
 
-/* Прячем кнопку Continue у WelcomeScreen, когда он открыт как Info */
+/* Hide the Continue button on WelcomeScreen when opened as Info */
 .dash-content .welcome-button-container{
   display: none;
 }
 
-/* ==== Адаптив ==== */
+/* ==== Responsive ==== */
 @media (max-width: 900px){
   .dash{ grid-template-columns: 1fr; }
   .dash-sidebar{ order: 2; }
   .dash-content{ order: 1; }
 }
-/* Текст всех пунктов меню (второй span после иконки) */
+/* Text of all menu items (second span after icon) */
 .dash-menu .dash-item > span:last-child{
-  font-size: 18px;           /* нужный размер текста */
+  font-size: 18px;           /* required text size */
   line-height: 1.25;
 }
 
-/* Кружок-иконка */
+/* Circle icon */
 .dash-menu .dash-item .dash-ico{
   width: 36px;
   height: 36px;
-  font-size: 20px;           /* чтобы эмодзи/иконка тоже стала крупнее */
+  font-size: 20px;           /* to make emoji/icon larger as well */
 }

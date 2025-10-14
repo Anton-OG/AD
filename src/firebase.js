@@ -15,7 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-// 🔒 сохраняем вход между перезагрузками
+
 setPersistence(auth, browserLocalPersistence).catch(() => {});
 
 export const db   = getFirestore(app);

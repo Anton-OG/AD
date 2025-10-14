@@ -81,12 +81,12 @@ body {
   zoom: var(--ui-zoom);
 }
 
-/* Firefox fallback (zoom не поддерживается) */
+/* Firefox fallback  */
 @supports not (zoom: 1) {
   .app-shell{
     transform: scale(var(--ui-zoom));
     transform-origin: top center;
-    /* компенсируем ширину, чтобы не появилась горизонтальная прокрутка */
+    
     width: calc(100% / var(--ui-zoom));
   }
 }

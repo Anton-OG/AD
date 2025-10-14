@@ -1,38 +1,38 @@
 .description-block {
   background-color: rgba(255, 255, 255, 0.03);
   border-radius: 1rem;
-  padding: 2.0rem;              /* чуть компактнее */
+  padding: 2.0rem;              /* slightly more compact */
   max-width: 62.5rem;
   margin: 2rem auto 3rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   text-align: center;
 }
 
-/* Заголовок как в ResearchInfo (жёлтый) */
+/* Title as in ResearchInfo (yellow) */
 .description-title{
   color: #ffcc00;
   margin: 0 0 12px 0;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
 }
 
-/* Двухколоночный лэйаут: слева текст, справа изображение */
+/* Two-column layout: text on the left, image on the right */
 .description-grid{
   display: grid;
   grid-template-columns: 1fr 560px;
   gap: 16px;
   align-items: start;
-  text-align: left; /* чтобы абзацы были обычными, без центрирования */
+  text-align: left; /* so paragraphs are normal, not centered */
   margin-top: 4px;
 }
 
-/* Компактные абзацы внутри левой колонки */
+/* Compact paragraphs inside the left column */
 .description-text {
   font-size: clamp(0.95rem, 1.05vw, 1.1rem);
   color: #dddddd;
   line-height: 1.5;
   text-align: justify;
   max-width: 48rem;
-  margin: 0.75rem 0;          /* компактнее */
+  margin: 0.75rem 0;          /* more compact */
 }
 
 .description-media{ display: block; }
@@ -48,7 +48,7 @@
   transition: max-width 0.3s ease;
 }
 
-/* Поле ввода и остальные элементы — как было */
+/* Input field and other elements — as before */
 .description-textarea {
   width: 100%;
   max-width: 100%;
@@ -103,7 +103,7 @@
   .description-button { font-size: 0.95rem; padding: 0.5rem 1.25rem; }
 }
 
-/* 📱 Мобильные: в столбик */
+/* 📱 Mobile: stack columns */
 @media (max-width: 980px){
   .description-grid{ grid-template-columns: 1fr; }
 }
@@ -114,14 +114,14 @@
   .description-image { max-width: 100%; margin: 1rem 0; }
 }
 
-/* Анимация (как была) */
+/* Animation (as before) */
 .fade-in { animation: fadeIn 0.6s ease-in-out; }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Карточка с подсказками */
+/* Card with hints */
 .instruction-card{
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.08);
@@ -129,7 +129,7 @@
   padding: 12px 14px;
 }
 
-/* Маленькая плашка сверху, в фирменном цвете как в ResearchInfo */
+/* Small badge at the top, in the brand color as in ResearchInfo */
 .instruction-badge{
   display: inline-block;
   background: #ffcc00;
@@ -143,7 +143,7 @@
   margin-bottom: 8px;
 }
 
-/* Компактный список с чек-иконками */
+/* Compact list with check icons */
 .instruction-list{
   list-style: none;
   margin: 0;
@@ -155,7 +155,7 @@
   margin: 8px 0;
   color: #ddd;
   line-height: 1.45;
-  text-align: justify;   /* чтобы строки аккуратно выровнялись */
+  text-align: justify;   /* so lines are neatly aligned */
 }
 .instruction-list li::before{
   content: "✓";
@@ -173,7 +173,7 @@
   font-size: 0.85rem;
 }
 
-/* Адаптивность — ужимаем отступы на узких экранах */
+/* Responsiveness — reduce paddings on narrow screens */
 @media (max-width: 768px){
   .instruction-card{ padding: 10px 12px; }
   .instruction-list li{ margin: 6px 0; }

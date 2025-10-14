@@ -50,7 +50,7 @@ export default function DescriptionTest({
     <div className="description-block fade-in">
       <h1 className="description-title">Tell Us What You See</h1>
 
-      {/* двухколоночный блок: слева текст, справа изображение */}
+   
       <div className="description-grid">
         <div className="description-text-col">
           <div className="instruction-card">
@@ -73,7 +73,7 @@ export default function DescriptionTest({
         </div>
       </div>
 
-      {/* поле ввода */}
+   
       <textarea
         ref={textareaRef}
         className="description-textarea"
@@ -83,19 +83,19 @@ export default function DescriptionTest({
         onChange={handleChange}
       />
 
-      {/* таймер */}
+   
       {elapsedTime > 0 && (
         <p className="description-timer">Elapsed time: {elapsedTime} seconds</p>
       )}
 
-      {/* кнопка */}
+      
       <div className="description-button-container">
         <button onClick={handleSubmit} className="description-button">
           Submit my description
         </button>
       </div>
 
-      {/* ошибка */}
+  
       {showErrorModal && <ErrorModal onClose={() => setShowErrorModal(false)} />}
     </div>
   );

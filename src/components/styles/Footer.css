@@ -20,3 +20,40 @@
 .app-main{
   flex: 1;              /* основной контент занимает всё пространство */
 }
+
+.footer {
+  width: 100%;
+  background: rgba(255,255,255,.04);
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 18px 0 12px 0;
+  color: #eaeaea;
+  text-align: center;
+  font-size: 1rem;
+  letter-spacing: .02em;
+  margin-top: 32px;
+}
+
+/* Footer links */
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 8px;
+}
+
+.footer-link {
+  color: #ffcc00;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color .15s;
+}
+.footer-link:hover {
+  color: #fff;
+}
+
+/* Footer copyright */
+.footer-copyright {
+  color: #bdbdbd;
+  font-size: 0.95rem;
+  margin-top: 6px;
+}

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../components/styles/SemanticGraph.css';
 import t1 from '../assets/t1.jpg';
 
-/* === СЛОВАРЬ КАТЕГОРИЙ === */
+
 const rawDictionary = [
   [1, ['girl', 'sister', 'kid', 'child', 'daughter', 'schoolgirl', 'female child', 'young girl', 'juvenile']],
   [2, ['shushing', 'silencing', 'warning', 'gesturing', 'alerting', 'signaling', 'pointing', 'communicating']],
@@ -29,7 +29,7 @@ const rawDictionary = [
 const dictionary = new Map();
 rawDictionary.forEach(([num, words]) => words.forEach(w => dictionary.set(w.toLowerCase(), num)));
 
-/* === КООРДИНАТЫ ТОЧЕК === */
+
 const coordinates = [
   [116.47, 362.44], [126.74, 242.71], [155.0, 63.0], [180.33, 90.27],
   [195.45, 30.9], [199.88, 144.65], [235.0, 118.16], [250.81, 436.19],
@@ -79,18 +79,18 @@ export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
   const [animSeed, setAnimSeed] = useState(0);
 
   const { found, transitions, missing, density, distance, index, words } = analyzeText(userText);
-  const uniqueFound = [...new Set(found)]; // для подсветки/сохранения
+  const uniqueFound = [...new Set(found)]; 
 
-  /* 1) Сообщаем родителю найденные/ненайденные номера один раз на изменение текста */
+  
   useEffect(() => {
     if (typeof onNumbersExtracted === 'function') {
       onNumbersExtracted({ found: uniqueFound, missing });
     }
-    // только при изменении userText
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userText]);
 
-  /* 2) CANVAS: отрисовка и анимация + НОМЕРА У КАЖДОЙ ТОЧКИ */
+ 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -105,21 +105,21 @@ export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
       for (let i = 1; i <= coordinates.length; i++) {
         const [x, y] = coordinates[i - 1];
 
-        // круг: все точки видны, найденные — крупнее/ярче
+        
         const isFound = uniqueFound.includes(i);
         ctx.beginPath();
         ctx.arc(x, y, isFound ? 6 : 4, 0, Math.PI * 2);
         ctx.fillStyle = isFound ? '#ff5555' : 'rgba(255,255,255,0.55)';
         ctx.fill();
 
-        // номер рядом с точкой (читаемо на любом фоне)
+        
         const lx = x + 10;
         const ly = y - 10;
         ctx.font = 'bold 14px system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'left';
         ctx.lineWidth = 4;
-        ctx.strokeStyle = 'rgba(0,0,0,0.6)'; // обводка для контраста
+        ctx.strokeStyle = 'rgba(0,0,0,0.6)'; 
         ctx.strokeText(String(i), lx, ly);
         ctx.fillStyle = isFound ? '#ffcc00' : '#e6e6e6';
         ctx.fillText(String(i), lx, ly);
@@ -150,8 +150,8 @@ export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
 
         redrawBase();
 
-        // завершённые отрезки
-        ctx.strokeStyle = '#ffcc00';
+       
+        ctx.strokeStyle = '#ff0040ff';
         ctx.lineWidth = 2;
         for (let i = 1; i < stepIndex; i++) {
           const [x1, y1] = coordinates[found[i - 1] - 1];
@@ -162,7 +162,7 @@ export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
           ctx.stroke();
         }
 
-        // текущий отрезок + стрелка
+       
         if (stepIndex < found.length) {
           const [x1, y1] = coordinates[found[stepIndex - 1] - 1];
           const [x2, y2] = coordinates[found[stepIndex] - 1];

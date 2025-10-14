@@ -2,7 +2,7 @@
   background-color: rgba(255, 255, 255, 0.03);
   border-radius: 1rem;
   padding: 2.5rem;
-  margin: 2rem auto 3rem; /* было 0rem auto — из-за этого прилипал к верху */
+  margin: 0rem auto;
   max-width: 62.5rem; /* 1000px */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   text-align: center;
@@ -38,7 +38,7 @@
   margin: 2rem auto;
   width: 100%;
   height: auto;
-  max-width: 960px; /* 2560×1440 базово */
+  max-width: 960px; /* 2560×1440  */
   border-radius: 0.75rem;
   border: 2px solid #888;
   background-color: #1e1e2f;
@@ -80,7 +80,7 @@
   }
 }
 
-/* 💻 1600px и ниже */
+/* 💻 1600px  */
 @media (max-width: 1600px) {
   .welcome-block {
     max-width: 50rem;
@@ -92,7 +92,7 @@
   }
 }
 
-/* 💻 1366×768 и меньше */
+/* 💻 1366×768  */
 @media (max-width: 1366px) {
   .welcome-block {
     max-width: 44rem;
@@ -109,7 +109,7 @@
   }
 }
 
-/* 📱 Мобильные устройства */
+/* 📱 */
 @media (max-width: 768px) {
   .welcome-block {
     width: 90%;
@@ -127,30 +127,30 @@
 }
 
 
-/* картинка */
 
-/* ↓ Full HD (1920×1080) — минус 15% */
+
+/* ↓ Full HD (1920×1080) */
 @media (max-width: 1920px) {
   .welcome-image {
     max-width: 816px;
   }
 }
 
-/* ↓ 1600×900 — минус ещё 15% */
+/* ↓ 1600×900  */
 @media (max-width: 1600px) {
   .welcome-image {
     max-width: 694px;
   }
 }
 
-/* ↓ 1366×768 — минус ещё 15% */
+/* ↓ 1366×768  */
 @media (max-width: 1366px) {
   .welcome-image {
     max-width: 590px;
   }
 }
 
-/* ↓ Мобильные */
+/* ↓  */
 @media (max-width: 768px) {
   .welcome-image {
     max-width: 100%;

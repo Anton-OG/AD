@@ -9,11 +9,7 @@ import {
   increment,
 } from 'firebase/firestore';
 
-/**
- * Создаёт запись теста в подколлекции users/{uid}/tests
- * Поля: createdAt, description, time, uid
- * Возвращает ID созданного документа (autoId).
- */
+
 export async function submitUserData({ description, time }) {
   const user = auth.currentUser;
   if (!user) throw new Error('Not authenticated');
@@ -28,7 +24,7 @@ export async function submitUserData({ description, time }) {
   const testsCol = collection(db, 'users', user.uid, 'tests');
   const ref = await addDoc(testsCol, testDoc);
 
-  // агрегаты в профиле (необязательно)
+  
   await setDoc(
     doc(db, 'users', user.uid),
     {
@@ -41,10 +37,7 @@ export async function submitUserData({ description, time }) {
   return ref.id;
 }
 
-/**
- * Дописывает к тесту найденные и ненайденные числа.
- * Поля: numbersFound (array), numbersMissing (array), updatedAt
- */
+
 export async function updateTestNumbers({ testId, numbersFound = [], numbersMissing = [] }) {
   const user = auth.currentUser;
   if (!user) throw new Error('Not authenticated');

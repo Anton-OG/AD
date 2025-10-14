@@ -7,7 +7,6 @@ export default function ResearchInfo({ onNext }) {
     <section className="info-block fade-in">
       <h1 className="info-title">About This Research Study</h1>
 
-      {/* две колонки: слева текст, справа картинка */}
       <div className="info-grid">
         <div className="info-text">
           <p>
@@ -31,7 +30,7 @@ export default function ResearchInfo({ onNext }) {
         </div>
       </div>
 
-      {/* кнопка снизу по центру */}
+      
       <div className="info-actions">
         <button className="info-button" onClick={onNext}>Start the test</button>
       </div>

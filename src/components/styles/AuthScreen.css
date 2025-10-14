@@ -46,13 +46,13 @@
 }
 
 /* Narrow card only for Sign in (2 fields + actions) */
-/* Узкая карточка для Sign in: 2 поля + (возможно) ошибка + кнопка */
+/* Narrow card for Sign in: 2 fields + (possibly) error + button */
 .auth-card:has(.auth-form > .auth-field:nth-of-type(2) + .auth-actions),
 .auth-card:has(.auth-form > .auth-field:nth-of-type(3) + .auth-actions){
   width: min(var(--login-card-width), 96vw);
 }
 
-/* Ограничить ширину полей в Sign in */
+/* Limit the width of fields in Sign in */
 .auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field,
 .auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-field{
   max-width: var(--login-field-width);
@@ -61,7 +61,7 @@
   margin-right: auto;
 }
 
-/* Кнопка — той же ширины */
+/* Button — same width */
 .auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-actions .primary-btn,
 .auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-actions .primary-btn{
   width: 100%;
@@ -70,7 +70,7 @@
   margin-right: auto;
 }
 
-/* Ошибка располагается под полями и тоже узкая (учитываем, что она внутри .auth-field) */
+/* Error is placed under the fields and is also narrow (considering it's inside .auth-field) */
 .auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field .auth-error,
 .auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-field .auth-error{
   max-width: var(--login-field-width);
@@ -252,7 +252,7 @@
 }
 
 /* Mobile: full width */
-/* Мобилка: не растягивать шире контейнера */
+/* Mobile: do not stretch wider than the container */
 @media (max-width: 560px){
   .auth-card:has(.auth-form > .auth-field:nth-of-type(2) + .auth-actions),
   .auth-card:has(.auth-form > .auth-field:nth-of-type(3) + .auth-actions){
@@ -279,8 +279,8 @@
 }
 
 .auth-form:not(:has(> .auth-field:nth-of-type(2) + .auth-actions)) .auth-actions .primary-btn{
-  width: min(200px, 100%);   /* узкая на десктопе, адаптивная на мобилке */
-  max-width: none;           /* сняли лимит для логина */
+  width: min(200px, 100%);   /* narrow on desktop, adaptive on mobile */
+  max-width: none;           /* removed limit for login */
   margin-left: 0;
   margin-right: 0;
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import '../components/styles/CompletionModal.css';
 
 export default function CompletionModal({ elapsedTime, onClose }) {

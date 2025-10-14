@@ -65,5 +65,5 @@
 
 /* ==== Small screens ==== */
 @media (max-width: 520px){
-  .hdr-user{ display: none; } /* экономим место на мобильных */
+  .hdr-user{ display: none; } /* hide username on small screens */
 }

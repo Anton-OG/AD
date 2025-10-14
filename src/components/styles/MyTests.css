@@ -90,7 +90,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 8px; /* чуть компактнее */
+  margin-bottom: 8px; 
 }
 
 .back-btn{
@@ -113,7 +113,7 @@
 }
 
 /* ---------- Compact layout for SemanticGraph on details ---------- */
-/* Сетка: слева метрики, справа картинка; ниже — словарь и текст в 2 колонки */
+
 .case-details .semantic-container{
   display: grid;
   grid-template-columns: 1fr 560px;
@@ -123,7 +123,7 @@
   align-items: start;
 }
 
-/* Метрики слева компактнее */
+
 .case-details .semantic-metrics{
   grid-column: 1;
   margin-top: 0 !important;
@@ -135,7 +135,7 @@
 .case-details .metric-row{ padding: 8px 10px; font-size: 14px; }
 .case-details .highlight-index-box{ margin-top: 12px; padding: 10px 12px; }
 
-/* Граф справа */
+
 .case-details .semantic-graph-wrapper{
   grid-column: 2;
   margin-top: 0 !important;
@@ -150,7 +150,7 @@
   justify-content: center;
 }
 
-/* Нижняя зона: словарь и текст — два столбца */
+
 .case-details .semantic-io{
   grid-column: 1 / -1;
   display: grid;
@@ -159,28 +159,28 @@
   margin-top: 16px;
 }
 
-/* У внешних блоков нет скролла — чтобы не было двойных полос */
+
 .case-details .dictionary-block,
 .case-details .usertext-block{
   overflow: visible !important;
   max-height: none !important;
 }
 
-/* Скролл и высоту задаём только внутренним контейнерам */
+
 .case-details .semantic-dictionary,
 .case-details .usertext-box{
   max-height: 380px;
   overflow: auto;
-  padding-right: 6px; /* место для полосы */
+  padding-right: 6px; 
 }
 
-/* Чуть компактнее заголовки секций */
+
 .case-details .dictionary-block h3,
 .case-details .usertext-block h3{
   margin: 0 0 8px 0;
 }
 
-/* Небольшой косметический скроллбар (необязательно) */
+
 .case-details .semantic-dictionary::-webkit-scrollbar,
 .case-details .usertext-box::-webkit-scrollbar{ width: 8px; }
 .case-details .semantic-dictionary::-webkit-scrollbar-thumb,

@@ -68,7 +68,7 @@
   }
 }
 
-/* 📱 Мобильные */
+/* 📱 Mobile */
 @media (max-width: 480px) {
   .completion-window {
     padding: 1.25rem;
