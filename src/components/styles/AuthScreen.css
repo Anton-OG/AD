@@ -1,5 +1,5 @@
 /* ======================================
-   AuthScreen — styles
+   AuthScreen — styles (clean)
    ====================================== */
 
 :root{
@@ -45,34 +45,24 @@
   padding: 18px 26px; /* compact */
 }
 
-/* Narrow card only for Sign in (2 fields + actions) */
-/* Narrow card for Sign in: 2 fields + (possibly) error + button */
-.auth-card:has(.auth-form > .auth-field:nth-of-type(2) + .auth-actions),
-.auth-card:has(.auth-form > .auth-field:nth-of-type(3) + .auth-actions){
+/* --- Sign in: always narrow regardless of field count --- */
+.auth-card.is-login{
   width: min(var(--login-card-width), 96vw);
 }
-
-/* Limit the width of fields in Sign in */
-.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field,
-.auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-field{
+.auth-card.is-login .auth-field{
   max-width: var(--login-field-width);
   width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
-
-/* Button — same width */
-.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-actions .primary-btn,
-.auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-actions .primary-btn{
+.auth-card.is-login .auth-actions .primary-btn{
   width: 100%;
   max-width: var(--login-field-width);
   margin-left: auto;
   margin-right: auto;
 }
-
-/* Error is placed under the fields and is also narrow (considering it's inside .auth-field) */
-.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field .auth-error,
-.auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-field .auth-error{
+.auth-card.is-login .auth-field .auth-error,
+.auth-card.is-login > .auth-error{
   max-width: var(--login-field-width);
   margin: 6px auto 0;
 }
@@ -139,7 +129,12 @@
   border: var(--input-bd-focus);
   box-shadow: var(--input-shadow-focus);
 }
-
+.doctor-row .doctor-toggle{
+  display: inline-flex;     /* перекрываем display:block */
+  align-items: center;
+  gap: 10px;
+  margin: 0;                /* убираем отступ, если был */
+}
 /* Two columns (Sign up) */
 .two-cols{
   display: grid;
@@ -167,7 +162,6 @@
   transition: background .15s, transform .05s, border-color .15s;
 }
 .gender-btn:hover{ background: rgba(255,255,255,.14); transform: translateY(-1px); }
-/* active = yellow */
 .gender-btn.active{
   background: var(--accent);
   color: var(--accent-ink);
@@ -215,55 +209,64 @@
 .primary-btn:hover{ background:#f0c000; transform: translateY(-1px); }
 .primary-btn:disabled{ opacity:.7; cursor: default; transform:none; }
 
-/* ============================
-   Sign in: narrow column
-   ============================ */
-
-/* Limit width of fields */
-.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field{
-  max-width: var(--login-field-width);
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+/* --- Doctor toggle (custom switch) --- */
+.doctor-row{
+  display:flex;
+  justify-content:center;
 }
-.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field input{
-  width: 100%;
-  max-width: 100%;
+.doctor-toggle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+  user-select:none;
+  color: var(--ink);
+  font-weight: 700;
 }
-
-/* Limit width of error to the same as fields */
-.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) > .auth-error{
-  /* do NOT stretch; center as grid item */
-  width: auto !important;
-  max-width: var(--login-field-width);
-  justify-self: center;
-  margin: 6px 0 0;
+.doctor-toggle input{
+  appearance: none;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.35);
+  position: relative;
+  outline: none;
+  transition: background .2s, border-color .2s, box-shadow .2s;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.35);
 }
-
-/* Center the CTA with same width */
-.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-actions{
-  width: 100%;
+.doctor-toggle input::before{
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 2px 6px rgba(0,0,0,.4);
+  transition: transform .2s ease, background .2s ease;
 }
-.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-actions .primary-btn{
-  width: 100%;
-  max-width: var(--login-field-width);
-  margin-left: auto;
-  margin-right: auto;
+.doctor-toggle input:checked{
+  background: var(--accent);
+  border-color: transparent;
+  box-shadow: 0 0 0 3px rgba(255,204,0,.22);
 }
-
-/* Mobile: full width */
-/* Mobile: do not stretch wider than the container */
-@media (max-width: 560px){
-  .auth-card:has(.auth-form > .auth-field:nth-of-type(2) + .auth-actions),
-  .auth-card:has(.auth-form > .auth-field:nth-of-type(3) + .auth-actions){
-    width: 96vw;
-  }
-  .auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field,
-  .auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-field,
-  .auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-actions .primary-btn,
-  .auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-actions .primary-btn{
-    max-width: 100%;
-  }
+.doctor-toggle input:checked::before{
+  transform: translateX(20px);
+  background: var(--accent-ink);
+}
+.doctor-badge{
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.18);
+  font-weight: 800;
+}
+.doctor-toggle input:checked + .doctor-badge{
+  background: rgba(255,204,0,.15);
+  color: var(--accent);
+  border-color: rgba(255,204,0,.35);
 }
 
 /* Animation */
@@ -272,15 +275,10 @@
   from{ opacity:0; transform: translateY(6px); }
   to{ opacity:1; transform: none; }
 }
-/* Keep Sign in as is, but make Sign up button not full-width */
-.auth-form:not(:has(> .auth-field:nth-of-type(2) + .auth-actions)) .auth-actions{
-  display: flex;
-  justify-content: center;
-}
 
-.auth-form:not(:has(> .auth-field:nth-of-type(2) + .auth-actions)) .auth-actions .primary-btn{
-  width: min(200px, 100%);   /* narrow on desktop, adaptive on mobile */
-  max-width: none;           /* removed limit for login */
-  margin-left: 0;
-  margin-right: 0;
+/* Mobile */
+@media (max-width: 560px){
+  .auth-card{ width: 96vw; }
+  .auth-card.is-login .auth-field,
+  .auth-card.is-login .auth-actions .primary-btn{ max-width: 100%; }
 }

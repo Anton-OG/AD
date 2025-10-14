@@ -5,35 +5,46 @@ import Header from './components/Header.jsx';
 import Footer from './components/Footer';
 import AuthScreen from './components/AuthScreen.jsx';
 import Dashboard from './components/Dashboard.jsx';
+import Doctor from './Doctor/Doctor.jsx';
 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from './firebase.js';
+import { auth, db } from './firebase.js';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function App() {
+  // Firebase user object (null when signed out or not verified)
   const [user, setUser] = useState(null);
+  // Role loaded from Firestore: "doctor" | "user" | null (loading)
+  const [role, setRole] = useState(null);
+  // Flag that auth state initialization has completed
   const [authReady, setAuthReady] = useState(false);
 
-  
+  // Inactivity auto-logout (30 minutes)
   const inactivityRef = useRef(null);
   const IDLE_MS = 30 * 60 * 1000;
-  const activityEvents = ['mousemove','keydown','click','scroll','touchstart','visibilitychange'];
+  const activityEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart', 'visibilitychange'];
 
+  // Reset idle timer and schedule sign-out
   const resetIdleTimer = () => {
     if (inactivityRef.current) clearTimeout(inactivityRef.current);
-    inactivityRef.current = setTimeout(async () => { try { await signOut(auth); } catch {} }, IDLE_MS);
+    inactivityRef.current = setTimeout(async () => {
+      try { await signOut(auth); } catch {}
+    }, IDLE_MS);
   };
 
+  // Start watching user activity
   const startInactivityWatcher = () => {
     stopInactivityWatcher();
-    activityEvents.forEach(ev => {
+    activityEvents.forEach((ev) => {
       const target = ev === 'visibilitychange' ? document : window;
       target.addEventListener(ev, resetIdleTimer, { passive: true });
     });
     resetIdleTimer();
   };
 
+  // Stop watching user activity
   const stopInactivityWatcher = () => {
-    activityEvents.forEach(ev => {
+    activityEvents.forEach((ev) => {
       const target = ev === 'visibilitychange' ? document : window;
       target.removeEventListener(ev, resetIdleTimer);
     });
@@ -43,26 +54,52 @@ export default function App() {
     }
   };
 
+  // Manual logout handler
   const handleLogout = async () => {
     stopInactivityWatcher();
     try { await signOut(auth); } catch {}
   };
 
+  // Listen for Firebase auth state changes and load Firestore role
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
-      if (u && u.emailVerified) {
-        setUser(u);
-        startInactivityWatcher();
-      } else {
-        setUser(null);
-        stopInactivityWatcher();
-      }
-      setAuthReady(true);
+      (async () => {
+        if (u && u.emailVerified) {
+          // Set user and start inactivity watcher
+          setUser(u);
+          startInactivityWatcher();
+
+          // Load role from Firestore: users/{uid}.role
+          try {
+            const snap = await getDoc(doc(db, 'users', u.uid));
+            const r = snap.exists() ? snap.data()?.role : null;
+            setRole(r || 'user'); // default to "user" if not set
+          } catch {
+            setRole('user');
+          }
+        } else {
+          // Signed out or not verified
+          setUser(null);
+          setRole(null);
+          stopInactivityWatcher();
+        }
+        setAuthReady(true);
+      })();
     });
     return unsub;
   }, []);
 
+  // Initial splash while auth is initializing
   if (!authReady) {
+    return (
+      <div className="splash">
+        <div className="spinner" />
+      </div>
+    );
+  }
+
+  // If we have a user but role hasn't loaded yet, keep showing the spinner
+  if (user && role == null) {
     return (
       <div className="splash">
         <div className="spinner" />
@@ -77,9 +114,11 @@ export default function App() {
       <main className="app-main">
         <div className="app-container">
           {!user ? (
+            // Not authenticated → show auth screen
             <AuthScreen onAuthed={() => {}} />
           ) : (
-            <Dashboard user={user} />
+            // Authenticated → route by role
+            (role === 'doctor' ? <Doctor user={user} /> : <Dashboard user={user} />)
           )}
         </div>
       </main>

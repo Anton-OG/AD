@@ -14,7 +14,9 @@ import {
   reload,
 } from 'firebase/auth';
 import { auth, db } from '../firebase.js';
-import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+
+const DOCTOR_CODE = 'YOUR_SECRET_DOCTOR_CODE';
 
 // Human-readable (EN) Firebase auth errors
 const humanizeAuthError = (err) => {
@@ -44,7 +46,11 @@ export default function AuthScreen({ onAuthed }) {
   const [mode, setMode] = useState('login'); // 'login' | 'register'
   const [busy, setBusy] = useState(false);
   const [authError, setAuthError] = useState('');
-
+  // Doctor login
+  const [isDoctor, setIsDoctor] = useState(false);
+  const [doctorCode, setDoctorCode] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   // shared
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -73,6 +79,8 @@ export default function AuthScreen({ onAuthed }) {
     setEmail('');
     setPassword('');
     setConfirmPassword('');
+    setIsDoctor(false);
+    setDoctorCode('');
   };
 
   // helper: check if Firestore profile exists
@@ -81,12 +89,40 @@ export default function AuthScreen({ onAuthed }) {
     return snap.exists();
   };
 
+  // helper: create users/{uid} if missing (set role optionally)
+  const ensureUserDoc = async (user, role = 'user') => {
+    const ref = doc(db, 'users', user.uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(
+        ref,
+        {
+          email: (user.email || '').toLowerCase(),
+          role,
+          createdAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
+    } else if (role && snap.data()?.role !== role) {
+      // update role if needed
+      await setDoc(ref, { role }, { merge: true });
+    }
+  };
+
   // helper: force sign-out and show message
   const blockAndExplain = async (msg) => {
     try {
       await signOut(auth);
     } catch {}
     setAuthError(msg);
+  };
+
+  const sha256Hex = async (str) => {
+    const data = new TextEncoder().encode(String(str));
+    const buf = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(buf))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
   };
 
   const handleSubmit = async (e) => {
@@ -155,6 +191,7 @@ export default function AuthScreen({ onAuthed }) {
             phone: ph,
             email: em.toLowerCase(),
             createdAt: serverTimestamp(),
+            role: 'user',
           });
         } catch (writeErr) {
           // rollback orphaned Auth user if Firestore write failed
@@ -196,7 +233,7 @@ export default function AuthScreen({ onAuthed }) {
         password
       );
 
-      // 🔒 block if email is not verified
+      // block if email is not verified
       try { await reload(cred.user); } catch {}
       if (!cred.user.emailVerified) {
         try {
@@ -218,6 +255,31 @@ export default function AuthScreen({ onAuthed }) {
         );
         return;
       }
+
+      // Doctor verification (only when checkbox is ticked)
+      if (isDoctor) {
+        try {
+          const dref = doc(db, 'doctorCodes', cred.user.uid);
+          const dsnap = await getDoc(dref);
+          if (!dsnap.exists() || dsnap.data()?.active === false) {
+            await blockAndExplain('Doctor account is not configured. Contact admin.');
+            return;
+          }
+          const expected = dsnap.data().codeHash;
+          const actual = await sha256Hex(doctorCode.trim());
+          if (!doctorCode.trim() || expected !== actual) {
+            await blockAndExplain('Invalid doctor code.');
+            return;
+          }
+          // Mark role as doctor on successful verification
+          await setDoc(doc(db, 'users', cred.user.uid), { role: 'doctor' }, { merge: true });
+        } catch (e) {
+          console.error(e);
+          await blockAndExplain('Doctor verification failed. Try again later.');
+          return;
+        }
+      }
+
       onAuthed?.(cred.user);
     } catch (err) {
       console.error(err);
@@ -245,7 +307,7 @@ export default function AuthScreen({ onAuthed }) {
 
   return (
     <div className="auth-wrap fade-in">
-      <div className="auth-card">
+      <div className={`auth-card ${mode === 'login' ? 'is-login' : 'is-register'}`}>
         <h1 className="auth-title">{mode === 'login' ? 'Sign in' : 'Create account'}</h1>
 
         <div className="auth-tabs">
@@ -309,6 +371,35 @@ export default function AuthScreen({ onAuthed }) {
                   inputMode="text"
                 />
               </div>
+
+              {/* Doctor portal */}
+             
+                    <div className="auth-field doctor-row">
+                      <label className="doctor-toggle">
+                        <input
+                          type="checkbox"
+                          checked={isDoctor}
+                          onChange={(e)=>setIsDoctor(e.target.checked)}
+                          disabled={busy}
+                        />
+                        <span className="doctor-badge">I am a doctor</span>
+                      </label>
+                    </div>
+              {isDoctor && (
+                <div className="auth-field">
+                  <label htmlFor={`doc-code-${nonce}`}>Doctor code</label>
+                  <input
+                    id={`doc-code-${nonce}`}
+                    type="password"
+                    placeholder="Enter your doctor code"
+                    value={doctorCode}
+                    onChange={(e)=>setDoctorCode(e.target.value)}
+                    disabled={busy}
+                    autoComplete="one-time-code"
+                    inputMode="numeric"
+                  />
+                </div>
+              )}
 
               {/* Error stays inside .auth-field to avoid layout shift */}
               {authError && (
