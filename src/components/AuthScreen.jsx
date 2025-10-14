@@ -7,30 +7,36 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
+  fetchSignInMethodsForEmail,
+  deleteUser,
+  signOut,
+  sendEmailVerification,
+  reload,
 } from 'firebase/auth';
 import { auth, db } from '../firebase.js';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 
-// Читабельные тексты ошибок Firebase
+// Human-readable (EN) Firebase auth errors
 const humanizeAuthError = (err) => {
-  const code = err?.code || (String(err?.message || '').match(/auth\/[a-z-]+/i) || [])[0];
+  const code =
+    err?.code || (String(err?.message || '').match(/auth\/[a-z-]+/i) || [])[0];
   switch (code) {
     case 'auth/invalid-credential':
     case 'auth/wrong-password':
     case 'auth/user-not-found':
-      return 'Неверный email или пароль.';
+      return 'Invalid email or password.';
     case 'auth/invalid-email':
-      return 'Некорректный адрес email.';
+      return 'Invalid email address.';
     case 'auth/email-already-in-use':
-      return 'Этот email уже используется.';
+      return 'An account with this email already exists.';
     case 'auth/weak-password':
-      return 'Слабый пароль (минимум 6 символов).';
+      return 'Weak password (minimum 6 characters).';
     case 'auth/too-many-requests':
-      return 'Слишком много попыток. Попробуйте позже.';
+      return 'Too many attempts. Please try again later.';
     case 'auth/network-request-failed':
-      return 'Проблема с сетью. Проверьте подключение.';
+      return 'Network error. Check your connection.';
     default:
-      return 'Ошибка авторизации. Попробуйте ещё раз.';
+      return 'Authentication error. Please try again.';
   }
 };
 
@@ -45,13 +51,13 @@ export default function AuthScreen({ onAuthed }) {
 
   // register-only
   const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName]   = useState('');
-  const [gender, setGender]       = useState(''); // 'male' | 'female'
-  const [age, setAge]             = useState('');
-  const [phone, setPhone]         = useState('');
+  const [lastName, setLastName] = useState('');
+  const [gender, setGender] = useState(''); // 'male' | 'female'
+  const [age, setAge] = useState('');
+  const [phone, setPhone] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  // модалки
+  // modals
   const [showError, setShowError] = useState(false);
   const [invalidAgeError, setInvalidAgeError] = useState(false);
   const [missingFields, setMissingFields] = useState([]);
@@ -69,54 +75,107 @@ export default function AuthScreen({ onAuthed }) {
     setConfirmPassword('');
   };
 
+  // helper: check if Firestore profile exists
+  const userDocExists = async (uid) => {
+    const snap = await getDoc(doc(db, 'users', uid));
+    return snap.exists();
+  };
+
+  // helper: force sign-out and show message
+  const blockAndExplain = async (msg) => {
+    try {
+      await signOut(auth);
+    } catch {}
+    setAuthError(msg);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setAuthError('');
 
     if (mode === 'register') {
-      const errs = [];
-      if (!firstName.trim()) errs.push('First name');
-      if (!lastName.trim())  errs.push('Last name');
-      if (!gender)           errs.push('Sex');
-      if (!age)              errs.push('Age');
-      if (!email.trim())     errs.push('Email');
-      if (!password)         errs.push('Password');
-      if (!confirmPassword)  errs.push('Confirm password');
+      // 1) collect missing fields (show modal first)
+      const first = firstName.trim();
+      const last = lastName.trim();
+      const em = email.trim();
+      const ph = phone.trim();
+      const ageRaw = age; // '' or string number
 
-      const ageNum = Number(age);
-      if (!Number.isFinite(ageNum) || ageNum < 8 || ageNum > 89) {
-        setInvalidAgeError(true);
-        return;
-      }
-      if (password && confirmPassword && password !== confirmPassword) {
-        setAuthError('Пароли не совпадают.');
-        return;
-      }
+      const errs = [];
+      if (!first) errs.push('First name');
+      if (!last) errs.push('Last name');
+      if (!gender) errs.push('Sex');
+      if (ageRaw === '') errs.push('Age'); // check emptiness before numeric checks
+      if (!em) errs.push('Email');
+      if (!password) errs.push('Password');
+      if (!confirmPassword) errs.push('Confirm password');
+
       if (errs.length) {
         setMissingFields(errs);
         setShowError(true);
         return;
       }
 
+      // 2) specific validation (age range, passwords match)
+      const ageNum = Number(ageRaw);
+      if (!Number.isFinite(ageNum) || ageNum < 8 || ageNum > 89) {
+        setInvalidAgeError(true);
+        return;
+      }
+      if (password && confirmPassword && password !== confirmPassword) {
+        setAuthError('Passwords do not match.');
+        return;
+      }
+
+      // 3) registration flow
       try {
         setBusy(true);
-        const cred = await createUserWithEmailAndPassword(auth, email.trim(), password);
-        await updateProfile(cred.user, {
-          displayName: `${firstName.trim()} ${lastName.trim()}`.trim(),
-        });
 
-        const userRef = doc(db, 'users', cred.user.uid);
-        await setDoc(userRef, {
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
-          gender,
-          age: ageNum,
-          phone: phone.trim(),
-          email: email.trim().toLowerCase(),
-          createdAt: serverTimestamp(),
-        });
+        // Pre-check: is email already registered?
+        const methods = await fetchSignInMethodsForEmail(auth, em);
+        if (methods.length > 0) {
+          setAuthError('An account with this email already exists.');
+          return;
+        }
 
-        onAuthed?.(cred.user);
+        // Create Auth user, then create Firestore profile
+        let cred = null;
+        try {
+          cred = await createUserWithEmailAndPassword(auth, em, password);
+          await updateProfile(cred.user, {
+            displayName: `${first} ${last}`.trim(),
+          });
+
+          const userRef = doc(db, 'users', cred.user.uid);
+          await setDoc(userRef, {
+            firstName: first,
+            lastName: last,
+            gender,
+            age: ageNum,
+            phone: ph,
+            email: em.toLowerCase(),
+            createdAt: serverTimestamp(),
+          });
+        } catch (writeErr) {
+          // rollback orphaned Auth user if Firestore write failed
+          if (cred?.user) {
+            try {
+              await deleteUser(cred.user);
+            } catch {}
+          }
+          throw writeErr;
+        }
+
+        // ✉️ send verification and block access until confirmed
+        try {
+          auth.useDeviceLanguage?.();
+          await sendEmailVerification(cred.user, {
+            url: `${window.location.origin}/`,
+            handleCodeInApp: false,
+          });
+        } catch {}
+        await blockAndExplain(`We sent a verification link to ${em}. Please verify your email, then sign in.`);
+        return;
       } catch (err) {
         console.error(err);
         setAuthError(humanizeAuthError(err));
@@ -129,11 +188,56 @@ export default function AuthScreen({ onAuthed }) {
     // login
     try {
       setBusy(true);
-      const cred = await signInWithEmailAndPassword(auth, email.trim(), password);
+
+      // Try to sign in first (avoid false negatives)
+      const cred = await signInWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
+      );
+
+      // 🔒 block if email is not verified
+      try { await reload(cred.user); } catch {}
+      if (!cred.user.emailVerified) {
+        try {
+          auth.useDeviceLanguage?.();
+          await sendEmailVerification(cred.user, {
+            url: `${window.location.origin}/`,
+            handleCodeInApp: false,
+          });
+        } catch {}
+        await blockAndExplain('Please verify your email. We just re-sent the verification link.');
+        return;
+      }
+
+      // allow only if profile document exists
+      const exists = await userDocExists(cred.user.uid);
+      if (!exists) {
+        await blockAndExplain(
+          'This account is no longer available. Please contact support.'
+        );
+        return;
+      }
       onAuthed?.(cred.user);
     } catch (err) {
       console.error(err);
-      setAuthError(humanizeAuthError(err));
+      // Disambiguate after failure: does this email exist?
+      try {
+        const methods = await fetchSignInMethodsForEmail(auth, email.trim());
+        if (methods.length === 0) {
+          setAuthError('No account found with this email.');
+        } else if (
+          err?.code === 'auth/wrong-password' ||
+          err?.code === 'auth/invalid-credential' ||
+          err?.code === 'auth/invalid-login-credentials'
+        ) {
+          setAuthError('Incorrect password.');
+        } else {
+          setAuthError(humanizeAuthError(err));
+        }
+      } catch {
+        setAuthError(humanizeAuthError(err));
+      }
     } finally {
       setBusy(false);
     }
@@ -206,7 +310,7 @@ export default function AuthScreen({ onAuthed }) {
                 />
               </div>
 
-              {/* Ошибка — в .auth-field, чтобы не растягивалась */}
+              {/* Error stays inside .auth-field to avoid layout shift */}
               {authError && (
                 <div className="auth-field">
                   <div className="auth-error" aria-live="polite">{authError}</div>
@@ -325,7 +429,7 @@ export default function AuthScreen({ onAuthed }) {
                 </div>
               </div>
 
-              {/* два поля пароля: слева пароль, справа подтверждение */}
+              {/* two password fields: left = password, right = confirmation */}
               <div className="two-cols">
                 <div className="auth-field">
                   <label htmlFor={`reg-pass-${nonce}`}>Password</label>
@@ -360,7 +464,7 @@ export default function AuthScreen({ onAuthed }) {
                 </div>
               </div>
 
-              {/* Ошибка — в .auth-field, чтобы не растягивалась */}
+              {/* Error stays inside .auth-field to avoid layout shift */}
               {authError && (
                 <div className="auth-field">
                   <div className="auth-error" aria-live="polite">{authError}</div>
