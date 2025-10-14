@@ -1,3 +1,4 @@
+// App.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 
@@ -9,7 +10,7 @@ import Doctor from './Doctor/Doctor.jsx';
 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, db } from './firebase.js';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 export default function App() {
   // Firebase user object (null when signed out or not verified)
@@ -19,12 +20,14 @@ export default function App() {
   // Flag that auth state initialization has completed
   const [authReady, setAuthReady] = useState(false);
 
+  // unsubscribe ref for role snapshot
+  const roleUnsubRef = useRef(null);
+
   // Inactivity auto-logout (30 minutes)
   const inactivityRef = useRef(null);
   const IDLE_MS = 30 * 60 * 1000;
   const activityEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart', 'visibilitychange'];
 
-  // Reset idle timer and schedule sign-out
   const resetIdleTimer = () => {
     if (inactivityRef.current) clearTimeout(inactivityRef.current);
     inactivityRef.current = setTimeout(async () => {
@@ -32,7 +35,6 @@ export default function App() {
     }, IDLE_MS);
   };
 
-  // Start watching user activity
   const startInactivityWatcher = () => {
     stopInactivityWatcher();
     activityEvents.forEach((ev) => {
@@ -42,7 +44,6 @@ export default function App() {
     resetIdleTimer();
   };
 
-  // Stop watching user activity
   const stopInactivityWatcher = () => {
     activityEvents.forEach((ev) => {
       const target = ev === 'visibilitychange' ? document : window;
@@ -54,39 +55,50 @@ export default function App() {
     }
   };
 
-  // Manual logout handler
   const handleLogout = async () => {
     stopInactivityWatcher();
     try { await signOut(auth); } catch {}
   };
 
-  // Listen for Firebase auth state changes and load Firestore role
+  // Listen for Firebase auth state changes and SUBSCRIBE to users/{uid} for live role updates
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
-      (async () => {
-        if (u && u.emailVerified) {
-          // Set user and start inactivity watcher
-          setUser(u);
-          startInactivityWatcher();
+    const unsubAuth = onAuthStateChanged(auth, (u) => {
+      // clean previous role subscription
+      if (roleUnsubRef.current) {
+        roleUnsubRef.current();
+        roleUnsubRef.current = null;
+      }
 
-          // Load role from Firestore: users/{uid}.role
-          try {
-            const snap = await getDoc(doc(db, 'users', u.uid));
+      if (u && u.emailVerified) {
+        setUser(u);
+        startInactivityWatcher();
+        setRole(null); // show spinner until first role snapshot arrives
+
+        // realtime role subscription — updates immediately after doctor verification
+        const ref = doc(db, 'users', u.uid);
+        roleUnsubRef.current = onSnapshot(
+          ref,
+          (snap) => {
             const r = snap.exists() ? snap.data()?.role : null;
-            setRole(r || 'user'); // default to "user" if not set
-          } catch {
-            setRole('user');
-          }
-        } else {
-          // Signed out or not verified
-          setUser(null);
-          setRole(null);
-          stopInactivityWatcher();
-        }
-        setAuthReady(true);
-      })();
+            setRole(r || 'user'); // default to "user" if role not set
+          },
+          () => setRole('user')
+        );
+      } else {
+        setUser(null);
+        setRole(null);
+        stopInactivityWatcher();
+      }
+      setAuthReady(true);
     });
-    return unsub;
+
+    return () => {
+      unsubAuth();
+      if (roleUnsubRef.current) {
+        roleUnsubRef.current();
+        roleUnsubRef.current = null;
+      }
+    };
   }, []);
 
   // Initial splash while auth is initializing
@@ -114,11 +126,9 @@ export default function App() {
       <main className="app-main">
         <div className="app-container">
           {!user ? (
-            // Not authenticated → show auth screen
             <AuthScreen onAuthed={() => {}} />
           ) : (
-            // Authenticated → route by role
-            (role === 'doctor' ? <Doctor user={user} /> : <Dashboard user={user} />)
+            role === 'doctor' ? <Doctor user={user} /> : <Dashboard user={user} />
           )}
         </div>
       </main>
