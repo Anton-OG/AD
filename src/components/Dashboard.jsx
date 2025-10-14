@@ -61,7 +61,7 @@ export default function Dashboard({ user }) {
       setElapsedTime(0);
       setTestId(null);
       setPendingNumbers(null);
-      if (timerRef.current) {                          // ← ДОЛЖНО БЫТЬ ТАК
+      if (timerRef.current) {                         
              clearInterval(timerRef.current);
         timerRef.current = null;
         }

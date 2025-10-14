@@ -1,4 +1,7 @@
+
+
 .dash{
+  
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 16px;
@@ -38,8 +41,9 @@
 }
 
 .dash-item .dash-ico{
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
   display: grid;
   place-items: center;
   border-radius: 999px;
@@ -56,6 +60,7 @@
 .dash-item[data-active="true"]{
   background: rgba(255,204,0,.16);
   outline: 1px solid rgba(255,204,0,.38);
+  font-size: 16px; 
 }
 
 .dash-user{
@@ -66,6 +71,7 @@
   color: #fff;
   font-weight: 600;
   letter-spacing: .2px;
+  font-size: 16px; 
 }
 
 /* ==== Контент ==== */
@@ -91,4 +97,16 @@
   .dash{ grid-template-columns: 1fr; }
   .dash-sidebar{ order: 2; }
   .dash-content{ order: 1; }
+}
+/* Текст всех пунктов меню (второй span после иконки) */
+.dash-menu .dash-item > span:last-child{
+  font-size: 18px;           /* нужный размер текста */
+  line-height: 1.25;
+}
+
+/* Кружок-иконка */
+.dash-menu .dash-item .dash-ico{
+  width: 36px;
+  height: 36px;
+  font-size: 20px;           /* чтобы эмодзи/иконка тоже стала крупнее */
 }
