@@ -1,51 +1,72 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import './styles/AuthScreen.css';
-
-import Select from 'react-select';
-import selectStyles from './styles/selectStyles.js';
-import flags from '../data/countries_with_flags.json';
 
 import UserErrorModal from './UserErrorModal.jsx';
 
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import {auth, db } from '../firebase.js';
-
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth';
+import { auth, db } from '../firebase.js';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
-export default function AuthScreen({ onAuthed }) {
-  const [mode, setMode] = useState('login');
+// Читабельные тексты ошибок Firebase
+const humanizeAuthError = (err) => {
+  const code = err?.code || (String(err?.message || '').match(/auth\/[a-z-]+/i) || [])[0];
+  switch (code) {
+    case 'auth/invalid-credential':
+    case 'auth/wrong-password':
+    case 'auth/user-not-found':
+      return 'Неверный email или пароль.';
+    case 'auth/invalid-email':
+      return 'Некорректный адрес email.';
+    case 'auth/email-already-in-use':
+      return 'Этот email уже используется.';
+    case 'auth/weak-password':
+      return 'Слабый пароль (минимум 6 символов).';
+    case 'auth/too-many-requests':
+      return 'Слишком много попыток. Попробуйте позже.';
+    case 'auth/network-request-failed':
+      return 'Проблема с сетью. Проверьте подключение.';
+    default:
+      return 'Ошибка авторизации. Попробуйте ещё раз.';
+  }
+};
 
-  // common
-  const [email, setEmail] = useState('');
-  const [pass, setPass] = useState('');
-  const [confirm, setConfirm] = useState('');
+export default function AuthScreen({ onAuthed }) {
+  const [mode, setMode] = useState('login'); // 'login' | 'register'
   const [busy, setBusy] = useState(false);
   const [authError, setAuthError] = useState('');
 
-  // sign up fields
-  const [firstName, setFirstName] = useState('');
-  const [lastName,  setLastName]  = useState('');
-  const [gender,    setGender]    = useState('');
-  const [age,       setAge]       = useState('');
-  const [country,   setCountry]   = useState(null); // { value,label,flagUrl }
-  const [phone,     setPhone]     = useState('');
+  // shared
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  // modals
+  // register-only
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName]   = useState('');
+  const [gender, setGender]       = useState(''); // 'male' | 'female'
+  const [age, setAge]             = useState('');
+  const [phone, setPhone]         = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  // модалки
   const [showError, setShowError] = useState(false);
   const [invalidAgeError, setInvalidAgeError] = useState(false);
   const [missingFields, setMissingFields] = useState([]);
 
-  const countryOptions = flags.map(({ name, code, flagUrl }) => ({
-    value: String(code || '').toUpperCase(),
-    label: name,
-    flagUrl
-  }));
+  const nonce = useMemo(() => Math.random().toString(36).slice(2), []);
+  const fieldName = (base) => `${base}-${mode}-${nonce}`;
 
   const switchMode = (m) => {
     setMode(m);
     setAuthError('');
     setShowError(false);
     setInvalidAgeError(false);
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
   };
 
   const handleSubmit = async (e) => {
@@ -54,66 +75,65 @@ export default function AuthScreen({ onAuthed }) {
 
     if (mode === 'register') {
       const errs = [];
-      const ageNum = parseInt(age, 10);
-
       if (!firstName.trim()) errs.push('First name');
       if (!lastName.trim())  errs.push('Last name');
-      if (!gender)           errs.push('Gender');
+      if (!gender)           errs.push('Sex');
+      if (!age)              errs.push('Age');
+      if (!email.trim())     errs.push('Email');
+      if (!password)         errs.push('Password');
+      if (!confirmPassword)  errs.push('Confirm password');
 
-      if (!age) {
-        errs.push('Age');
-      } else if (Number.isNaN(ageNum) || ageNum <= 7 || ageNum >= 90) {
+      const ageNum = Number(age);
+      if (!Number.isFinite(ageNum) || ageNum < 8 || ageNum > 89) {
         setInvalidAgeError(true);
         return;
       }
-      if (!country) errs.push('Country');
-
-      if (!email)   errs.push('Email');
-      if (!pass)    errs.push('Password');
-      if (!confirm) errs.push('Confirm password');
-      if (pass && confirm && pass !== confirm) {
-        setAuthError('Passwords must match');
+      if (password && confirmPassword && password !== confirmPassword) {
+        setAuthError('Пароли не совпадают.');
         return;
       }
-
       if (errs.length) {
         setMissingFields(errs);
         setShowError(true);
         return;
       }
+
+      try {
+        setBusy(true);
+        const cred = await createUserWithEmailAndPassword(auth, email.trim(), password);
+        await updateProfile(cred.user, {
+          displayName: `${firstName.trim()} ${lastName.trim()}`.trim(),
+        });
+
+        const userRef = doc(db, 'users', cred.user.uid);
+        await setDoc(userRef, {
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          gender,
+          age: ageNum,
+          phone: phone.trim(),
+          email: email.trim().toLowerCase(),
+          createdAt: serverTimestamp(),
+        });
+
+        onAuthed?.(cred.user);
+      } catch (err) {
+        console.error(err);
+        setAuthError(humanizeAuthError(err));
+      } finally {
+        setBusy(false);
+      }
+      return;
     }
 
-    setBusy(true);
+    // login
     try {
-     
-
-      if (mode === 'login') {
-        await signInWithEmailAndPassword(auth, email.trim(), pass);
-        onAuthed?.();
-        return;
-      }
-
-      // sign up
-      const cred = await createUserWithEmailAndPassword(auth, email.trim(), pass);
-      const displayName = `${firstName.trim()} ${lastName.trim()}`.trim();
-      try { await updateProfile(cred.user, { displayName }); } catch (_) {}
-
-      await setDoc(doc(db, 'users', cred.user.uid), {
-        uid: cred.user.uid,
-        email: email.trim(),
-        displayName,
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        gender,
-        age: Number(age),
-        country: { code: country.value, name: country.label, flagUrl: country.flagUrl || null },
-        phone: phone.trim() || null,
-        createdAt: serverTimestamp(),
-      });
-
-      onAuthed?.();
+      setBusy(true);
+      const cred = await signInWithEmailAndPassword(auth, email.trim(), password);
+      onAuthed?.(cred.user);
     } catch (err) {
-      setAuthError(err?.message || 'Authentication error');
+      console.error(err);
+      setAuthError(humanizeAuthError(err));
     } finally {
       setBusy(false);
     }
@@ -143,193 +163,221 @@ export default function AuthScreen({ onAuthed }) {
           </button>
         </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form
+          className="auth-form"
+          id={`auth-${mode}-${nonce}`}
+          onSubmit={handleSubmit}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="none"
+          spellCheck={false}
+        >
           {mode === 'login' && (
             <>
               <div className="auth-field">
-                <label>Email</label>
+                <label htmlFor={`login-email-${nonce}`}>Email</label>
                 <input
+                  id={`login-email-${nonce}`}
+                  name={fieldName('email')}
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  disabled={busy}
                   required
-                  autoComplete="email"
+                  autoComplete="username"
+                  inputMode="email"
                 />
               </div>
 
               <div className="auth-field">
-                <label>Password</label>
+                <label htmlFor={`login-pass-${nonce}`}>Password</label>
                 <input
+                  id={`login-pass-${nonce}`}
+                  name={fieldName('password')}
                   type="password"
-                  placeholder="Minimum 6 characters"
-                  value={pass}
-                  onChange={(e) => setPass(e.target.value)}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={busy}
                   required
-                  minLength={6}
                   autoComplete="current-password"
+                  inputMode="text"
                 />
+              </div>
+
+              {/* Ошибка — в .auth-field, чтобы не растягивалась */}
+              {authError && (
+                <div className="auth-field">
+                  <div className="auth-error" aria-live="polite">{authError}</div>
+                </div>
+              )}
+
+              <div className="auth-actions">
+                <button type="submit" className="primary-btn" disabled={busy}>
+                  {busy ? 'Signing in…' : 'Sign in'}
+                </button>
               </div>
             </>
           )}
 
           {mode === 'register' && (
             <>
-              {/* First & Last */}
               <div className="two-cols">
                 <div className="auth-field">
-                  <label>First name</label>
+                  <label htmlFor={`reg-first-${nonce}`}>First name</label>
                   <input
+                    id={`reg-first-${nonce}`}
+                    name={fieldName('given-name')}
                     type="text"
                     placeholder="Enter your first name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    required
+                    disabled={busy}
+                    autoComplete="off"
                   />
                 </div>
                 <div className="auth-field">
-                  <label>Last name</label>
+                  <label htmlFor={`reg-last-${nonce}`}>Last name</label>
                   <input
+                    id={`reg-last-${nonce}`}
+                    name={fieldName('family-name')}
                     type="text"
                     placeholder="Enter your last name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    required
+                    disabled={busy}
+                    autoComplete="off"
                   />
                 </div>
               </div>
 
-              {/* Sex */}
-              <div className="auth-field">
-                <label>Sex:</label>
-                <div className="gender-row">
-                  <button
-                    type="button"
-                    className={`gender-btn ${gender === 'Male' ? 'active' : ''}`}
-                    onClick={() => setGender('Male')}
-                  >
-                    Male
-                  </button>
-                  <button
-                    type="button"
-                    className={`gender-btn ${gender === 'Female' ? 'active' : ''}`}
-                    onClick={() => setGender('Female')}
-                  >
-                    Female
-                  </button>
-                </div>
-              </div>
-
-              {/* Age & Country */}
               <div className="two-cols">
                 <div className="auth-field">
-                  <label>Enter your age:</label>
+                  <label>Sex:</label>
+                  <div className="gender-row">
+                    <button
+                      type="button"
+                      className={`gender-btn ${gender === 'male' ? 'active' : ''}`}
+                      onClick={() => setGender('male')}
+                      disabled={busy}
+                    >
+                      Male
+                    </button>
+                    <button
+                      type="button"
+                      className={`gender-btn ${gender === 'female' ? 'active' : ''}`}
+                      onClick={() => setGender('female')}
+                      disabled={busy}
+                    >
+                      Female
+                    </button>
+                  </div>
+                </div>
+
+                <div className="auth-field">
+                  <label htmlFor={`reg-age-${nonce}`}>Enter your age:</label>
                   <input
+                    id={`reg-age-${nonce}`}
+                    name={fieldName('age')}
                     type="number"
-                    min="1"
-                    max="120"
+                    inputMode="numeric"
+                    min="8"
+                    max="89"
+                    placeholder="Enter age"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
-                    placeholder="Enter age"
-                  />
-                </div>
-                <div className="auth-field">
-                  <label>Select your country:</label>
-                  <Select
-                    options={countryOptions}
-                    value={country}
-                    onChange={(selected) => setCountry(selected)}
-                    placeholder="Select your country..."
-                    isSearchable
-                    styles={selectStyles}
-                    className="select-field"
-                    classNamePrefix="rs"
-                    formatOptionLabel={({ label, flagUrl, value }) => (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        {flagUrl ? (
-                          <img src={flagUrl} alt="" style={{ width: 20, height: 14, borderRadius: 2 }} />
-                        ) : null}
-                        <span>{label}</span>
-                        {value ? (
-                          <span style={{ marginLeft: 'auto', opacity: 0.7, fontSize: 12 }}>{value}</span>
-                        ) : null}
-                      </div>
-                    )}
-                    filterOption={(opt, raw) => {
-                      const q = (raw || '').trim().toLowerCase();
-                      if (!q) return true;
-                      const name = (opt.label || '').toLowerCase();
-                      const code = (opt.data?.value || opt.value || '').toString().toLowerCase();
-                      return name.includes(q) || code.includes(q);
-                    }}
+                    disabled={busy}
+                    autoComplete="off"
                   />
                 </div>
               </div>
 
-              {/* Phone & Email */}
               <div className="two-cols">
                 <div className="auth-field">
-                  <label>Phone (optional)</label>
+                  <label htmlFor={`reg-phone-${nonce}`}>Phone (optional)</label>
                   <input
+                    id={`reg-phone-${nonce}`}
+                    name={fieldName('tel')}
                     type="tel"
                     placeholder="+421 900 000 000"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    autoComplete="tel"
+                    disabled={busy}
+                    autoComplete="off"
+                    inputMode="tel"
                   />
                 </div>
+
                 <div className="auth-field">
-                  <label>Email</label>
+                  <label htmlFor={`reg-email-${nonce}`}>Email</label>
                   <input
+                    id={`reg-email-${nonce}`}
+                    name={fieldName('email')}
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    required
-                    autoComplete="email"
+                    disabled={busy}
+                    autoComplete="username"
+                    inputMode="email"
                   />
                 </div>
               </div>
 
-              {/* Password & Confirm */}
+              {/* два поля пароля: слева пароль, справа подтверждение */}
               <div className="two-cols">
                 <div className="auth-field">
-                  <label>Password</label>
+                  <label htmlFor={`reg-pass-${nonce}`}>Password</label>
                   <input
+                    id={`reg-pass-${nonce}`}
+                    name={fieldName('new-password')}
                     type="password"
-                    placeholder="Minimum 6 characters"
-                    value={pass}
-                    onChange={(e) => setPass(e.target.value)}
+                    placeholder="Create password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={busy}
                     required
-                    minLength={6}
                     autoComplete="new-password"
+                    inputMode="text"
                   />
                 </div>
+
                 <div className="auth-field">
-                  <label>Confirm password</label>
+                  <label htmlFor={`reg-pass2-${nonce}`}>Confirm password</label>
                   <input
+                    id={`reg-pass2-${nonce}`}
+                    name={fieldName('confirm-password')}
                     type="password"
-                    placeholder="Repeat your password"
-                    value={confirm}
-                    onChange={(e) => setConfirm(e.target.value)}
+                    placeholder="Repeat password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    disabled={busy}
                     required
+                    autoComplete="new-password"
+                    inputMode="text"
                   />
                 </div>
               </div>
 
-              <p className="auth-note">
+              {/* Ошибка — в .auth-field, чтобы не растягивалась */}
+              {authError && (
+                <div className="auth-field">
+                  <div className="auth-error" aria-live="polite">{authError}</div>
+                </div>
+              )}
+
+              <div className="auth-info">
                 This information will be used solely for research purposes and will remain anonymous.
-              </p>
+              </div>
+
+              <div className="auth-actions">
+                <button type="submit" className="primary-btn" disabled={busy}>
+                  {busy ? 'Creating…' : 'Sign up'}
+                </button>
+              </div>
             </>
           )}
-
-          {authError && <div className="auth-error">{authError}</div>}
-
-          <div className="auth-actions">
-            <button className="auth-button" type="submit" disabled={busy}>
-              {busy ? 'Please wait…' : mode === 'login' ? 'Sign in' : 'Sign up'}
-            </button>
-          </div>
         </form>
       </div>
 

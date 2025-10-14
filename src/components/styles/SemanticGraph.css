@@ -1,9 +1,9 @@
 /* === БАЗОВЫЕ СТИЛИ === */
 body {
+  background: #1e1e2f;           /* или так: background-color: #1e1e2f; */
+  color: #ffffff;
   margin: 0;
   font-family: 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(to bottom right, #1e1e2f, #2a2a40);
-  color: #ffffff;
   overflow-x: hidden;
 }
 
@@ -157,7 +157,7 @@ body {
   background-color: #e6b800;
 }
 
-/* === ДЕТАЛИ === */
+/* === ДЕТАЛИ (старый контейнер) === */
 .semantic-details {
   display: flex;
   flex-wrap: wrap;
@@ -171,7 +171,7 @@ body {
   min-width: 280px;
 }
 
-/* === СЛОВАРЬ === */
+/* === СЛОВАРЬ (контент) === */
 .semantic-dictionary {
   max-height: 26rem;
   overflow-y: auto;
@@ -242,35 +242,95 @@ body {
   border-radius: 0.25rem;
 }
 
+/* === НОВАЯ СЕКЦИЯ: «Словарь / Ваш текст» === */
+.semantic-io {
+  position: relative;
+  max-width: 1180px;       /* центрируем секцию по странице */
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+  justify-items: center;   /* карточки по центру своих колонок */
+}
+
+/* вертикальный разделитель по центру */
+.semantic-io::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(-0.5px);
+}
+
+/* карточки колонок */
+.dictionary-block,
+.usertext-block {
+  width: 100%;
+  max-width: 520px;        /* равная видимая ширина карточек */
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+}
+
+/* заголовки карточек */
+.dictionary-block h3,
+.usertext-block h3 {
+  color: #ffcc00;
+  text-align: center;
+  margin: 0 0 0.75rem 0;
+}
+
+/* прокрутка внутри карточек — используем существующие классы */
+.dictionary-block .semantic-dictionary,
+.usertext-block .usertext-box {
+  max-height: 26rem;
+  overflow: auto;
+  padding-right: 0.5rem;
+}
+
+/* скроллбары внутри карточек */
+.dictionary-block .semantic-dictionary::-webkit-scrollbar,
+.usertext-block .usertext-box::-webkit-scrollbar {
+  width: 6px;
+}
+.dictionary-block .semantic-dictionary::-webkit-scrollbar-thumb,
+.usertext-block .usertext-box::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
 /* === АДАПТИВНОСТЬ === */
+@media (max-width: 992px) {
+  .semantic-io {
+    grid-template-columns: 1fr;  /* в одну колонку */
+    gap: 1.25rem;
+  }
+  .semantic-io::before { display: none; }
+  .dictionary-block,
+  .usertext-block {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+}
+
 @media (max-width: 768px) {
-  .semantic-details {
-    flex-direction: column;
-  }
-
-  .metric-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .metric-value {
-    text-align: left;
-  }
-
-  .highlight-index-box {
-    flex-direction: column;
-    align-items: flex-start;
-    font-size: 1rem;
-  }
-
+  .semantic-details { flex-direction: column; }
+  .metric-row { flex-direction: column; align-items: flex-start; }
+  .metric-value { text-align: left; }
+  .highlight-index-box { flex-direction: column; align-items: flex-start; font-size: 1rem; }
   .semantic-details > div,
-  .card-block {
-    min-width: unset;
-    width: 100%;
-  }
-
+  .card-block { min-width: unset; width: 100%; }
   .metric-label,
-  .metric-value {
-    font-size: 0.95rem;
-  }
+  .metric-value { font-size: 0.95rem; }
+}
+@media (max-width: 480px) {
+  .semantic-metrics { max-width: 100%; padding: 0 1rem; }
+  .highlight-index-box { font-size: 0.95rem; }
 }

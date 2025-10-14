@@ -2,10 +2,11 @@
   background-color: rgba(255, 255, 255, 0.03);
   border-radius: 1rem;
   padding: 2.5rem;
-  margin-bottom: 3rem;
+  max-width: 62.5rem;      /* ← ограничиваем ширину (как на welcome) */
+  margin: 2rem auto 3rem;  /* ← центр + отступы сверху/снизу */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   text-align: center;
-  margin: 0rem auto;
+  /* margin: 0rem auto;  ← удалено, т.к. перезатирало нижний margin */
 }
 
 .fade-in {
@@ -13,14 +14,8 @@
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .description-text {
@@ -61,7 +56,6 @@
   box-sizing: border-box;
 }
 
-
 .description-button-container {
   display: flex;
   justify-content: center;
@@ -79,9 +73,7 @@
   transition: background-color 0.3s ease;
 }
 
-.description-button:hover {
-  background-color: #e6b800;
-}
+.description-button:hover { background-color: #e6b800; }
 
 .description-timer {
   font-size: 1rem;
@@ -91,92 +83,36 @@
 
 /* 💻 Full HD */
 @media (max-width: 1920px) {
-  .description-text {
-    max-width: 44rem;
-  }
-
-  .description-textarea {
-    max-width: 36rem;
-  }
+  .description-text { max-width: 44rem; }
+  .description-textarea { max-width: 36rem; }
 }
 
 /* 💻 1600px */
 @media (max-width: 1600px) {
-  .description-text {
-    font-size: clamp(0.95rem, 1.1vw, 1.25rem);
-    max-width: 40rem;
-  }
-
-  .description-textarea {
-    max-width: 34rem;
-    font-size: 0.95rem;
-  }
+  .description-text { font-size: clamp(0.95rem, 1.1vw, 1.25rem); max-width: 40rem; }
+  .description-textarea { max-width: 34rem; font-size: 0.95rem; }
 }
 
 /* 💻 1366px */
 @media (max-width: 1366px) {
-  .description-text {
-    font-size: clamp(0.9rem, 1vw, 1.1rem);
-    max-width: 38rem;
-  }
-
-  .description-textarea {
-    max-width: 32rem;
-    font-size: 0.9rem;
-  }
-
-  .description-button {
-    font-size: 0.95rem;
-    padding: 0.5rem 1.25rem;
-  }
+  .description-text { font-size: clamp(0.9rem, 1vw, 1.1rem); max-width: 38rem; }
+  .description-textarea { max-width: 32rem; font-size: 0.9rem; }
+  .description-button { font-size: 0.95rem; padding: 0.5rem 1.25rem; }
 }
 
 /* 📱 Мобильные */
 @media (max-width: 768px) {
-  .description-block {
-    width: 90%;
-    padding: 1rem;
-  }
-
-  .description-text {
-    font-size: 0.95rem;
-     text-align: justify;
-  }
-
-  .description-textarea {
-    width: 100%;
-  }
-
-  .description-button {
-    width: 100%;
-  }
+  .description-block { width: 90%; padding: 1rem; }
+  .description-text { font-size: 0.95rem; text-align: justify; }
+  .description-textarea { width: 100%; }
+  .description-button { width: 100%; }
 }
 
 /* ↓ Full HD (1920×1080) */
-@media (max-width: 1920px) {
-  .description-image {
-    max-width: 720px;
-  }
-}
-
+@media (max-width: 1920px) { .description-image { max-width: 720px; } }
 /* ↓ 1600×900 */
-@media (max-width: 1600px) {
-  .description-image {
-    max-width: 540px;
-  }
-}
-
+@media (max-width: 1600px) { .description-image { max-width: 540px; } }
 /* ↓ 1366×768 */
-@media (max-width: 1366px) {
-  .description-image {
-    max-width: 405px;
-  }
-}
-
+@media (max-width: 1366px) { .description-image { max-width: 405px; } }
 /* ↓ Мобильные */
-@media (max-width: 768px) {
-  .description-image {
-    max-width: 100%;
-    margin: 1rem 0;
-  }
-}
+@media (max-width: 768px)  { .description-image { max-width: 100%; margin: 1rem 0; } }

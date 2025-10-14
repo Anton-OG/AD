@@ -19,6 +19,7 @@ html, body {
 .app-main{
   flex: 1 0 auto;   /* контент занимает всё доступное пространство */
   display: block;
+  padding-top: 24px;  
 }
 
 /* ========= Global footer ========= */

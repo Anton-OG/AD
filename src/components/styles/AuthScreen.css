@@ -1,166 +1,274 @@
-/* ===== Design tokens ===== */
+/* ======================================
+   AuthScreen — styles
+   ====================================== */
+
 :root{
-  --card-bg: rgba(255,255,255,.03);
-  --card-radius: 16px;
-  --radius: 10px;
-  --border: #575a66;
-  --field-bg: #2c2c3c;
-  --fg: #fff;
+  /* Colors */
+  --bg-card: rgba(255,255,255,.05);
+  --bd-card: 1px solid rgba(255,255,255,.12);
+  --shadow-card: 0 12px 28px rgba(0,0,0,.35);
+
+  --ink: #eaeaea;
+  --ink-muted: #cfcfcf;
   --accent: #ffcc00;
+  --accent-ink: #111;
 
-  --space-1: 6px;
-  --space-2: 10px;
-  --space-3: 14px;
+  --input-bg: #2b2c37;
+  --input-ink: #e9e9ee;
+  --input-bd: 1.5px solid rgba(255,255,255,.16);
+  --input-bd-focus: 1.5px solid rgba(255,255,255,.36);
+  --input-shadow-focus: 0 0 0 3px rgba(255,255,255,.12);
 
-  /* ДЛИНА ВСЕХ ПОЛЕЙ/СЕЛЕКТОВ/КНОПОК ПОЛА */
-  --field-width: 100%;
+  /* Sizes */
+  --login-field-width: 320px;     /* Sign in field/button width */
+  --login-card-width: 680px;      /* Sign in card width */
+  --register-card-width: 765px;   /* Sign up card width (compact) */
+  --register-gap: 14px 17px;      /* Sign up grid gap (compact) */
 }
 
-/* ===== базовая раскладка + липкий футер ===== */
-html, body, #root { height: 100%; }
-#root { display: flex; flex-direction: column; }
+/* Canvas */
+.auth-wrap{
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 3vw, 28px);
+  color: var(--ink);
+}
 
-*{ box-sizing:border-box; }
-
-/* ===== Card ===== */
-.auth-wrap{ max-width:1280px; margin:0 auto; padding:20px 16px; }
+/* Card */
 .auth-card{
-  background:var(--card-bg);
-  border-radius:var(--card-radius);
-  padding:24px;
-  margin:0 auto 24px;
-  max-width:760px;
-  box-shadow:0 4px 12px rgba(0,0,0,.3);
+  width: min(var(--register-card-width), 96vw);
+  border: var(--bd-card);
+  background: var(--bg-card);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+  padding: 18px 26px; /* compact */
 }
 
-/* ===== Header / Tabs ===== */
+/* Narrow card only for Sign in (2 fields + actions) */
+/* Узкая карточка для Sign in: 2 поля + (возможно) ошибка + кнопка */
+.auth-card:has(.auth-form > .auth-field:nth-of-type(2) + .auth-actions),
+.auth-card:has(.auth-form > .auth-field:nth-of-type(3) + .auth-actions){
+  width: min(var(--login-card-width), 96vw);
+}
+
+/* Ограничить ширину полей в Sign in */
+.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field,
+.auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-field{
+  max-width: var(--login-field-width);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Кнопка — той же ширины */
+.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-actions .primary-btn,
+.auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-actions .primary-btn{
+  width: 100%;
+  max-width: var(--login-field-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Ошибка располагается под полями и тоже узкая (учитываем, что она внутри .auth-field) */
+.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field .auth-error,
+.auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-field .auth-error{
+  max-width: var(--login-field-width);
+  margin: 6px auto 0;
+}
+
+/* Title */
 .auth-title{
-  margin:0 0 12px;
-  color:var(--fg);
-  font-weight:800;
-  font-size:clamp(22px,2.2vw,28px);
-  text-align:center;
+  text-align: center;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  margin: 2px 0 18px;
 }
-.auth-tabs{ display:flex; gap:8px; justify-content:center; margin-bottom:10px; }
-.auth-tab{
-  background:#444; border:1px solid #aaa; color:#fff;
-  padding:7px 12px; border-radius:var(--radius);
-  cursor:pointer; font-weight:700; font-size:15px; min-width:110px; transition:.2s;
-}
-.auth-tab:hover,.auth-tab.active{ background:var(--accent); color:#000; border-color:var(--accent); }
 
-/* ===== Form grid ===== */
+/* Tabs */
+.auth-tabs{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.auth-tab{
+  appearance: none;
+  border: 1px solid rgba(255,255,255,.28);
+  background: rgba(255,255,255,.08);
+  color: var(--ink);
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s, transform .05s, border-color .15s;
+}
+.auth-tab:hover{ background: rgba(255,255,255,.14); transform: translateY(-1px); }
+.auth-tab.active{
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: transparent;
+}
+
+/* Form grid */
 .auth-form{
-  display:grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-3);
-  max-width:700px;
-  margin:0 auto;
-  text-align:left;
+  display: grid;
+  gap: 16px 20px;
 }
-.two-cols{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
+
+/* Field */
+.auth-field label{
+  display:block;
+  margin: 4px 0 6px;
+  color: var(--ink-muted);
+  font-size: .95rem;
+}
+.auth-field input{
+  display:block;
   width:100%;
+  background: var(--input-bg);
+  color: var(--input-ink);
+  border: var(--input-bd);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s, transform .05s, background .15s;
 }
-@media (max-width: 560px){
+.auth-field input::placeholder{ color: rgba(233,233,238,.6); }
+.auth-field input:focus{
+  border: var(--input-bd-focus);
+  box-shadow: var(--input-shadow-focus);
+}
+
+/* Two columns (Sign up) */
+.two-cols{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--register-gap);
+}
+@media (max-width: 760px){
   .two-cols{ grid-template-columns: 1fr; }
 }
 
-/* ===== Field ===== */
-.auth-field{ display:grid; gap: var(--space-1); min-width:0; }
-.auth-field label{ color:#ddd; font-weight:600; font-size:14px; margin:0; }
-
-/* ===== Inputs — одинаковая длина и центрирование ===== */
-.auth-field input[type="email"],
-.auth-field input[type="password"],
-.auth-field input[type="number"],
-.auth-field input[type="tel"],
-.auth-field input[type="text"]{
-  height: 40px;
-  padding: 8px 12px;
-  font-size: 14px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: var(--field-bg);
-  color: var(--fg);
-  width: var(--field-width);   /* ← меняешь только эту переменную */
-  display: block;
-  margin: 0 auto;              /* по центру в колонке */
-  outline: none;
-}
-.auth-field input:focus{
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(255,204,0,.18);
-}
-
-/* У возраста скрываем стрелки */
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0 }
-input[type=number]{ appearance:textfield; -moz-appearance:textfield }
-
-/* ===== react-select — как у инпутов ===== */
-.select-field{ width: var(--field-width); margin: 0 auto; }  /* контейнер */
-.select-field .rs__control{
-  border-radius: var(--radius) !important;
-  min-height: 40px !important;
-  border: 1px solid var(--border) !important;
-  background: var(--field-bg) !important;
-  width: 100% !important;     /* заполняет контейнер */
-}
-.rs__value-container{ padding: 0 10px !important; }
-.rs__single-value{ color: var(--fg) !important; }
-.rs__placeholder{ color: #9aa0ac !important; }
-.rs__indicator{ padding: 6px !important; }
-.rs__menu{ background: #1f2230 !important; color: var(--fg) !important; border:1px solid #3a3d49; }
-.rs__option{ padding: 8px 10px !important; }
-.rs__option--is-focused{ background:#2a2e3d !important; }
-.rs__option--is-selected{ background: var(--accent) !important; color:#000 !important; }
-
-/* ===== Gender — кнопки длиной как поля ===== */
+/* Gender buttons */
 .gender-row{
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
-  width: var(--field-width);     /* длина ряда как у полей */
-  margin: 0 auto;                /* центр */
+  gap: 12px;
 }
 .gender-btn{
-  width: 100%;                   /* каждая занимает свою половину */
-  min-width: 0;
-  background:#444; border:1px solid #aaa; color:#fff;
-  padding:10px 14px; border-radius: var(--radius);
-  cursor:pointer; font-size:15px; font-weight:700; transition:.15s;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.28);
+  background: rgba(255,255,255,.08);
+  color: var(--ink);
+  font-weight: 800;
+  cursor: pointer;
+  transition: background .15s, transform .05s, border-color .15s;
 }
-.gender-btn:hover{ background:var(--accent); color:#000; }
-.gender-btn.active{ background:var(--accent); color:#000; border-color:var(--accent); }
-
-@media (max-width:560px){
-  .gender-row{ grid-template-columns: 1fr; } /* на мобиле в столбик */
+.gender-btn:hover{ background: rgba(255,255,255,.14); transform: translateY(-1px); }
+/* active = yellow */
+.gender-btn.active{
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgba(255,204,0,.25) inset;
 }
 
-/* ===== Note / Error / Action ===== */
-.auth-note{
-  margin: 8px auto 0;
-  color:#cfcfcf; font-size:13.5px; line-height:1.3;
-  text-align:center;             /* по центру, как просил */
+/* Info & error */
+.auth-info{
+  margin-top: 6px;
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: .96rem;
 }
 .auth-error{
-  background:rgba(255,0,0,.08); border:1px solid rgba(255,0,0,.25);
-  color:#ffd6d6; padding:8px 10px; border-radius: var(--radius); font-size:14px;
+  background: rgba(255,78,78,.12);
+  border: 1px solid rgba(255,78,78,.35);
+  color: #ffdede;
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
 }
-.auth-actions{ display:flex; justify-content:center; margin-top:6px; }
-.auth-button{
-  padding: 10px 18px; font-size:16px; font-weight:800;
-  background: var(--accent); color:#000; border:none; border-radius: var(--radius);
-  cursor:pointer; transition:.15s;
+
+/* Actions / primary button */
+.auth-actions{
+  display: flex;
+  justify-content: center;
+  margin-top: 2px;
 }
-.auth-button:hover{ background:#e6b800; }
-.auth-button:active{ transform: translateY(1px); }
-.auth-button:disabled{ opacity:.7; cursor:default; }
+.primary-btn{
+  appearance: none;
+  display: inline-block;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 900;
+  font-size: 1rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(255,204,0,.28);
+  transition: transform .05s, background .15s, box-shadow .15s;
+}
+.primary-btn:hover{ background:#f0c000; transform: translateY(-1px); }
+.primary-btn:disabled{ opacity:.7; cursor: default; transform:none; }
 
-/* Anim */
-.fade-in{ animation: fadeIn .35s ease; }
-@keyframes fadeIn{ from{ opacity:0; transform: translateY(6px); } to{ opacity:1; transform:none; } }
+/* ============================
+   Sign in: narrow column
+   ============================ */
 
+/* Limit width of fields */
+.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field{
+  max-width: var(--login-field-width);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field input{
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Limit width of error to the same as fields */
+.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) > .auth-error{
+  /* do NOT stretch; center as grid item */
+  width: auto !important;
+  max-width: var(--login-field-width);
+  justify-self: center;
+  margin: 6px 0 0;
+}
+
+/* Center the CTA with same width */
+.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-actions{
+  width: 100%;
+}
+.auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-actions .primary-btn{
+  width: 100%;
+  max-width: var(--login-field-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Mobile: full width */
+/* Мобилка: не растягивать шире контейнера */
+@media (max-width: 560px){
+  .auth-card:has(.auth-form > .auth-field:nth-of-type(2) + .auth-actions),
+  .auth-card:has(.auth-form > .auth-field:nth-of-type(3) + .auth-actions){
+    width: 96vw;
+  }
+  .auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-field,
+  .auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-field,
+  .auth-form:has(> .auth-field:nth-of-type(2) + .auth-actions) .auth-actions .primary-btn,
+  .auth-form:has(> .auth-field:nth-of-type(3) + .auth-actions) .auth-actions .primary-btn{
+    max-width: 100%;
+  }
+}
+
+/* Animation */
+.fade-in{ animation: authFade .35s ease-out both; }
+@keyframes authFade{
+  from{ opacity:0; transform: translateY(6px); }
+  to{ opacity:1; transform: none; }
+}
