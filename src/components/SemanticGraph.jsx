@@ -1,3 +1,4 @@
+// src/components/SemanticGraph.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import '../components/styles/SemanticGraph.css';
 import t1 from '../assets/t1.jpg';
@@ -37,9 +38,7 @@ const coordinates = [
   [711.37, 192.37], [779.47, 124.25], [788.37, 402.37]
 ];
 
-function getQuadrant(n) {
-  return n <= 10 ? 'left' : 'right';
-}
+function getQuadrant(n) { return n <= 10 ? 'left' : 'right'; }
 
 function analyzeText(rawText) {
   const clean = (rawText || '').toLowerCase().replace(/[^\w\s]/g, '');
@@ -61,7 +60,7 @@ function analyzeText(rawText) {
     totalDistance += Math.hypot(x2 - x1, y2 - y1);
   }
 
-  const index = (1 - density) * 0.5 + (transitions / Math.max(1, found.length - 1 || 1)) * 0.5;
+  const index = (1 - density) * 0.5 + (transitions / Math.max(1, (found.length - 1) || 1)) * 0.5;
   const matched = words.filter(w => dictionary.has(w));
 
   return { found, transitions, missing, density, distance: totalDistance, index, words: matched };
@@ -75,26 +74,72 @@ function highlightWords(text, vocab) {
   );
 }
 
-export default function SemanticGraph({ userText = '', gender, age, time }) {
+export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
   const canvasRef = useRef(null);
   const [animSeed, setAnimSeed] = useState(0);
 
   const { found, transitions, missing, density, distance, index, words } = analyzeText(userText);
-  const matchedSet = new Set(words);
+  const uniqueFound = [...new Set(found)]; // для подсветки/сохранения
 
-  /* === CANVAS === */
+  /* 1) Сообщаем родителю найденные/ненайденные номера один раз на изменение текста */
+  useEffect(() => {
+    if (typeof onNumbersExtracted === 'function') {
+      onNumbersExtracted({ found: uniqueFound, missing });
+    }
+    // только при изменении userText
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userText]);
+
+  /* 2) CANVAS: отрисовка и анимация + НОМЕРА У КАЖДОЙ ТОЧКИ */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+
     const img = new Image();
     img.src = t1;
 
     let raf = null;
 
+    const drawPointsAndLabels = () => {
+      for (let i = 1; i <= coordinates.length; i++) {
+        const [x, y] = coordinates[i - 1];
+
+        // круг: все точки видны, найденные — крупнее/ярче
+        const isFound = uniqueFound.includes(i);
+        ctx.beginPath();
+        ctx.arc(x, y, isFound ? 6 : 4, 0, Math.PI * 2);
+        ctx.fillStyle = isFound ? '#ff5555' : 'rgba(255,255,255,0.55)';
+        ctx.fill();
+
+        // номер рядом с точкой (читаемо на любом фоне)
+        const lx = x + 10;
+        const ly = y - 10;
+        ctx.font = 'bold 14px system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'left';
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'rgba(0,0,0,0.6)'; // обводка для контраста
+        ctx.strokeText(String(i), lx, ly);
+        ctx.fillStyle = isFound ? '#ffcc00' : '#e6e6e6';
+        ctx.fillText(String(i), lx, ly);
+      }
+    };
+
+    const redrawBase = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      drawPointsAndLabels();
+    };
+
     img.onload = () => {
       canvas.width = img.width;
       canvas.height = img.height;
+
+      if (found.length < 2) {
+        redrawBase();
+        return;
+      }
 
       let stepIndex = 1;
       let stepStart = performance.now();
@@ -102,19 +147,10 @@ export default function SemanticGraph({ userText = '', gender, age, time }) {
 
       const render = now => {
         const progress = Math.min(1, (now - stepStart) / stepDuration);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
 
-        // точки
-        ctx.fillStyle = '#ff5555';
-        for (const num of matchedSet) {
-          const [x, y] = coordinates[num - 1];
-          ctx.beginPath();
-          ctx.arc(x, y, 6, 0, Math.PI * 2);
-          ctx.fill();
-        }
+        redrawBase();
 
-        // уже пройденные линии
+        // завершённые отрезки
         ctx.strokeStyle = '#ffcc00';
         ctx.lineWidth = 2;
         for (let i = 1; i < stepIndex; i++) {
@@ -157,41 +193,20 @@ export default function SemanticGraph({ userText = '', gender, age, time }) {
         }
       };
 
-      if (found.length > 1) {
-        raf = requestAnimationFrame(render);
-      } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
-        for (const num of matchedSet) {
-          const [x, y] = coordinates[num - 1];
-          ctx.beginPath();
-          ctx.arc(x, y, 6, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
+      raf = requestAnimationFrame(render);
     };
 
-    return () => raf && cancelAnimationFrame(raf);
-  }, [animSeed, userText]); // перезапуск анимации
+    return () => { if (raf) cancelAnimationFrame(raf); };
+  }, [animSeed, userText, found, uniqueFound]);
 
   return (
     <div className="semantic-container">
-      {/* Спасибо / сведения */}
-      <div className="semantic-thankyou">
-        <h2>Thanks for helping us with our research!</h2>
-        <div className="thankyou-info">
-          <p><strong>Sex:</strong> {gender}</p>
-          <p><strong>Age:</strong> {age}</p>
-         
-          <p><strong>Time to complete:</strong> {time} seconds</p>
-        </div>
-      </div>
+      
 
-      {/* Метрики */}
       <div className="semantic-metrics">
         <h3>Test Analysis Summary</h3>
         <div className="metrics-table">
-          <div className="metric-row"><span className="metric-label">🧠 Found categories:</span><span className="metric-value">{found.join(', ')}</span></div>
+          <div className="metric-row"><span className="metric-label">🧠 Found categories (sequence):</span><span className="metric-value">{found.join(', ')}</span></div>
           <div className="metric-row"><span className="metric-label">🔄 Transitions between fields:</span><span className="metric-value">{transitions}</span></div>
           <div className="metric-row"><span className="metric-label">📉 Missing categories:</span><span className="metric-value">{missing.join(', ')}</span></div>
           <div className="metric-row"><span className="metric-label">📈 Graph density:</span><span className="metric-value">{density.toFixed(3)}</span></div>
@@ -203,15 +218,13 @@ export default function SemanticGraph({ userText = '', gender, age, time }) {
         </div>
       </div>
 
-      {/* Кнопка + Канвас */}
       <div className="semantic-graph-wrapper">
-  <canvas ref={canvasRef} />
-  <div className="replay-button-wrapper">
-    <button className="replay-button" onClick={() => setAnimSeed(x => x + 1)}>▶️ Replay animation</button>
-  </div>
-</div>
+        <canvas ref={canvasRef} />
+        <div className="replay-button-wrapper">
+          <button className="replay-button" onClick={() => setAnimSeed(x => x + 1)}>▶️ Replay animation</button>
+        </div>
+      </div>
 
-      {/* Новая секция: словарь + текст */}
       <div className="semantic-io">
         <div className="dictionary-block">
           <h3>Semantic Word Groups</h3>

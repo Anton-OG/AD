@@ -1,336 +1,191 @@
-/* === БАЗОВЫЕ СТИЛИ === */
-body {
-  background: #1e1e2f;           /* или так: background-color: #1e1e2f; */
-  color: #ffffff;
-  margin: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  overflow-x: hidden;
-}
+/* =========================
+   SemanticGraph — compact, responsive layout
+   ========================= */
 
-.semantic-container {
+/* Корневой контейнер компонента */
+.semantic-container{
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem 1rem;
   box-sizing: border-box;
+
+  /* Верхняя зона: метрики + граф — две колонки */
+  display: grid;
+  grid-template-columns: 1fr 560px;
+  gap: 16px;
+  align-items: start;
 }
 
-/* === БЛОК СПАСИБО === */
-.semantic-thankyou h2 {
-  font-size: clamp(1.5rem, 2vw, 2rem);
-  text-align: center;
-  color: #ffffff;
-  margin-bottom: 1rem;
-}
-
-.thankyou-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  text-align: center;
-}
-
-.thankyou-info p {
-  font-size: 1rem;
-  color: #dddddd;
-  margin: 0.2rem 0;
-}
-
-.thankyou-info strong {
-  color: #ffcc00;
-}
-
-/* === ОБЩИЙ КАРТОЧНЫЙ БЛОК === */
-.card-block {
-  background-color: rgba(255, 255, 255, 0.04);
-  padding: 1rem;
+/* Общая карточная подложка */
+.card-block{
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  box-sizing: border-box;
-  width: 100%;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  padding: 1rem 1.1rem;
 }
 
-/* === МЕТРИКИ === */
-.semantic-metrics {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
+/* ===== Метрики (левая колонка) ===== */
+.semantic-metrics{
+  grid-column: 1;
+  margin-top: 0; /* поднимаем ближе к верху */
 }
-
-.semantic-metrics h3 {
-  font-size: clamp(1.3rem, 1.7vw, 1.6rem);
+.semantic-metrics h3{
+  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
   color: #ffcc00;
-  margin-bottom: 1rem;
   text-align: center;
+  margin: 0 0 10px 0;
 }
-
-.metrics-table {
+.metrics-table{
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 8px;
 }
-
-.metric-row {
+.metric-row{
   display: flex;
   justify-content: space-between;
+  gap: 8px;
   flex-wrap: wrap;
-  background-color: rgba(255, 255, 255, 0.02);
-  padding: 0.6rem 0.8rem;
+  padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.05);
 }
-
-.metric-label {
-  color: #ddd;
-  font-weight: 500;
-}
-
-.metric-value {
-  color: #fff;
-  text-align: right;
-}
-
-/* === ИНДЕКС === */
-.highlight-index-box {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: rgba(255, 204, 0, 0.05);
-  border-top: 1px solid rgba(255, 204, 0, 0.3);
+.metric-label{ color:#ddd; font-weight:600; }
+.metric-value{ color:#fff; text-align:right; }
+.highlight-index-box{
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255,204,0,.06);
+  border: 1px solid rgba(255,204,0,.35);
   color: #ffcc00;
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-weight: 800;
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  border-radius: 8px;
+  gap: 12px;
 }
+.highlight-index-label{ opacity:.95; }
+.highlight-index-value{ font-size: 1.2rem; }
 
-.highlight-index-label {
-  font-size: 1.1rem;
-}
-
-.highlight-index-value {
-  font-size: 1.4rem;
-}
-
-/* === КАНВАС === */
-.semantic-graph-wrapper {
-  margin: 2rem 0;
+/* ===== Граф (правая колонка) ===== */
+.semantic-graph-wrapper{
+  grid-column: 2;
+  margin-top: 0;
   display: flex;
   flex-direction: column;
+  gap: 10px;
   align-items: center;
-  gap: 1rem;
 }
-
-.semantic-graph-wrapper canvas {
+.semantic-graph-wrapper canvas{
   width: 100%;
-  max-width: 700px;
+  height: auto;            /* масштаб в колонке */
   border-radius: 10px;
   border: 2px solid #888;
   background: #fff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px rgba(255,255,255,.1);
 }
-
-/* === КНОПКА ПОВТОРА === */
-.replay-button-wrapper {
-  text-align: center;
-}
-
-.replay-button {
-  background-color: #ffcc00;
+.replay-button-wrapper{ text-align:center; }
+.replay-button{
+  background: #ffcc00;
   color: #000;
-  font-weight: bold;
-  padding: 0.6rem 1.2rem;
+  font-weight: 800;
+  padding: .6rem 1.1rem;
   font-size: 1rem;
-  border: none;
-  border-radius: 0.5rem;
+  border: 0;
+  border-radius: .5rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+}
+.replay-button:hover{ background:#e6b800; }
+
+/* ===== Нижняя секция: словарь + текст (две колонки) ===== */
+.semantic-io{
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
 }
 
-.replay-button:hover {
-  background-color: #e6b800;
+/* Внешние карточки — без overflow, чтобы не было двойного скролла */
+.dictionary-block,
+.usertext-block{
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  overflow: visible;     /* важно */
+  max-height: none;      /* важно */
+}
+.dictionary-block h3,
+.usertext-block h3{
+  color:#ffcc00;
+  text-align:center;
+  margin: 0 0 10px 0;
 }
 
-/* === ДЕТАЛИ (старый контейнер) === */
-.semantic-details {
+/* Прокрутка только внутри этих контейнеров */
+.semantic-dictionary,
+.usertext-box{
+  max-height: 380px;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+/* Список словаря */
+.category-row{
   display: flex;
+  gap: 8px;
   flex-wrap: wrap;
-  gap: 2rem;
-  justify-content: center;
-  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  padding: .35rem 0;
 }
-
-.semantic-details > div {
-  flex: 1 1 45%;
-  min-width: 280px;
+.category-number{
+  color:#ffcc00;
+  font-weight: 800;
+  min-width: 26px;
 }
+.category-words{ color:#fff; word-break: break-word; }
 
-/* === СЛОВАРЬ (контент) === */
-.semantic-dictionary {
-  max-height: 26rem;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  padding-right: 0.5rem;
-}
-
-.semantic-dictionary::-webkit-scrollbar {
-  width: 6px;
-}
-
-.semantic-dictionary::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
-}
-
-.semantic-dictionary h3,
-.semantic-usertext h3 {
-  color: #ffcc00;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.category-row {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding-bottom: 0.25rem;
-}
-
-.category-number {
-  color: #ffcc00;
-  font-weight: bold;
-  margin-right: 0.5rem;
-  min-width: 28px;
-}
-
-.category-words {
-  color: #fff;
-  flex: 1;
-  word-break: break-word;
-}
-
-.category-words span {
-  margin-right: 0.3rem;
-}
-
-/* === ТЕКСТ ПОЛЬЗОВАТЕЛЯ === */
-.usertext-box {
+/* Текст пользователя + подсветки */
+.usertext-box{
   font-size: 1rem;
   line-height: 1.6;
   color: #eee;
   word-break: break-word;
   text-align: justify;
 }
-
-.usertext-box span {
-  margin-right: 0.3rem;
+.highlight{
+  background:#ffcc00;
+  color:#000;
+  font-weight: 800;
+  padding: .15rem .35rem;
+  border-radius: .25rem;
 }
 
-/* === ПОДСВЕТКА === */
-.highlight {
-  background-color: #ffcc00;
-  color: #000;
-  font-weight: bold;
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
+/* Небольшой косметический скроллбар */
+.semantic-dictionary::-webkit-scrollbar,
+.usertext-box::-webkit-scrollbar{ width: 8px; }
+.semantic-dictionary::-webkit-scrollbar-thumb,
+.usertext-box::-webkit-scrollbar-thumb{
+  background: rgba(255,255,255,.18);
+  border-radius: 8px;
+}
+.semantic-dictionary::-webkit-scrollbar-thumb:hover,
+.usertext-box::-webkit-scrollbar-thumb:hover{
+  background: rgba(255,255,255,.28);
 }
 
-/* === НОВАЯ СЕКЦИЯ: «Словарь / Ваш текст» === */
-.semantic-io {
-  position: relative;
-  max-width: 1180px;       /* центрируем секцию по странице */
-  margin: 2rem auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  align-items: start;
-  justify-items: center;   /* карточки по центру своих колонок */
-}
-
-/* вертикальный разделитель по центру */
-.semantic-io::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateX(-0.5px);
-}
-
-/* карточки колонок */
-.dictionary-block,
-.usertext-block {
-  width: 100%;
-  max-width: 520px;        /* равная видимая ширина карточек */
-  background-color: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(4px);
-}
-
-/* заголовки карточек */
-.dictionary-block h3,
-.usertext-block h3 {
-  color: #ffcc00;
-  text-align: center;
-  margin: 0 0 0.75rem 0;
-}
-
-/* прокрутка внутри карточек — используем существующие классы */
-.dictionary-block .semantic-dictionary,
-.usertext-block .usertext-box {
-  max-height: 26rem;
-  overflow: auto;
-  padding-right: 0.5rem;
-}
-
-/* скроллбары внутри карточек */
-.dictionary-block .semantic-dictionary::-webkit-scrollbar,
-.usertext-block .usertext-box::-webkit-scrollbar {
-  width: 6px;
-}
-.dictionary-block .semantic-dictionary::-webkit-scrollbar-thumb,
-.usertext-block .usertext-box::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
-}
-
-/* === АДАПТИВНОСТЬ === */
-@media (max-width: 992px) {
-  .semantic-io {
-    grid-template-columns: 1fr;  /* в одну колонку */
-    gap: 1.25rem;
-  }
-  .semantic-io::before { display: none; }
-  .dictionary-block,
-  .usertext-block {
-    max-width: 720px;
-    margin: 0 auto;
+/* ===== Адаптив ===== */
+@media (max-width: 1200px){
+  .semantic-container{
+    grid-template-columns: 1fr 460px;
   }
 }
-
-@media (max-width: 768px) {
-  .semantic-details { flex-direction: column; }
-  .metric-row { flex-direction: column; align-items: flex-start; }
-  .metric-value { text-align: left; }
-  .highlight-index-box { flex-direction: column; align-items: flex-start; font-size: 1rem; }
-  .semantic-details > div,
-  .card-block { min-width: unset; width: 100%; }
-  .metric-label,
-  .metric-value { font-size: 0.95rem; }
-}
-@media (max-width: 480px) {
-  .semantic-metrics { max-width: 100%; padding: 0 1rem; }
-  .highlight-index-box { font-size: 0.95rem; }
+@media (max-width: 980px){
+  .semantic-container{
+    grid-template-columns: 1fr; /* всё в одну колонку */
+  }
+  .semantic-graph-wrapper{ grid-column: 1; }
+  .semantic-io{ grid-template-columns: 1fr; }
 }

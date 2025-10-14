@@ -1,38 +1,46 @@
 .description-block {
   background-color: rgba(255, 255, 255, 0.03);
   border-radius: 1rem;
-  padding: 2.5rem;
-  max-width: 62.5rem;      /* ← ограничиваем ширину (как на welcome) */
-  margin: 2rem auto 3rem;  /* ← центр + отступы сверху/снизу */
+  padding: 2.0rem;              /* чуть компактнее */
+  max-width: 62.5rem;
+  margin: 2rem auto 3rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   text-align: center;
-  /* margin: 0rem auto;  ← удалено, т.к. перезатирало нижний margin */
 }
 
-.fade-in {
-  animation: fadeIn 0.6s ease-in-out;
+/* Заголовок как в ResearchInfo (жёлтый) */
+.description-title{
+  color: #ffcc00;
+  margin: 0 0 12px 0;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* Двухколоночный лэйаут: слева текст, справа изображение */
+.description-grid{
+  display: grid;
+  grid-template-columns: 1fr 560px;
+  gap: 16px;
+  align-items: start;
+  text-align: left; /* чтобы абзацы были обычными, без центрирования */
+  margin-top: 4px;
 }
 
+/* Компактные абзацы внутри левой колонки */
 .description-text {
-  font-size: clamp(1rem, 1.3vw, 1.4rem);
+  font-size: clamp(0.95rem, 1.05vw, 1.1rem);
   color: #dddddd;
-  line-height: 1.6;
+  line-height: 1.5;
   text-align: justify;
-  max-width: 50rem;
-  margin: 1.5rem auto;
+  max-width: 48rem;
+  margin: 0.75rem 0;          /* компактнее */
 }
 
+.description-media{ display: block; }
 .description-image {
   display: block;
-  margin: 2rem auto;
   width: 100%;
   height: auto;
-  max-width: 960px; /* исходно под 2560×1440 */
+  max-width: 960px;
   border-radius: 0.75rem;
   border: 2px solid #888;
   background-color: #1e1e2f;
@@ -40,12 +48,13 @@
   transition: max-width 0.3s ease;
 }
 
+/* Поле ввода и остальные элементы — как было */
 .description-textarea {
   width: 100%;
   max-width: 100%;
   padding: 0.875rem;
   font-size: 1rem;
-  margin: 1.5rem auto;
+  margin: 1.2rem auto;
   border-radius: 0.5rem;
   border: 1px solid #aaa;
   background-color: #2c2c3c;
@@ -56,11 +65,7 @@
   box-sizing: border-box;
 }
 
-.description-button-container {
-  display: flex;
-  justify-content: center;
-}
-
+.description-button-container { display: flex; justify-content: center; }
 .description-button {
   padding: 0.625rem 1.5rem;
   font-size: clamp(0.9rem, 1vw, 1.1rem);
@@ -72,7 +77,6 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
 .description-button:hover { background-color: #e6b800; }
 
 .description-timer {
@@ -83,36 +87,94 @@
 
 /* 💻 Full HD */
 @media (max-width: 1920px) {
-  .description-text { max-width: 44rem; }
-  .description-textarea { max-width: 36rem; }
+  .description-image { max-width: 720px; }
 }
 
 /* 💻 1600px */
 @media (max-width: 1600px) {
-  .description-text { font-size: clamp(0.95rem, 1.1vw, 1.25rem); max-width: 40rem; }
-  .description-textarea { max-width: 34rem; font-size: 0.95rem; }
+  .description-grid{ grid-template-columns: 1fr 540px; }
+  .description-image { max-width: 540px; }
 }
 
 /* 💻 1366px */
 @media (max-width: 1366px) {
-  .description-text { font-size: clamp(0.9rem, 1vw, 1.1rem); max-width: 38rem; }
-  .description-textarea { max-width: 32rem; font-size: 0.9rem; }
+  .description-grid{ grid-template-columns: 1fr 405px; }
+  .description-image { max-width: 405px; }
   .description-button { font-size: 0.95rem; padding: 0.5rem 1.25rem; }
 }
 
-/* 📱 Мобильные */
+/* 📱 Мобильные: в столбик */
+@media (max-width: 980px){
+  .description-grid{ grid-template-columns: 1fr; }
+}
 @media (max-width: 768px) {
   .description-block { width: 90%; padding: 1rem; }
-  .description-text { font-size: 0.95rem; text-align: justify; }
   .description-textarea { width: 100%; }
   .description-button { width: 100%; }
+  .description-image { max-width: 100%; margin: 1rem 0; }
 }
 
-/* ↓ Full HD (1920×1080) */
-@media (max-width: 1920px) { .description-image { max-width: 720px; } }
-/* ↓ 1600×900 */
-@media (max-width: 1600px) { .description-image { max-width: 540px; } }
-/* ↓ 1366×768 */
-@media (max-width: 1366px) { .description-image { max-width: 405px; } }
-/* ↓ Мобильные */
-@media (max-width: 768px)  { .description-image { max-width: 100%; margin: 1rem 0; } }
+/* Анимация (как была) */
+.fade-in { animation: fadeIn 0.6s ease-in-out; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Карточка с подсказками */
+.instruction-card{
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+/* Маленькая плашка сверху, в фирменном цвете как в ResearchInfo */
+.instruction-badge{
+  display: inline-block;
+  background: #ffcc00;
+  color: #000;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+
+/* Компактный список с чек-иконками */
+.instruction-list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.instruction-list li{
+  position: relative;
+  padding-left: 28px;
+  margin: 8px 0;
+  color: #ddd;
+  line-height: 1.45;
+  text-align: justify;   /* чтобы строки аккуратно выровнялись */
+}
+.instruction-list li::before{
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #ffcc00;
+  color: #000;
+  font-weight: 900;
+  font-size: 0.85rem;
+}
+
+/* Адаптивность — ужимаем отступы на узких экранах */
+@media (max-width: 768px){
+  .instruction-card{ padding: 10px 12px; }
+  .instruction-list li{ margin: 6px 0; }
+}

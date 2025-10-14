@@ -1,0 +1,69 @@
+.site-header-top{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(30,30,47,.7);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.hdr-inner{
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #eee;
+}
+
+/* ==== Brand (logo + title) ==== */
+.hdr-brand{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hdr-logo{
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: rgba(255,255,255,.06);
+  box-shadow: 0 1px 2px rgba(0,0,0,.25) inset;
+}
+
+.hdr-title{
+  font-weight: 800;
+  letter-spacing: .2px;
+  white-space: nowrap;
+}
+
+/* ==== Actions (user + logout) ==== */
+.hdr-actions{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hdr-user{ opacity: .9; }
+
+.hdr-logout{
+  appearance: none;
+  border: none;
+  background: #ffcc00;
+  color: #000;
+  font-weight: 800;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform .05s ease, background .15s ease;
+}
+
+.hdr-logout:hover{ background: #e6b800; }
+.hdr-logout:active{ transform: translateY(1px); }
+
+/* ==== Small screens ==== */
+@media (max-width: 520px){
+  .hdr-user{ display: none; } /* экономим место на мобильных */
+}

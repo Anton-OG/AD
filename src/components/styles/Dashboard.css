@@ -1,0 +1,94 @@
+.dash{
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  min-height: calc(100dvh - 120px); /* примерно под шапку+футер */
+}
+
+/* ==== Левое меню ==== */
+.dash-sidebar{
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+  padding: 18px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dash-menu{
+  display: grid;
+  gap: 8px;
+}
+
+.dash-item{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #e8e8e8;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: background .15s ease, transform .03s ease;
+}
+
+.dash-item .dash-ico{
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+}
+
+.dash-item:hover{
+  background: rgba(255,255,255,.06);
+}
+.dash-item:active{
+  transform: translateY(1px);
+}
+
+.dash-item[data-active="true"]{
+  background: rgba(255,204,0,.16);
+  outline: 1px solid rgba(255,204,0,.38);
+}
+
+.dash-user{
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+
+/* ==== Контент ==== */
+.dash-content{
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+  padding: 18px;
+  overflow: hidden;
+}
+
+.tab-wrap{
+  height: 100%;
+}
+
+/* Прячем кнопку Continue у WelcomeScreen, когда он открыт как Info */
+.dash-content .welcome-button-container{
+  display: none;
+}
+
+/* ==== Адаптив ==== */
+@media (max-width: 900px){
+  .dash{ grid-template-columns: 1fr; }
+  .dash-sidebar{ order: 2; }
+  .dash-content{ order: 1; }
+}
