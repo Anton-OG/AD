@@ -1,9 +1,9 @@
 /* ======================================
-   AuthScreen — styles (clean)
+   AuthScreen — responsive styles
    ====================================== */
 
 :root{
-  /* Colors */
+  /* Theme */
   --bg-card: rgba(255,255,255,.05);
   --bd-card: 1px solid rgba(255,255,255,.12);
   --shadow-card: 0 12px 28px rgba(0,0,0,.35);
@@ -19,35 +19,43 @@
   --input-bd-focus: 1.5px solid rgba(255,255,255,.36);
   --input-shadow-focus: 0 0 0 3px rgba(255,255,255,.12);
 
-  /* Sizes */
-  --login-field-width: 320px;     /* Sign in field/button width */
-  --login-card-width: 680px;      /* Sign in card width */
-  --register-card-width: 765px;   /* Sign up card width (compact) */
-  --register-gap: 14px 17px;      /* Sign up grid gap (compact) */
+  /* Base sizes (desktop) */
+  --login-field-width: 340px;     /* narrow column for Sign in */
+  --login-card-width: 700px;
+  --register-card-width: 820px;
+  --register-gap: 14px 18px;
 }
 
 /* Canvas */
 .auth-wrap{
   min-height: 100dvh;
   display: grid;
-  place-items: center;
+  justify-items: center;
+  align-items: center;
   padding: clamp(16px, 3vw, 28px);
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
   color: var(--ink);
+}
+
+/* If screen is low by height (e.g. laptops/landscape mobile) — pin to top */
+@media (max-height: 740px){
+  .auth-wrap{ align-items: start; }
 }
 
 /* Card */
 .auth-card{
-  width: min(var(--register-card-width), 96vw);
+  width: min(var(--register-card-width), 94vw);
   border: var(--bd-card);
   background: var(--bg-card);
   border-radius: 18px;
   box-shadow: var(--shadow-card);
-  padding: 18px 26px; /* compact */
+  padding: 20px 26px;
+  margin-inline: auto; /* safety center */
 }
 
-/* --- Sign in: always narrow regardless of field count --- */
+/* Sign in: always visually narrow on desktop */
 .auth-card.is-login{
-  width: min(var(--login-card-width), 96vw);
+  width: min(var(--login-card-width), 94vw);
 }
 .auth-card.is-login .auth-field{
   max-width: var(--login-field-width);
@@ -70,7 +78,7 @@
 /* Title */
 .auth-title{
   text-align: center;
-  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
   margin: 2px 0 18px;
 }
 
@@ -78,6 +86,7 @@
 .auth-tabs{
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 18px;
 }
@@ -129,20 +138,18 @@
   border: var(--input-bd-focus);
   box-shadow: var(--input-shadow-focus);
 }
+
 .doctor-row .doctor-toggle{
-  display: inline-flex;     /* перекрываем display:block */
+  display: inline-flex;     
   align-items: center;
   gap: 10px;
-  margin: 0;                /* убираем отступ, если был */
+  margin: 0;                
 }
 /* Two columns (Sign up) */
 .two-cols{
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--register-gap);
-}
-@media (max-width: 760px){
-  .two-cols{ grid-template-columns: 1fr; }
 }
 
 /* Gender buttons */
@@ -209,19 +216,24 @@
 .primary-btn:hover{ background:#f0c000; transform: translateY(-1px); }
 .primary-btn:disabled{ opacity:.7; cursor: default; transform:none; }
 
-/* --- Doctor toggle (custom switch) --- */
+/* Sign up: кнопка не на всю ширину на десктопе */
+.auth-form:not(.login) .auth-actions{ justify-content: center; }
+.auth-form:not(.login) .auth-actions .primary-btn{ width: min(220px, 100%); }
+
+/* Doctor toggle (custom switch) */
 .doctor-row{
   display:flex;
   justify-content:center;
 }
 .doctor-toggle{
-  display:flex;
+  display:inline-flex;             /* перекрывает label {display:block} */
   align-items:center;
   gap:10px;
   cursor:pointer;
   user-select:none;
   color: var(--ink);
   font-weight: 700;
+  margin: 0;
 }
 .doctor-toggle input{
   appearance: none;
@@ -234,6 +246,7 @@
   outline: none;
   transition: background .2s, border-color .2s, box-shadow .2s;
   box-shadow: inset 0 1px 2px rgba(0,0,0,.35);
+  vertical-align: middle;
 }
 .doctor-toggle input::before{
   content: "";
@@ -257,11 +270,12 @@
   background: var(--accent-ink);
 }
 .doctor-badge{
-  padding: 4px 8px;
-  border-radius: 8px;
+  padding: 6px 10px;
+  border-radius: 10px;
   background: rgba(255,255,255,.08);
   border: 1px solid rgba(255,255,255,.18);
   font-weight: 800;
+  line-height: 1;
 }
 .doctor-toggle input:checked + .doctor-badge{
   background: rgba(255,204,0,.15);
@@ -276,9 +290,69 @@
   to{ opacity:1; transform: none; }
 }
 
-/* Mobile */
+/* =========================
+   Responsive breakpoints
+   ========================= */
+
+/* 1600–1920 */
+@media (max-width: 1600px){
+  :root{
+    --login-card-width: 680px;
+    --register-card-width: 780px;
+  }
+}
+
+/* 1366 / 1440 laptops */
+@media (max-width: 1440px){
+  :root{
+    --login-field-width: 330px;
+    --login-card-width: 660px;
+    --register-card-width: 760px;
+  }
+  .auth-title{ font-size: clamp(1.8rem, 2.6vw, 2.2rem); }
+}
+
+/* Tablet landscape / small laptops */
+@media (max-width: 992px){
+  :root{
+    --login-card-width: 620px;
+    --register-card-width: 720px;
+  }
+  .auth-card{ padding: 18px 22px; }
+}
+
+/* Tablet portrait */
+@media (max-width: 768px){
+  :root{
+    --register-card-width: 680px;
+  }
+  .two-cols{ grid-template-columns: 1fr; } /* Sign up collapses */
+  .auth-card{ width: min(var(--register-card-width), 96vw); }
+}
+
+/* Phones */
 @media (max-width: 560px){
-  .auth-card{ width: 96vw; }
+  :root{
+    --login-field-width: 100%;
+  }
+  .auth-card{
+    width: 96vw;              /* карточка центрируется */
+    padding: 16px 16px;
+    border-radius: 16px;
+  }
+  /* На телефонах Sign in тоже на всю ширину */
   .auth-card.is-login .auth-field,
-  .auth-card.is-login .auth-actions .primary-btn{ max-width: 100%; }
+  .auth-card.is-login .auth-actions .primary-btn{
+    max-width: 100%;
+  }
+  .auth-tabs{ gap: 8px; }
+  .auth-tab{ padding: 9px 14px; }
+  .doctor-badge{ padding: 6px 9px; }
+}
+
+/* Very small phones */
+@media (max-width: 360px){
+  .auth-title{ font-size: 1.6rem; }
+  .auth-tab{ font-size: .95rem; }
+  .primary-btn{ font-size: .95rem; }
 }
