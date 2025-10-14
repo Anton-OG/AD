@@ -75,18 +75,3 @@ body {
 @media (max-width: 600px){
   .app-main { padding: 20px 12px; }
 }
-:root { --ui-zoom: 1.10; }           /* 110% */
-
-.app-shell {                         /* Chrome/Edge/Opera/Safari */
-  zoom: var(--ui-zoom);
-}
-
-/* Firefox fallback  */
-@supports not (zoom: 1) {
-  .app-shell{
-    transform: scale(var(--ui-zoom));
-    transform-origin: top center;
-    
-    width: calc(100% / var(--ui-zoom));
-  }
-}
