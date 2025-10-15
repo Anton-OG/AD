@@ -1,5 +1,5 @@
 /* ======================================
-   AuthScreen — responsive styles
+   AuthScreen — responsive styles (clean)
    ====================================== */
 
 :root{
@@ -10,7 +10,7 @@
 
   --ink: #eaeaea;
   --ink-muted: #cfcfcf;
-  --accent: #f0a400;
+  --accent: #f0a400f1;
   --accent-ink: #111;
 
   --input-bg: #2b2c37;
@@ -20,8 +20,8 @@
   --input-shadow-focus: 0 0 0 3px rgba(255,255,255,.12);
 
   /* Base sizes (desktop) */
-  --login-field-width: 340px;     /* narrow column for Sign in */
-  --login-card-width: 700px;
+  --login-field-width: 300px;
+  --login-card-width: 500px;
   --register-card-width: 820px;
   --register-gap: 14px 18px;
   --page-pad: clamp(16px, 3vw, 28px);
@@ -37,23 +37,23 @@
   color: var(--ink);
 }
 
-/* If screen is low by height (e.g. laptops/landscape mobile) — pin to top */
+/* If screen height is small (e.g. laptops/landscape mobile) — pin to top */
 @media (max-height: 740px){
   .auth-wrap{ align-items: start; }
 }
 
 /* Card */
-  .auth-card{
-     width: min(var(--register-card-width), 100%);
-    border: var(--bd-card);
-    background: var(--bg-card);
-    border-radius: 18px;
-    box-shadow: var(--shadow-card);
-    padding: 20px 26px;
-    margin-inline: auto; /* safety center */
-  }
+.auth-card{
+  width: min(var(--register-card-width), 100%);
+  border: var(--bd-card);
+  background: var(--bg-card);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+  padding: 20px 26px;
+  margin-inline: auto;
+}
 
-/* Sign in: always visually narrow on desktop */
+/* Sign in: visually narrow on desktop */
 .auth-card.is-login{
   width: min(var(--login-card-width), 100%);
 }
@@ -99,9 +99,10 @@
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
-  transition: background .15s, transform .05s, border-color .15s;
+  transition: background .15s, transform .05s, border-color .15s, opacity .15s;
 }
 .auth-tab:hover{ background: rgba(255,255,255,.14); transform: translateY(-1px); }
+.auth-tab:disabled{ opacity: .6; cursor: default; transform: none; }
 .auth-tab.active{
   background: var(--accent);
   color: var(--accent-ink);
@@ -116,14 +117,14 @@
 
 /* Field */
 .auth-field label{
-  display:block;
+  display: block;
   margin: 4px 0 6px;
   color: var(--ink-muted);
   font-size: .95rem;
 }
 .auth-field input{
-  display:block;
-  width:100%;
+  display: block;
+  width: 100%;
   background: var(--input-bg);
   color: var(--input-ink);
   border: var(--input-bd);
@@ -139,12 +140,6 @@
   box-shadow: var(--input-shadow-focus);
 }
 
-.doctor-row .doctor-toggle{
-  display: inline-flex;     
-  align-items: center;
-  gap: 10px;
-  margin: 0;                
-}
 /* Two columns (Sign up) */
 .two-cols{
   display: grid;
@@ -166,9 +161,10 @@
   color: var(--ink);
   font-weight: 800;
   cursor: pointer;
-  transition: background .15s, transform .05s, border-color .15s;
+  transition: background .15s, transform .05s, border-color .15s, opacity .15s;
 }
 .gender-btn:hover{ background: rgba(255,255,255,.14); transform: translateY(-1px); }
+.gender-btn:disabled{ opacity: .6; cursor: default; transform: none; }
 .gender-btn.active{
   background: var(--accent);
   color: var(--accent-ink);
@@ -211,26 +207,26 @@
   color: var(--accent-ink);
   cursor: pointer;
   box-shadow: 0 6px 14px rgba(255,204,0,.28);
-  transition: transform .05s, background .15s, box-shadow .15s;
+  transition: transform .05s, background .15s, box-shadow .15s, opacity .15s;
 }
 .primary-btn:hover{ background:#f0a400; transform: translateY(-1px); }
 .primary-btn:disabled{ opacity:.7; cursor: default; transform:none; }
 
-/* Sign up:  */
-.auth-form:not(.login) .auth-actions{ justify-content: center; }
-.auth-form:not(.login) .auth-actions .primary-btn{ width: min(220px, 100%); }
+/* Sign up (scoped корректно к карточке регистрации) */
+.auth-card.is-register .auth-actions{ justify-content: center; }
+.auth-card.is-register .auth-actions .primary-btn{ width: min(220px, 100%); }
 
 /* Doctor toggle (custom switch) */
 .doctor-row{
-  display:flex;
-  justify-content:center;
+  display: flex;
+  justify-content: center;
 }
 .doctor-toggle{
-  display:inline-flex;             /*  {display:block} */
-  align-items:center;
-  gap:10px;
-  cursor:pointer;
-  user-select:none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
   color: var(--ink);
   font-weight: 700;
   margin: 0;
@@ -283,11 +279,144 @@
   border-color: rgba(255,204,0,.35);
 }
 
-/* Animation */
-.fade-in{ animation: authFade .35s ease-out both; }
+/* Animation (namespaced to avoid cross-file conflicts) */
+.auth-wrap.fade-in{ animation: authFade .35s ease-out both; }
 @keyframes authFade{
   from{ opacity:0; transform: translateY(6px); }
   to{ opacity:1; transform: none; }
+}
+/* === Restore logo section === */
+.brand-box {
+  display: grid;
+  place-items: center;
+  margin: 6px 0 12px;
+}
+.brand-logo-xl{
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  box-sizing: border-box;     /* чтобы padding не увеличивал круг */
+  padding: 0px 10px 5px 18px;               /* ← уменьшает видимую картинку внутри */
+  object-fit: contain;        /* картинка остаётся целиком */
+  background: rgba(255,255,255,.06);
+  border: 3px solid var(--accent);
+  box-shadow: 0 6px 20px rgba(0,0,0,.35);
+}
+
+.brand-name {
+   margin-top: 8px;
+  color: var(--accent);
+  font-weight: 800;
+  letter-spacing: .02em;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+/* === Restore doctor toggle + forgot password row === */
+.doctor-and-forgot {
+  display: flex;
+  align-items: center;
+  gap: 80px;                   
+  margin-top: 10px;
+  max-width: var(--login-field-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+.forgot-link {
+  font-weight: 500;        
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  text-decoration: none;
+  transition: color .15s;
+}
+.forgot-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* stylish checkbox block for login */
+.auth-card.is-login .doctor-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.auth-card.is-login .doctor-check input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.auth-card.is-login .doctor-check .box {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: rgba(255,255,255,.08);
+  border: 2px solid rgba(255,255,255,.9);
+  box-shadow: 0 1px 2px rgba(0,0,0,.25) inset, 0 2px 8px rgba(0,0,0,.25);
+  position: relative;
+  transition: background .2s, border-color .2s, box-shadow .2s;
+}
+.auth-card.is-login .doctor-check .box::after {
+  content: "";
+  position: absolute;
+  left: 4px;     
+  width: 5px;      
+  height: 9px;     
+  border: 2.5px solid var(--accent);  
+  border-top: 0;
+  border-left: 0;
+  transform: rotate(45deg) scale(1);
+  opacity: 0;
+  transition: transform .18s ease, opacity .18s ease;
+}
+.auth-card.is-login .doctor-check input:checked + .box {
+  background: rgba(240,164,0,.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(240,164,0,.45);
+}
+.auth-card.is-login .doctor-check input:checked + .box::after {
+  opacity:1;
+  transform: rotate(45deg) scale(1);
+}
+.auth-card.is-login .doctor-check .text {
+  padding:6px 10px;
+  border-radius:12px;
+  background: rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+  color: var(--ink-muted);
+  font-weight:500;
+  font-size: 0.9rem; 
+  padding: 4px 8px;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.auth-card.is-login .doctor-check input:checked ~ .text {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(240,164,0,.10);
+}
+/* === Restore icon alignment inside input fields === */
+.auth-field.with-ico {
+  position: relative;
+}
+.auth-field.with-ico .ico {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: var(--accent);
+  opacity: .95;
+  pointer-events: none;
+}
+.auth-field.with-ico input {
+  padding-left: 42px; 
 }
 
 /* =========================
@@ -297,8 +426,8 @@
 /* 1600–1920 */
 @media (max-width: 1600px){
   :root{
-    --login-card-width: 680px;
-    --register-card-width: 780px;
+    --login-card-width: 450px;
+    --register-card-width: 650px;
   }
 }
 
@@ -306,8 +435,8 @@
 @media (max-width: 1440px){
   :root{
     --login-field-width: 330px;
-    --login-card-width: 660px;
-    --register-card-width: 760px;
+    --login-card-width: 460px;
+    --register-card-width: 560px;
   }
   .auth-title{ font-size: clamp(1.8rem, 2.6vw, 2.2rem); }
 }
@@ -336,14 +465,10 @@
     --login-field-width: 100%;
   }
   .auth-card{
-    width: 96vw;             
-    padding: 16px 16px;
+    width: 100%;
+    padding: 16px;
     border-radius: 16px;
   }
-  
-  .auth-card{ width: 100%; padding: 16px; border-radius: 16px;}
-  .auth-card.is-login .auth-field,
-  .auth-card.is-login .auth-actions .primary-btn{max-width: 100%; }
   .auth-tabs{ gap: 8px; }
   .auth-tab{ padding: 9px 14px; }
   .doctor-badge{ padding: 6px 9px; }
@@ -354,4 +479,58 @@
   .auth-title{ font-size: 1.6rem; }
   .auth-tab{ font-size: .95rem; }
   .primary-btn{ font-size: .95rem; }
+}
+
+/* ==== Autofill: dark theme friendly ==== */
+/* Chrome/Edge/Safari */
+.auth-field input:-webkit-autofill,
+.auth-field input:-webkit-autofill:hover,
+.auth-field input:-webkit-autofill:focus {
+ 
+  box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--input-ink) !important;
+  caret-color: var(--input-ink);
+  border: var(--input-bd) !important; 
+  transition: background-color 9999s ease-out, color 9999s ease-out; 
+}
+/* Firefox */
+.auth-field input:-moz-autofill {
+  box-shadow: 0 0 0 1000px var(--input-bg) inset;
+  color: var(--input-ink);
+  caret-color: var(--input-ink);
+  border: var(--input-bd);
+}
+.auth-field input:-moz-autofill:focus {
+  border: var(--input-bd-focus);
+  box-shadow:
+    0 0 0 1000px var(--input-bg) inset,
+    var(--input-shadow-focus);
+}
+/* ==== Autofill: dark theme friendly ==== */
+/* Chrome/Edge/Safari */
+.auth-field input:-webkit-autofill,
+.auth-field input:-webkit-autofill:hover,
+.auth-field input:-webkit-autofill:focus {
+  /* заливаем тот же цвет, что и обычное поле */
+  box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--input-ink) !important;
+  caret-color: var(--input-ink);
+  border: var(--input-bd) !important; /* или var(--input-bd-focus) на фокусе */
+  transition: background-color 9999s ease-out, color 9999s ease-out; /* убирает мигание */
+}
+
+
+
+/* Firefox */
+.auth-field input:-moz-autofill {
+  box-shadow: 0 0 0 1000px var(--input-bg) inset;
+  color: var(--input-ink);
+  caret-color: var(--input-ink);
+  border: var(--input-bd);
+}
+.auth-field input:-moz-autofill:focus {
+  border: var(--input-bd-focus);
+  box-shadow:
+    0 0 0 1000px var(--input-bg) inset,
+    var(--input-shadow-focus);
 }

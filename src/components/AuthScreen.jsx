@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './styles/AuthScreen.css';
-
+import logo from '../assets/2.png';
 import UserErrorModal from './UserErrorModal.jsx';
 
 import {
@@ -59,7 +59,7 @@ export default function AuthScreen({ onAuthed }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [gender, setGender] = useState(''); // 'male' | 'female'
-  const [age, setAge] = useState('');
+  const [dob, setDob] = useState('');
   const [phone, setPhone] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -87,6 +87,7 @@ export default function AuthScreen({ onAuthed }) {
     setConfirmPassword('');
     setIsDoctor(false);
     setDoctorCode('');
+    setDob('');
   };
 
   // helper: check if Firestore profile exists
@@ -133,7 +134,15 @@ export default function AuthScreen({ onAuthed }) {
       .map((b) => b.toString(16).padStart(2, '0'))
       .join('');
   };
-
+      const calcAgeYears = (dobStr) => {
+        const d = new Date(dobStr);
+        if (Number.isNaN(d.getTime())) return NaN;
+        const today = new Date();
+        let age = today.getFullYear() - d.getFullYear();
+        const m = today.getMonth() - d.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < d.getDate())) age--;
+        return age;
+      };
   // form submission handler (login or register)
         const handleSubmit = async (e) => {
    e.preventDefault();
@@ -149,13 +158,13 @@ export default function AuthScreen({ onAuthed }) {
       const last = lastName.trim();
       const em = email.trim();
       const ph = phone.trim();
-      const ageRaw = age; // '' or string number
+     
 
       const errs = [];
       if (!first) errs.push('First name');
       if (!last) errs.push('Last name');
       if (!gender) errs.push('Sex');
-      if (ageRaw === '') errs.push('Age'); // check emptiness before numeric checks
+      if (!dob) errs.push('Date of birth'); // check emptiness before numeric checks
       if (!em) errs.push('Email');
       if (!password) errs.push('Password');
       if (!confirmPassword) errs.push('Confirm password');
@@ -167,8 +176,8 @@ export default function AuthScreen({ onAuthed }) {
       }
 
       // 2) specific validation (age range, passwords match)
-      const ageNum = Number(ageRaw);
-      if (!Number.isFinite(ageNum) || ageNum < 8 || ageNum > 89) {
+      const ageNum = calcAgeYears(dob);
+   if (!Number.isFinite(ageNum) || ageNum < 8 || ageNum > 89) {
         setInvalidAgeError(true);
         return;
       }
@@ -300,11 +309,11 @@ export default function AuthScreen({ onAuthed }) {
             code === 'auth/invalid-credential' ||
             code === 'auth/invalid-login-credentials'
           ) {
-            setAuthError('Incorrect password.');
+            setAuthError('Incorrect email or password.');
           } else if (code === 'auth/user-not-found') {
             setAuthError('No account found with this email.');
           } else {
-            // Fallback: аккуратно проверим наличие аккаунта
+            // Fallback: check if email exists to give better hint  
             try {
               const methods = await fetchSignInMethodsForEmail(
                 auth,
@@ -356,89 +365,108 @@ export default function AuthScreen({ onAuthed }) {
           spellCheck={false}
         >
           {mode === 'login' && (
-            <>
-              <div className="auth-field">
-                <label htmlFor={`login-email-${nonce}`}>Email</label>
-                <input
-                  id={`login-email-${nonce}`}
-                  name={fieldName('email')}
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={busy}
-                  required
-                  autoComplete="username"
-                  inputMode="email"
-                />
-              </div>
+  <>
+                {/* БРЕНД-БЛОК */}
+                <div className="brand-box">
+                  <img src={logo} alt="UrsaCortex" className="brand-logo-xl" />
+                  <div className="brand-name">UrsaCortex Labs</div>
+                </div>
 
-              <div className="auth-field">
-                <label htmlFor={`login-pass-${nonce}`}>Password</label>
-                <input
-                  id={`login-pass-${nonce}`}
-                  name={fieldName('password')}
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  disabled={busy}
-                  required
-                  autoComplete="current-password"
-                  inputMode="text"
-                />
-              </div>
-
-              {/* Doctor portal */}
-             
-                    <div className="auth-field doctor-row">
-                      <label className="doctor-toggle">
-                        <input
-                          type="checkbox"
-                          checked={isDoctor}
-                          onChange={(e)=>setIsDoctor(e.target.checked)}
-                          disabled={busy}
-                        />
-                        <span className="doctor-badge">I am a doctor</span>
-                      </label>
-                    </div>
-              {isDoctor && (
-                <div className="auth-field">
-                  <label htmlFor={`doc-code-${nonce}`}>Doctor code</label>
-                <input
-                id={`doc-code-${nonce}`}
-                    type="password"
-                    placeholder="Enter your doctor code"
-                    value={doctorCode}
-                    onChange={(e)=>setDoctorCode(e.target.value)}
+                {/* Email */}
+                <div className="auth-field with-ico">
+                  <label htmlFor={`login-email-${nonce}`}></label>
+                  <span className="ico" aria-hidden>📧</span>
+                  <input
+                    id={`login-email-${nonce}`}
+                    name={fieldName('email')}
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     disabled={busy}
-                    autoComplete="one-time-code"
-                    inputMode="numeric"
-                    required={isDoctor}
-              />
+                    required
+                    autoComplete="username"
+                    inputMode="email"
+                  />
                 </div>
-              )}
 
-              {/* Error stays inside .auth-field to avoid layout shift */}
-              {authError && (
-                <div className="auth-field">
-                  <div className="auth-error" aria-live="polite">{authError}</div>
+                {/* Password */}
+                <div className="auth-field with-ico">
+                  <label htmlFor={`login-pass-${nonce}`}></label>
+                  <span className="ico" aria-hidden>🔒</span>
+                  <input
+                    id={`login-pass-${nonce}`}
+                    name={fieldName('password')}
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={busy}
+                    required
+                    autoComplete="current-password"
+                  />
                 </div>
-              )}
 
-              <div className="auth-actions">
-                <button type="submit" className="primary-btn" disabled={busy}>
-                  {busy ? 'Signing in…' : 'Sign in'}
-                </button>
-              </div>
-            </>
-          )}
+                
+               
+
+                {/* Поле кода врача показываем ТОЛЬКО при включённом тумблере */}
+                {isDoctor && (
+                  <div className="auth-field with-ico">
+                    <label htmlFor={`doc-code-${nonce}`}></label>
+                    <span className="ico" aria-hidden>🗝️</span>
+                    <input
+                      id={`doc-code-${nonce}`}
+                      type="password"
+                      placeholder="Enter your doctor code"
+                      value={doctorCode}
+                      onChange={(e)=>setDoctorCode(e.target.value)}
+                      disabled={busy}
+                      autoComplete="one-time-code"
+                      inputMode="numeric"
+                      required
+                    />
+                  </div>
+                )}
+                    <div className="auth-actions">
+                  <button type="submit" className="primary-btn" disabled={busy}>
+                    {busy ? 'Signing in…' : 'Login'}
+                  </button>
+                </div>
+                <div className="doctor-and-forgot">
+                    <label className="doctor-check">
+                      <input
+                        type="checkbox"
+                        checked={isDoctor}
+                        onChange={(e)=>setIsDoctor(e.target.checked)}
+                        disabled={busy}
+                      />
+                      <span className="box" aria-hidden="true"></span>
+                      <span className="text">Doctor</span>
+                    </label>
+
+                    <a className="forgot-link" href="#" onClick={(e)=>e.preventDefault()}>
+                      Forgot Password?
+                    </a>
+                  </div>
+              </>
+              
+            )}
+                 
+
+                {authError && (
+                  <div className="auth-field">
+                    <div className="auth-error" aria-live="polite">{authError}</div>
+                  </div>
+                )}
+
+              
 
           {mode === 'register' && (
             <>
               <div className="two-cols">
                 <div className="auth-field">
-                  <label htmlFor={`reg-first-${nonce}`}>First name</label>
+                  <label htmlFor={`reg-first-${nonce}`}></label>
                   <input
                     id={`reg-first-${nonce}`}
                     name={fieldName('given-name')}
@@ -451,7 +479,7 @@ export default function AuthScreen({ onAuthed }) {
                   />
                 </div>
                 <div className="auth-field">
-                  <label htmlFor={`reg-last-${nonce}`}>Last name</label>
+                  <label htmlFor={`reg-last-${nonce}`}></label>
                   <input
                     id={`reg-last-${nonce}`}
                     name={fieldName('family-name')}
@@ -467,7 +495,7 @@ export default function AuthScreen({ onAuthed }) {
 
               <div className="two-cols">
                 <div className="auth-field">
-                  <label>Sex:</label>
+                  
                   <div className="gender-row">
                     <button
                       type="button"
@@ -488,27 +516,25 @@ export default function AuthScreen({ onAuthed }) {
                   </div>
                 </div>
 
-                <div className="auth-field">
-                  <label htmlFor={`reg-age-${nonce}`}>Enter your age:</label>
+                 <div className="auth-field">
+                  <label htmlFor={`reg-dob-${nonce}`}></label>
                   <input
-                    id={`reg-age-${nonce}`}
-                    name={fieldName('age')}
-                    type="number"
-                    inputMode="numeric"
-                    min="8"
-                    max="89"
-                    placeholder="Enter age"
-                    value={age}
-                    onChange={(e) => setAge(e.target.value)}
+                    id={`reg-dob-${nonce}`}
+                    name={fieldName('bday')}
+                    type="date"
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
                     disabled={busy}
-                    autoComplete="off"
+                    required
+                    autoComplete="bday"
+                    lang="en"
                   />
                 </div>
               </div>
 
               <div className="two-cols">
                 <div className="auth-field">
-                  <label htmlFor={`reg-phone-${nonce}`}>Phone (optional)</label>
+                  <label htmlFor={`reg-phone-${nonce}`}></label>
                   <input
                     id={`reg-phone-${nonce}`}
                     name={fieldName('tel')}
@@ -523,7 +549,7 @@ export default function AuthScreen({ onAuthed }) {
                 </div>
 
                 <div className="auth-field">
-                  <label htmlFor={`reg-email-${nonce}`}>Email</label>
+                  <label htmlFor={`reg-email-${nonce}`}></label>
                   <input
                     id={`reg-email-${nonce}`}
                     name={fieldName('email')}
@@ -541,7 +567,7 @@ export default function AuthScreen({ onAuthed }) {
               {/* two password fields: left = password, right = confirmation */}
               <div className="two-cols">
                 <div className="auth-field">
-                  <label htmlFor={`reg-pass-${nonce}`}>Password</label>
+                  <label htmlFor={`reg-pass-${nonce}`}></label>
                   <input
                     id={`reg-pass-${nonce}`}
                     name={fieldName('new-password')}
@@ -557,7 +583,7 @@ export default function AuthScreen({ onAuthed }) {
                 </div>
 
                 <div className="auth-field">
-                  <label htmlFor={`reg-pass2-${nonce}`}>Confirm password</label>
+                  <label htmlFor={`reg-pass2-${nonce}`}></label>
                   <input
                     id={`reg-pass2-${nonce}`}
                     name={fieldName('confirm-password')}
@@ -606,3 +632,4 @@ export default function AuthScreen({ onAuthed }) {
     </div>
   );
 }
+
