@@ -454,7 +454,12 @@ export default function AuthScreen({ onAuthed }) {
                       >
                       Forgot Password?
                     </a>
-                  </div>
+                  </div> 
+                  {authError && (
+                <div className="auth-field">
+                  <div className="auth-error" aria-live="polite">{authError}</div>
+                </div>
+              )}
               </>
               
             )}
