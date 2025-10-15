@@ -10,7 +10,7 @@
 
 /* Title as in ResearchInfo (yellow) */
 .description-title{
-  color: #ffcc00;
+  color: #f0a400;
   margin: 0 0 12px 0;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
 }
@@ -69,7 +69,7 @@
 .description-button {
   padding: 0.625rem 1.5rem;
   font-size: clamp(0.9rem, 1vw, 1.1rem);
-  background-color: #ffcc00;
+  background-color: #f0a400;
   color: #000;
   border: none;
   border-radius: 0.5rem;
@@ -132,7 +132,7 @@
 /* Small badge at the top, in the brand color as in ResearchInfo */
 .instruction-badge{
   display: inline-block;
-  background: #ffcc00;
+  background: #f0a400;
   color: #000;
   font-weight: 700;
   font-size: 0.8rem;
@@ -167,7 +167,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: #ffcc00;
+  background: #f0a400;
   color: #000;
   font-weight: 900;
   font-size: 0.85rem;

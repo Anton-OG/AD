@@ -10,9 +10,12 @@ import Doctor from './Doctor/Doctor.jsx';
 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, db } from './firebase.js';
-import { doc, onSnapshot } from 'firebase/firestore';
-
+import { doc, onSnapshot, collection, query, where, getDocs, limit } from 'firebase/firestore';
 export default function App() {
+ const doctorLoginIntent =
+  typeof window !== 'undefined' && sessionStorage.getItem('doctorIntent') === '1';
+  // Flag that doctor login was requested and is in progress  
+  const [doctorSessionOk, setDoctorSessionOk] = useState(false);
   // Firebase user object (null when signed out or not verified)
   const [user, setUser] = useState(null);
   // Role loaded from Firestore: "doctor" | "user" | null (loading)
@@ -57,7 +60,8 @@ export default function App() {
 
   const handleLogout = async () => {
     stopInactivityWatcher();
-    try { await signOut(auth); } catch {}
+    setDoctorSessionOk(false);
+    try { sessionStorage.removeItem('doctorIntent'); await signOut(auth); } catch {}
   };
 
   // Listen for Firebase auth state changes and SUBSCRIBE to users/{uid} for live role updates
@@ -119,6 +123,13 @@ export default function App() {
     );
   }
 
+  if (user && doctorLoginIntent && !doctorSessionOk) {
+  return (
+    <div className="splash">
+      <div className="spinner" />
+    </div>
+  );
+  }
   return (
     <div className="app-shell">
       {user && <Header user={user} onLogout={handleLogout} />}
@@ -126,9 +137,15 @@ export default function App() {
       <main className="app-main">
         <div className="app-container">
           {!user ? (
-            <AuthScreen onAuthed={() => {}} />
+             <AuthScreen
+              onAuthed={(_, meta) => {
+                const ok = !!meta?.doctorSessionOk;
+                setDoctorSessionOk(ok);
+                if (ok) sessionStorage.removeItem('doctorIntent');
+              }}
+            />
           ) : (
-            role === 'doctor' ? <Doctor user={user} /> : <Dashboard user={user} />
+            doctorSessionOk ? <Doctor user={user} /> : <Dashboard user={user} />
           )}
         </div>
       </main>

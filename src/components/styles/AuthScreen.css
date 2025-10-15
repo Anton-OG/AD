@@ -10,7 +10,7 @@
 
   --ink: #eaeaea;
   --ink-muted: #cfcfcf;
-  --accent: #ffcc00;
+  --accent: #f0a400;
   --accent-ink: #111;
 
   --input-bg: #2b2c37;
@@ -213,10 +213,10 @@
   box-shadow: 0 6px 14px rgba(255,204,0,.28);
   transition: transform .05s, background .15s, box-shadow .15s;
 }
-.primary-btn:hover{ background:#f0c000; transform: translateY(-1px); }
+.primary-btn:hover{ background:#f0a400; transform: translateY(-1px); }
 .primary-btn:disabled{ opacity:.7; cursor: default; transform:none; }
 
-/* Sign up: кнопка не на всю ширину на десктопе */
+/* Sign up:  */
 .auth-form:not(.login) .auth-actions{ justify-content: center; }
 .auth-form:not(.login) .auth-actions .primary-btn{ width: min(220px, 100%); }
 
@@ -226,7 +226,7 @@
   justify-content:center;
 }
 .doctor-toggle{
-  display:inline-flex;             /* перекрывает label {display:block} */
+  display:inline-flex;             /*  {display:block} */
   align-items:center;
   gap:10px;
   cursor:pointer;

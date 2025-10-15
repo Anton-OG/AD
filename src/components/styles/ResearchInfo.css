@@ -12,7 +12,7 @@
 .info-title{
   margin: 0 0 16px 0;
   text-align: center;
-  color: #ffcc00;
+  color: #f0a400;
   font-size: clamp(1.3rem, 1.9vw, 1.9rem);
 }
 
@@ -57,13 +57,13 @@
   padding: 10px 18px;
   border-radius: 10px;
   font-weight: 800;
-  background: #ffcc00;
+  background: #f0a400;
   color: #1d1d1d;
   cursor: pointer;
   transition: transform .03s ease, background .15s ease, box-shadow .15s ease;
 }
 .info-button:hover{
-  background: #e6b800;
+  background: #f0a400;
   box-shadow: 0 0 0 4px rgba(255,204,0,.18);
 }
 .info-button:active{ transform: translateY(1px); }

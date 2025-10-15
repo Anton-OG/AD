@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './styles/AuthScreen.css';
 
 import UserErrorModal from './UserErrorModal.jsx';
@@ -67,7 +67,13 @@ export default function AuthScreen({ onAuthed }) {
   const [showError, setShowError] = useState(false);
   const [invalidAgeError, setInvalidAgeError] = useState(false);
   const [missingFields, setMissingFields] = useState([]);
-
+  useEffect(() => {
+   const last = sessionStorage.getItem('authLastError');
+    if (last) {
+     setAuthError(last);
+      sessionStorage.removeItem('authLastError');
+    }
+  }, []);
   const nonce = useMemo(() => Math.random().toString(36).slice(2), []);
   const fieldName = (base) => `${base}-${mode}-${nonce}`;
 
@@ -109,13 +115,16 @@ export default function AuthScreen({ onAuthed }) {
     }
   };
 
-  // helper: force sign-out and show message
-  const blockAndExplain = async (msg) => {
-    try {
-      await signOut(auth);
-    } catch {}
-    setAuthError(msg);
-  };
+          const blockAndExplain = async (msg) => {
+          // запомним текст, чтобы он пережил размонтирование компонента
+          sessionStorage.setItem('authLastError', msg);
+          try {
+            sessionStorage.removeItem('doctorIntent');
+            await signOut(auth);
+          } catch {}
+          // если ещё не размонтировались — покажем и локально
+          setAuthError(msg);
+        };
 
   const sha256Hex = async (str) => {
     const data = new TextEncoder().encode(String(str));
@@ -125,8 +134,13 @@ export default function AuthScreen({ onAuthed }) {
       .join('');
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // form submission handler (login or register)
+        const handleSubmit = async (e) => {
+   e.preventDefault();
+   if (isDoctor && !doctorCode.trim()) {
+     setAuthError('Doctor code is required.');
+     return;
+   }
     setAuthError('');
 
     if (mode === 'register') {
@@ -218,6 +232,7 @@ export default function AuthScreen({ onAuthed }) {
         setAuthError(humanizeAuthError(err));
       } finally {
         setBusy(false);
+        sessionStorage.removeItem('doctorIntent');
       }
       return;
     }
@@ -226,13 +241,9 @@ export default function AuthScreen({ onAuthed }) {
     try {
       setBusy(true);
 
-      // Try to sign in first (avoid false negatives)
-      const cred = await signInWithEmailAndPassword(
-        auth,
-        email.trim(),
-        password
-      );
-
+      if (isDoctor) sessionStorage.setItem('doctorIntent', '1');
+     const cred = await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
+     
       // block if email is not verified
       try { await reload(cred.user); } catch {}
       if (!cred.user.emailVerified) {
@@ -272,7 +283,7 @@ export default function AuthScreen({ onAuthed }) {
             return;
           }
           // Mark role as doctor on successful verification
-          await setDoc(doc(db, 'users', cred.user.uid), { role: 'doctor' }, { merge: true });
+          const doctorOk = true;
         } catch (e) {
           console.error(e);
           await blockAndExplain('Doctor verification failed. Try again later.');
@@ -280,26 +291,32 @@ export default function AuthScreen({ onAuthed }) {
         }
       }
 
-      onAuthed?.(cred.user);
+      onAuthed?.(cred.user, { doctorSessionOk: isDoctor ? true : false });
     } catch (err) {
       console.error(err);
-      // Disambiguate after failure: does this email exist?
-      try {
-        const methods = await fetchSignInMethodsForEmail(auth, email.trim());
-        if (methods.length === 0) {
-          setAuthError('No account found with this email.');
-        } else if (
-          err?.code === 'auth/wrong-password' ||
-          err?.code === 'auth/invalid-credential' ||
-          err?.code === 'auth/invalid-login-credentials'
-        ) {
-          setAuthError('Incorrect password.');
-        } else {
-          setAuthError(humanizeAuthError(err));
-        }
-      } catch {
-        setAuthError(humanizeAuthError(err));
-      }
+      const code = err?.code || '';
+          if (
+            code === 'auth/wrong-password' ||
+            code === 'auth/invalid-credential' ||
+            code === 'auth/invalid-login-credentials'
+          ) {
+            setAuthError('Incorrect password.');
+          } else if (code === 'auth/user-not-found') {
+            setAuthError('No account found with this email.');
+          } else {
+            // Fallback: аккуратно проверим наличие аккаунта
+            try {
+              const methods = await fetchSignInMethodsForEmail(
+                auth,
+                email.trim().toLowerCase()
+              );
+              setAuthError(methods.length === 0
+                ? 'No account found with this email.'
+                : humanizeAuthError(err));
+            } catch {
+              setAuthError(humanizeAuthError(err));
+            }
+          }
     } finally {
       setBusy(false);
     }
@@ -388,8 +405,8 @@ export default function AuthScreen({ onAuthed }) {
               {isDoctor && (
                 <div className="auth-field">
                   <label htmlFor={`doc-code-${nonce}`}>Doctor code</label>
-                  <input
-                    id={`doc-code-${nonce}`}
+                <input
+                id={`doc-code-${nonce}`}
                     type="password"
                     placeholder="Enter your doctor code"
                     value={doctorCode}
@@ -397,7 +414,8 @@ export default function AuthScreen({ onAuthed }) {
                     disabled={busy}
                     autoComplete="one-time-code"
                     inputMode="numeric"
-                  />
+                    required={isDoctor}
+              />
                 </div>
               )}
 
