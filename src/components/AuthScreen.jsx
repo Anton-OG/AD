@@ -444,7 +444,7 @@ export default function AuthScreen({ onAuthed }) {
                         disabled={busy}
                       />
                       <span className="box" aria-hidden="true"></span>
-                      <span className="text">I am a Doctor</span>
+                      <span className="text">Admin panel</span>
                     </label>
 
                      <a
