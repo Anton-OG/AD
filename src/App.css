@@ -75,3 +75,26 @@ body {
 @media (max-width: 600px){
   .app-main { padding: 20px 12px; }
 }
+/* Глобальный градиентный фон для всего приложения 
+html, body, #root { height: 100%; }
+
+body{
+  margin: 0;
+  
+  background:
+     radial-gradient(1100px 800px at 12% 88%, rgba(0, 200, 255, .7) 0%, transparent 60%),
+  radial-gradient(1000px 800px at 88% 18%, rgba(255, 80, 190, .7) 0%, transparent 60%),
+  linear-gradient(135deg, #3aa0e6 0%, #7b5cff 55%, #ff7bd1 95%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;  
+  min-height: 100dvh;
+}
+
+
+.app-container,
+.auth-screen,
+.dashboard,
+.welcome-screen {
+  background: transparent !important;
+}
+*/
