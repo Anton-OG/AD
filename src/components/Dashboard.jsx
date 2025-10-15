@@ -77,10 +77,10 @@ export default function Dashboard({ user }) {
             <span className="dash-ico">ℹ️</span><span>Info</span>
           </button>
           <button className="dash-item" data-active={tab === 'new'} onClick={() => setTab('new')}>
-            <span className="dash-ico">🧪</span><span>New test</span>
+            <span className="dash-ico">🧬</span><span>New test</span>
           </button>
           <button className="dash-item" data-active={tab === 'cases'} onClick={() => setTab('cases')}>
-            <span className="dash-ico">📂</span><span>My test cases</span>
+            <span className="dash-ico">🗂️</span><span>My test cases</span>
           </button>
         </nav>
         <div className="dash-user">User: {name}</div>
