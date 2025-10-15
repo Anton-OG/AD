@@ -6,7 +6,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="site-footer" role="contentinfo">
-      © {year} Cognitive Perception Test
+      © {year} UrsaCortex Diagnostics
     </footer>
   );
 }

@@ -371,8 +371,7 @@ export default function AuthScreen({ onAuthed }) {
                 {/* БРЕНД-БЛОК */}
                 <div className="brand-box">
                   <img src={logo} alt="UrsaCortex" className="brand-logo-xl" />
-                  <div className="brand-name">UrsaCortex </div>
-                  <div className="brand-name">Diagnostics</div>
+                  <div className="brand-name">UC Diagnostics</div>
                 </div>
 
                 {/* Email */}
