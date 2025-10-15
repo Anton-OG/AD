@@ -93,7 +93,9 @@ export default function ResetPasswordModal({ initialEmail = '', onClose }) {
             <p className="reset-text">
               If an account exists for <strong>{email}</strong>, a password reset link has been sent.
             </p>
+            <div className="reset-actions">
             <button className="btn-primary" onClick={onClose}>Done</button>
+            </div>
           </>
         )}
       </div>

@@ -10,7 +10,7 @@
 
   --ink: #eaeaea;
   --ink-muted: #cfcfcf;
-  --accent: #f0a400f1;
+  --accent: #FF9823;
   --accent-ink: #111;
 
   --input-bg: #2b2c37;
@@ -209,7 +209,7 @@
   box-shadow: 0 6px 14px rgba(255,204,0,.28);
   transition: transform .05s, background .15s, box-shadow .15s, opacity .15s;
 }
-.primary-btn:hover{ background:#f0a400; transform: translateY(-1px); }
+.primary-btn:hover{ background:#FF9823; transform: translateY(-1px); }
 .primary-btn:disabled{ opacity:.7; cursor: default; transform:none; }
 
 /* Sign up (scoped корректно к карточке регистрации) */
@@ -317,7 +317,7 @@
 .doctor-and-forgot {
   display: flex;
   align-items: center;
-  gap: 80px;                   
+  gap: 50px;                   
   margin-top: 10px;
   max-width: var(--login-field-width);
   margin-left: auto;

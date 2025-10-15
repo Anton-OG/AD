@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import './styles/AuthScreen.css';
 import logo from '../assets/2.png';
 import UserErrorModal from './UserErrorModal.jsx';
+import ResetPasswordModal from './ResetPasswordModal.jsx';
 
 import {
   signInWithEmailAndPassword,
@@ -67,6 +68,7 @@ export default function AuthScreen({ onAuthed }) {
   const [showError, setShowError] = useState(false);
   const [invalidAgeError, setInvalidAgeError] = useState(false);
   const [missingFields, setMissingFields] = useState([]);
+  const [showReset, setShowReset] = useState(false);
   useEffect(() => {
    const last = sessionStorage.getItem('authLastError');
     if (last) {
@@ -442,10 +444,14 @@ export default function AuthScreen({ onAuthed }) {
                         disabled={busy}
                       />
                       <span className="box" aria-hidden="true"></span>
-                      <span className="text">Doctor</span>
+                      <span className="text">I am a Doctor</span>
                     </label>
 
-                    <a className="forgot-link" href="#" onClick={(e)=>e.preventDefault()}>
+                     <a
+                        className="forgot-link"
+                        href="#"
+                        onClick={(e) => { e.preventDefault(); setShowReset(true); }}
+                      >
                       Forgot Password?
                     </a>
                   </div>
@@ -453,14 +459,6 @@ export default function AuthScreen({ onAuthed }) {
               
             )}
                  
-
-                {authError && (
-                  <div className="auth-field">
-                    <div className="auth-error" aria-live="polite">{authError}</div>
-                  </div>
-                )}
-
-              
 
           {mode === 'register' && (
             <>
@@ -629,6 +627,14 @@ export default function AuthScreen({ onAuthed }) {
           missingFields={['Age must be between 8 and 89 years']}
         />
       )}
+
+      
+          {showReset && (
+            <ResetPasswordModal
+              initialEmail={email}
+              onClose={() => setShowReset(false)}
+            />
+          )}
     </div>
   );
 }

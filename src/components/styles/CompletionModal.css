@@ -27,7 +27,7 @@
 }
 
 .completion-window h2 {
-  color: #f0a400;
+  color: #FF9823;
   margin-bottom: 1rem;
   font-size: clamp(1.4rem, 2vw, 1.6rem);
   text-align: center;
@@ -43,7 +43,7 @@
 .completion-button {
   padding: 0.625rem 1.5rem;
   font-size: clamp(0.9rem, 1vw, 1.1rem);
-  background-color: #f0a400;
+  background-color: #FF9823;
   color: #000;
   border: none;
   border-radius: 0.5rem;

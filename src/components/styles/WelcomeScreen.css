@@ -9,7 +9,7 @@
   transition: all 0.3s ease;
 }
 .welcome-block h1 {
-  color: #f0a400; 
+  color: #FF9823; 
 }
 .fade-in {
   animation: fadeIn 0.6s ease-in-out;
@@ -57,7 +57,7 @@
 .welcome-button {
   padding: 0.625rem 1.5rem;
   font-size: clamp(0.9rem, 1vw, 1.1rem);
-  background-color: #f0a400;
+  background-color: #FF9823;
   color: #000;
   border: none;
   border-radius: 0.5rem;

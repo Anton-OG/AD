@@ -57,13 +57,13 @@
   padding: 10px 18px;
   border-radius: 10px;
   font-weight: 800;
-  background: #f0a400;
+  background: #FF9823;
   color: #1d1d1d;
   cursor: pointer;
   transition: transform .03s ease, background .15s ease, box-shadow .15s ease;
 }
 .info-button:hover{
-  background: #f0a400;
+  background: #FF9823;
   box-shadow: 0 0 0 4px rgba(255,204,0,.18);
 }
 .info-button:active{ transform: translateY(1px); }

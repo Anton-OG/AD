@@ -1,14 +1,12 @@
-.error-modal {
+.error-modal{
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(10, 10, 20, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  inset: 0;                 /* вместо top/left/width/height */
+  background: rgba(10,10,20,.8);
+  display: grid;            /* стабильнее, чем flex, когда есть прокрутка */
+  place-items: center;      /* по центру и по X, и по Y */
+  padding: 16px;            /* чтобы окно не липло к краям на мобилках */
   z-index: 9999;
+  overflow: auto;           /* если содержимое выше окна — можно скроллить */
 }
 
 .error-window {
