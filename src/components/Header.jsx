@@ -10,7 +10,7 @@ export default function Header({ user, onLogout }) {
       <div className="hdr-inner">
         <div className="hdr-brand">
           <img src={logo} alt="CPT Logo" className="hdr-logo" />
-          <div className="hdr-title">UrsaCortex Labs</div>
+          <div className="hdr-title">UrsaCortex Diagnostics</div>
         </div>
         <div className="hdr-actions">
           <span className="hdr-user"><strong>{name}</strong></span>
