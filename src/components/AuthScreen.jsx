@@ -284,13 +284,13 @@ export default function AuthScreen({ onAuthed }) {
           const dref = doc(db, 'doctorCodes', cred.user.uid);
           const dsnap = await getDoc(dref);
           if (!dsnap.exists() || dsnap.data()?.active === false) {
-            await blockAndExplain('Doctor account is not configured. Contact admin.');
+            await blockAndExplain(' Account is not configured. Contact Head Administrator.');
             return;
           }
           const expected = dsnap.data().codeHash;
           const actual = await sha256Hex(doctorCode.trim());
           if (!doctorCode.trim() || expected !== actual) {
-            await blockAndExplain('Invalid doctor code.');
+            await blockAndExplain('Invalid admin code.');
             return;
           }
           // Mark role as doctor on successful verification
@@ -420,7 +420,7 @@ export default function AuthScreen({ onAuthed }) {
                     <input
                       id={`doc-code-${nonce}`}
                       type="password"
-                      placeholder="Enter your doctor code"
+                      placeholder="Enter your admin code"
                       value={doctorCode}
                       onChange={(e)=>setDoctorCode(e.target.value)}
                       disabled={busy}
