@@ -171,7 +171,38 @@ i18n
                 },
                 units: {
                 seconds_short: "s"
-                }
+                },
+                settings: {
+                        title: "Settings",
+                        first_name: "First name",
+                        last_name: "Last name",
+                        phone: "Phone",
+                        save_profile: "Save profile",
+
+                        email_section: "Change e-mail",
+                        email_placeholder: "new-email@example.com",
+                        send_email_change: "Send confirmation e-mail",
+
+                        password_section: "Password",
+                        send_password_reset: "Send password reset e-mail",
+
+                        saved: "Changes saved.",
+                        error_save: "Couldn't save profile. Please try again.",
+
+                        email_enter: "Enter a new e-mail.",
+                        email_sent: "We've sent a confirmation to your new e-mail. Follow the link in the message to finish the change.",
+                        email_requires_recent_login: "To change e-mail you need to sign in again. Please sign out and sign back in.",
+                        email_invalid: "Invalid e-mail address.",
+                        email_in_use: "This e-mail is already in use.",
+                        email_change_error: "Couldn't send the confirmation e-mail.",
+
+                        pass_sent: "We've sent a password reset e-mail to your current address.",
+                        pass_error: "Couldn't send the password reset e-mail.",
+
+                        open_aria: "Open profile settings",
+                        close_aria: "Close"
+                        }
+
 
         }
       },
@@ -245,7 +276,7 @@ i18n
           info_title: "O výskumnom projekte",
           info_cta: "Začať test",
           info_p1: "Tento test je súčasťou výskumnej štúdie, ktorá skúma, ako ľudia rozumejú obrázkom a každodenným situáciám. Zaujíma nás najmä súvis s pamäťou a myslením.",
-          info_p2: "Tento test je súčasťou výskumu, ktorý skúma, ako ľudia interpretujú obrázky a každodenné situácie. Zvlášť nás zaujíma, ako to súvisí s pamäťou a kognitívnymi schopnosťami. Naším cieľom je nájsť nové spôsoby podpory včasného záchytu stavov, ako je Alzheimerova choroba. Informácie, ktoré poskytnete, môžu pomôcť trénovať nástroje umelej inteligencie (AI) na lepšie porozumenie skorým zmenám funkcií mozgu. Všetky odpovede sú anonymné a použité výlučne na výskumné účely.",
+          info_p2: "Tento test je súčasťou výskumnej štúdie zameranej na to, ako ľudia rozumejú obrázkom a každodenným situáciám. Zaujíma nás najmä súvis s pamäťou, myslením a ďalšími kognitívnymi schopnosťami. Naším cieľom je hľadať nové spôsoby podpory včasného záchytu ochorení, ako je Alzheimerova choroba. Informácie, ktoré poskytnete, môžu pomôcť pri tréningu nástrojov umelej inteligencie (AI) na lepšie rozpoznávanie skorých zmien v činnosti mozgu. Vaše odpovede sú anonymné a budú použité výlučne na výskumné účely.",
           info_image_alt: "Výskumná štúdia",
           
           // Navigation (Dashboard)
@@ -337,11 +368,42 @@ i18n
             },
             units: {
             seconds_short: "s"
-            }
+            },
+
+                "settings": {
+             
+                title: "Nastavenia",
+                first_name: "Meno",
+                last_name: "Priezvisko",
+                phone: "Telefón",
+                save_profile: "Uložiť profil",
+
+                email_section: "Zmeniť e-mail",
+                email_placeholder: "novy-email@priklad.sk",
+                send_email_change: "Poslať potvrdzovací e-mail",
+
+                password_section: "Heslo",
+                send_password_reset: "Poslať e-mail na zmenu hesla",
+
+                saved: "Zmeny boli uložené.",
+                error_save: "Profil sa nepodarilo uložiť. Skúste znova.",
+
+                email_enter: "Zadajte nový e-mail.",
+                email_sent: "Odoslali sme potvrdenie na váš nový e-mail. Dokončite zmenu cez odkaz v správe.",
+                email_requires_recent_login: "Na zmenu e-mailu sa musíte znova prihlásiť. Odhláste sa a prihláste sa späť.",
+                email_invalid: "Neplatná e-mailová adresa.",
+                email_in_use: "Tento e-mail sa už používa.",
+                email_change_error: "Potvrdzovací e-mail sa nepodarilo odoslať.",
+
+                pass_sent: "Odoslali sme e-mail na obnovenie hesla na vašu aktuálnu adresu.",
+                pass_error: "E-mail na zmenu hesla sa nepodarilo odoslať.",
+
+                open_aria: "Otvoriť nastavenia profilu",
+                close_aria: "Zavrieť"
 
 
 
-
+            },
         }
       }
     }

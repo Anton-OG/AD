@@ -10,7 +10,7 @@ function LangSwitch() {
   const setLang = (code) => { i18n.changeLanguage(code); localStorage.setItem('lang', code); };
   const toggle = () => setLang(current === 'en' ? 'sk' : 'en');
 
-  // Отслеживаем мобильный брейкпоинт
+
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia
       ? window.matchMedia('(max-width: 520px)').matches
@@ -29,7 +29,7 @@ function LangSwitch() {
     };
   }, []);
 
-  // Мобильный вид: одна кнопка EN/SK — просто переключает язык
+ 
   if (isMobile) {
     const label = current.toUpperCase();
     const onKeyToggle = (e) => {
@@ -48,7 +48,7 @@ function LangSwitch() {
     );
   }
 
-  // Десктоп: твоя «пилюля»
+  
   const onKey = (e, code) => {
     if (e.key === 'Enter' || e.key === ' ') setLang(code);
     if (e.key === 'ArrowLeft') setLang('en');

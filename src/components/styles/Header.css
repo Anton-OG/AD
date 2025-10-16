@@ -135,7 +135,7 @@
 }
 .hdr-lang-toggle:active{ transform: translateY(1px); }
 
-/* иконка внутри кнопки глаза */
+
 .auth-field.with-ico .toggle-visibility img,
 .auth-field.with-ico .toggle-visibility-ico{
   width: 18px;
@@ -149,7 +149,7 @@
   .hdr-lang { display: none; }                  
   .hdr-lang-toggle { display: inline-flex; align-items: center; justify-content: center; }
   .hdr-actions { gap: 8px; }                    
-  .hdr-logout { padding: 8px 10px; }            /* чуть меньше кнопка выхода */
+  .hdr-logout { padding: 8px 10px; }         
   .brand-full { display: none; }
   .brand-short { display: inline; }
 }

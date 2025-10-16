@@ -4,20 +4,21 @@ import './styles/Dashboard.css';
 import infoIco from '../assets/info.png';
 import newTestIco from '../assets/new-test.png';
 import casesIco from '../assets/cases.png';
-
-
+import gearIcon from '../assets/gear.png';
 
 import WelcomeScreen from './WelcomeScreen.jsx';
 import ResearchInfo from './ResearchInfo.jsx';
 import DescriptionTest from './DescriptionTest.jsx';
 import SemanticGraph from './SemanticGraph.jsx';
 import CompletionModal from './CompletionModal.jsx';
+import UserSettings from './UserSettings.jsx';
 import MyTests from './MyTests.jsx'
 import { submitUserData, updateTestNumbers } from '../submitData.js';
 import { useTranslation } from 'react-i18next';
 
 
 export default function Dashboard({ user }) {
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const {i18n, t } = useTranslation();
   const [tab, setTab] = useState('info');  
   const [casesKey, setCasesKey] = useState(0);        // left: Info / New test / My test cases
@@ -92,7 +93,27 @@ export default function Dashboard({ user }) {
               <span className="dash-ico"><img src={casesIco} alt="" /></span><span>{t('nav_cases')}</span>
             </button>
         </nav>
-        <div className="dash-user"> {name}</div>
+           
+        <div className="dash-user">
+            <span className="dash-user-name">{name}</span>
+            <button
+              className="user-gear"
+              aria-label={t('settings.open_aria')}
+              onClick={() => setSettingsOpen(v => !v)}
+              title="Settings"
+            >
+              <img
+                src={gearIcon}   // "/icons/gear.png"
+                alt=""
+                aria-hidden="true"
+                className="user-gear-icon"
+                draggable="false"
+              />
+            </button>
+          </div>
+        {settingsOpen && (
+          <UserSettings user={user} onClose={() => setSettingsOpen(false)} />
+        )}
       </aside>
 
       {/* Central area */}

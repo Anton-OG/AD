@@ -348,7 +348,7 @@
   left: 12px;
   top: 55%;
   transform: translateY(-50%);
-  width: 20px;              /* подгони под свой PNG */
+  width: 20px;              
   height: 20px;
   display: block;
   opacity: .95;
@@ -366,26 +366,26 @@
   transform: translateY(-50%);
   background: transparent;
   border: 0;
-  padding: 6px;            /* размер кликабельной области */
+  padding: 6px;           
   cursor: pointer;
-  display: inline-flex;     /* чтобы центрировать картинку внутри */
+  display: inline-flex;     
   align-items: center;
   justify-content: center;
-  line-height: 0;           /* убирает лишние пробелы вокруг img */
+  line-height: 0;           
   user-select: none;
 }
 .auth-field.with-ico .toggle-visibility img{
-  width: 20px;              /* меняй под свой PNG */
+  width: 20px;              
   height: 20px;
   display: block;
-  pointer-events: none;     /* кликаем по кнопке, не по картинке */
-  object-fit: contain;      /* аккуратное вписывание, если пропорции другие */
+  pointer-events: none;     
+  object-fit: contain;      
 }
 .auth-field.with-ico .toggle-visibility:hover{ color: var(--accent); }
 
 
 .auth-field.with-ico input{
-  padding-right: 42px; /* слева уже есть padding-left: 42px */
+  padding-right: 42px; 
 }
  .auth-card{
    width: min(var(--register-card-width), 100%);
@@ -395,7 +395,7 @@
    box-shadow: var(--shadow-card);
    padding: 20px 26px;
    margin-inline: auto;
-  position: relative; /* для абсолютного позиционирования свитчера */
+  position: relative;
  }
  /* === Language pill on Auth card === */
 .auth-lang{
@@ -407,7 +407,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  width: 72px;          /* компактнее, чем в шапке */
+  width: 72px;         
   height: 28px;
   padding: 3px;
   border-radius: 999px;

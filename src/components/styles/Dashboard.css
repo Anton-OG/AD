@@ -97,6 +97,151 @@
   display: none;
 }
 
+/* === User settings (gear + start-like menu) === */
+.dash-sidebar{ position: relative; }
+
+.dash-user{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.dash-user-name{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap;transform: translateY(-2px); }
+
+/* === Gear as plain icon (no circle) === */
+.user-gear{
+  appearance: none;
+  background: none !important;
+  border: 0 !important;
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+  width: auto;                 
+  height: auto;
+  border-radius: 0;
+  box-shadow: none !important;
+  cursor: pointer;
+  display: inline-grid;
+  place-items: center;
+}
+
+.user-gear-icon{
+  width: 20px;                 
+  height: 20px;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center;
+  transition: transform .14s ease, filter .14s ease;
+}
+
+/* лёгкое увеличение при hover/active */
+.user-gear:hover .user-gear-icon{ transform: scale(1.14); }
+.user-gear:active .user-gear-icon{ transform: scale(1.06); }
+
+
+
+.user-gear:focus-visible .user-gear-icon{
+  box-shadow: 0 0 0 2px rgba(56,189,248,.9);
+  border-radius: 3px;
+}
+/* overlay dim (like Start menu) */
+.user-menu-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,20,.35);
+  z-index: 2000;
+  overflow: hidden;              
+  overscroll-behavior: contain;
+}
+
+/* panel */
+.user-menu{
+  position: absolute;
+  left: 20px;
+  bottom: 86px;          
+  width: min(360px, calc(100vw - 40px));
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.25) inset;
+}
+
+/* header */
+.user-menu-head{
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.user-menu-title{ font-weight: 800; letter-spacing: .02em; }
+.user-menu-close{
+  appearance: none; border: 0; background: transparent; color: #cfcfcf;
+  font-size: 22px; cursor: pointer; line-height: 1;
+}
+.user-menu-close:hover{ color: #fff; }
+
+/* sections */
+.user-menu-section{
+  display: grid; gap: 8px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.user-menu-section:first-of-type{ border-top: 0; padding-top: 4px; }
+
+.user-menu-label{ font-size: .92rem; color: #cfcfcf; }
+.user-menu-input{
+  width: 100%;
+  background: #2b2c37;
+  color: #e9e9ee;
+  border: 1.5px solid rgba(255,255,255,.16);
+  border-radius: 12px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.user-menu-input:focus{
+  border-color: rgba(255,255,255,.36);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.12);
+}
+
+.user-menu-btn{
+  justify-self: start;
+  appearance: none; border: 0; border-radius: 10px;
+  padding: 9px 12px; font-weight: 800; cursor: pointer;
+  background: rgba(255,255,255,.10); color: #fff;
+  transition: background .15s, transform .05s, box-shadow .15s;
+}
+.user-menu-btn:hover{ background: rgba(255,255,255,.16); }
+.user-menu-btn:active{ transform: translateY(1px); }
+.user-menu-btn.primary{ background: #1EB4FC; color:#000; box-shadow: 0 6px 14px rgba(0,238,255,.28); }
+.user-menu-btn.primary:hover{ background: #36bfff; }
+
+/* info/error line */
+.user-menu-note{
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0,178,78,.18);
+  border: 1px solid rgba(0,178,78,.45);
+  color: #eafff3;
+}
+.user-menu-note.is-error{
+  background: rgba(255,78,78,.12);
+  border-color: rgba(255,78,78,.35);
+  color: #ffdede;
+}
+
+/* mobile: move panel to bottom full width */
+@media (max-width: 600px){
+  .user-menu{
+    left: 12px; right: 12px; bottom: 12px;
+    width: auto;
+  }
+}
+
+
 /* ==== Responsive ==== */
 @media (max-width: 900px){
   .dash{ grid-template-columns: 1fr; }
@@ -111,11 +256,11 @@
 
 /* Circle icon */
 .dash-item .dash-ico img{
-  width: 30px;        /* настрой под себя */
+  width: 30px;        
   height: 30px;
   display: block;
   object-fit: contain;
-  pointer-events: none; /* кликаем по кнопке, не по картинке */
+  pointer-events: none; 
 }
 @media (max-width: 960px){
   .dash-menu .dash-item .dash-ico img{ width: 18px; height: 18px; }

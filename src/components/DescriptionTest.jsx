@@ -17,12 +17,12 @@ export default function DescriptionTest({
   const startTimeRef = useRef(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
 
-  // Фокус на поле
+ 
   useEffect(() => {
     if (textareaRef.current) textareaRef.current.focus();
   }, []);
 
-  // Очистка таймера
+  
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);

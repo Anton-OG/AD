@@ -157,13 +157,13 @@ export default function AuthScreen({ onAuthed }) {
   };
 
           const blockAndExplain = async (msg) => {
-          // запомним текст, чтобы он пережил размонтирование компонента
+          
           sessionStorage.setItem('authLastError', msg);
           try {
             sessionStorage.removeItem('doctorIntent');
             await signOut(auth);
           } catch {}
-          // если ещё не размонтировались — покажем и локально
+          
           setAuthError(msg);
         };
 
