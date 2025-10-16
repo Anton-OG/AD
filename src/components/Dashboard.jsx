@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import './styles/Dashboard.css';
 
-import infoIco from '../assets/info.png';
+import infoIco from '../assets/inco-1.png';
 import newTestIco from '../assets/new-test.png';
 import casesIco from '../assets/cases.png';
 import gearIcon from '../assets/gear.png';
