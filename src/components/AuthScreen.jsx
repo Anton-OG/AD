@@ -284,13 +284,13 @@ export default function AuthScreen({ onAuthed }) {
           const dref = doc(db, 'doctorCodes', cred.user.uid);
           const dsnap = await getDoc(dref);
           if (!dsnap.exists() || dsnap.data()?.active === false) {
-            await blockAndExplain(' Account is not configured. Contact Head Administrator.');
+            await blockAndExplain(' Account is not configured. Contact Administrator.');
             return;
           }
           const expected = dsnap.data().codeHash;
           const actual = await sha256Hex(doctorCode.trim());
           if (!doctorCode.trim() || expected !== actual) {
-            await blockAndExplain('Invalid admin code.');
+            await blockAndExplain('Invalid doctor code.');
             return;
           }
           // Mark role as doctor on successful verification
@@ -377,7 +377,7 @@ export default function AuthScreen({ onAuthed }) {
                 {/* Email */}
                 <div className="auth-field with-ico">
                   <label htmlFor={`login-email-${nonce}`}></label>
-                  <span className="ico" aria-hidden>📧</span>
+                  <span className="ico" aria-hidden>🖂</span>
                   <input
                     id={`login-email-${nonce}`}
                     name={fieldName('email')}
@@ -395,7 +395,7 @@ export default function AuthScreen({ onAuthed }) {
                 {/* Password */}
                 <div className="auth-field with-ico">
                   <label htmlFor={`login-pass-${nonce}`}></label>
-                  <span className="ico" aria-hidden>🔒</span>
+                  <span className="ico" aria-hidden>ꗃ</span>
                   <input
                     id={`login-pass-${nonce}`}
                     name={fieldName('password')}
@@ -416,11 +416,11 @@ export default function AuthScreen({ onAuthed }) {
                 {isDoctor && (
                   <div className="auth-field with-ico">
                     <label htmlFor={`doc-code-${nonce}`}></label>
-                    <span className="ico" aria-hidden>🗝️</span>
+                    <span className="ico" aria-hidden>ꄗ</span>
                     <input
                       id={`doc-code-${nonce}`}
                       type="password"
-                      placeholder="Enter your admin code"
+                      placeholder="Enter your doctor code"
                       value={doctorCode}
                       onChange={(e)=>setDoctorCode(e.target.value)}
                       disabled={busy}
@@ -444,7 +444,7 @@ export default function AuthScreen({ onAuthed }) {
                         disabled={busy}
                       />
                       <span className="box" aria-hidden="true"></span>
-                      <span className="text">Admin panel</span>
+                      <span className="text">I am a Doctor</span>
                     </label>
 
                      <a

@@ -10,7 +10,7 @@
 
   --ink: #eaeaea;
   --ink-muted: #cfcfcf;
-  --accent: #FF9823;
+  --accent: #1EB4FC;
   --accent-ink: #111;
 
   --input-bg: #2b2c37;
@@ -206,10 +206,10 @@
   background: var(--accent);
   color: var(--accent-ink);
   cursor: pointer;
-  box-shadow: 0 6px 14px rgba(255,204,0,.28);
+  box-shadow: 0 6px 14px rgba(0, 238, 255, 0.28);
   transition: transform .05s, background .15s, box-shadow .15s, opacity .15s;
 }
-.primary-btn:hover{ background:#FF9823; transform: translateY(-1px); }
+.primary-btn:hover{ background:#1EB4FC; transform: translateY(-1px); }
 .primary-btn:disabled{ opacity:.7; cursor: default; transform:none; }
 
 /* Sign up (scoped корректно к карточке регистрации) */
@@ -259,7 +259,7 @@
 .doctor-toggle input:checked{
   background: var(--accent);
   border-color: transparent;
-  box-shadow: 0 0 0 3px rgba(255,204,0,.22);
+  box-shadow: 0 0 0 3px rgba(0, 238, 255, 0.28);
 }
 .doctor-toggle input:checked::before{
   transform: translateX(20px);
@@ -276,7 +276,7 @@
 .doctor-toggle input:checked + .doctor-badge{
   background: rgba(255,204,0,.15);
   color: var(--accent);
-  border-color: rgba(255,204,0,.35);
+  border-color: rgba(0, 238, 255, 0.28);
 }
 
 /* Animation (namespaced to avoid cross-file conflicts) */
@@ -379,7 +379,7 @@
 .auth-card.is-login .doctor-check input:checked + .box {
   background: rgba(240,164,0,.15);
   border-color: var(--accent);
-  box-shadow: 0 0 12px rgba(240,164,0,.45);
+  box-shadow: 0 0 12px rgba(0, 238, 255, 0.28);
 }
 .auth-card.is-login .doctor-check input:checked + .box::after {
   opacity:1;
@@ -399,7 +399,7 @@
 .auth-card.is-login .doctor-check input:checked ~ .text {
   color: var(--accent);
   border-color: var(--accent);
-  background: rgba(240,164,0,.10);
+  background: rgba(0, 232, 240, 0.1);
 }
 /* === Restore icon alignment inside input fields === */
 .auth-field.with-ico {

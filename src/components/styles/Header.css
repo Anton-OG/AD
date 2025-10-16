@@ -53,7 +53,7 @@
 .hdr-logout{
   appearance: none;
   border: none;
-  background: #f0a400;
+  background: #1EB4FC;
   color: #000;
   font-weight: 800;
   padding: 8px 12px;
@@ -62,7 +62,7 @@
   transition: transform .05s ease, background .15s ease;
 }
 
-.hdr-logout:hover{ background: #e6b800; }
+.hdr-logout:hover{ background: #1EB4FC; }
 .hdr-logout:active{ transform: translateY(1px); }
 
 /* ==== Small screens ==== */

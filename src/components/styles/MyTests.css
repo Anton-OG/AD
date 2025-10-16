@@ -29,8 +29,8 @@
 }
 .case-card:hover{
   background: rgba(255,255,255,.06);
-  border-color: rgba(255,204,0,.7);
-  box-shadow: 0 0 0 3px rgba(255,204,0,.16) inset;
+  border-color: rgba(0, 225, 255, 0.7);
+  box-shadow: 0 0 0 3px rgba(0, 225, 255, 0.16) inset;
 }
 .case-card:active{ transform: translateY(1px); }
 

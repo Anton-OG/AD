@@ -64,7 +64,7 @@ const selectStyles = {
     ...base,
     color: '#aaa',
     '&:hover': {
-      color: '#ffcc00',
+      color: '#1EB4FC',
     },
   }),
   indicatorSeparator: () => ({
