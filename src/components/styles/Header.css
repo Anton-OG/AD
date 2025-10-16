@@ -118,12 +118,30 @@
 }
 .hdr-lang-knob[data-pos="sk"]{ transform: translateX(100%); }
 
+.hdr-lang-toggle{
+  display: none;                
+  appearance: none;
+  border: 1px solid rgba(255,255,255,.18);
+  background: #1EB4FC;
+  color: #0b0b0b;
+  font-weight: 800;
+  letter-spacing: .6px;
+  border-radius: 999px;
+  height: 32px;
+  min-width: 44px;           
+  padding: 0 10px;
+  cursor: pointer;
+  transition: transform .05s ease, background .15s ease;
+}
+.hdr-lang-toggle:active{ transform: translateY(1px); }
+
+.brand-short { display: none; }
 @media (max-width: 520px){
-  .hdr-lang{ width: 78px; height: 32px; }
-  .hdr-lang-opt{ font-size: 12px; }
+  .hdr-lang { display: none; }                  
+  .hdr-lang-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .hdr-actions { gap: 8px; }                    
+  .hdr-logout { padding: 8px 10px; }            /* чуть меньше кнопка выхода */
+  .brand-full { display: none; }
+  .brand-short { display: inline; }
 }
 
-/* ==== Small screens ==== */
-@media (max-width: 520px){
-  .hdr-user{ display: none; } /* hide username on small screens */
-}
