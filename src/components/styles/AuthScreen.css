@@ -344,14 +344,16 @@
   position: relative;
 }
 .auth-field.with-ico .ico {
-  position: absolute;
+    position: absolute;
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 18px;
-  color: var(--accent);
+  width: 18px;              /* подгони под свой PNG */
+  height: 18px;
+  display: block;
   opacity: .95;
   pointer-events: none;
+  object-fit: contain;
 }
 .auth-field.with-ico input {
   padding-left: 42px; 
@@ -442,10 +444,7 @@
 }
 .auth-lang-knob[data-pos="sk"]{ transform: translateX(100%); }
 
-@media (max-width: 520px){
-  .auth-lang{ top: 10px; right: 10px; width: 66px; height: 26px; }
-  .auth-lang-opt{ font-size: 11px; }
-}
+
 
 /* =========================
    Responsive breakpoints
@@ -501,7 +500,10 @@
   .auth-tab{ padding: 9px 14px; }
 
 }
-
+@media (max-width: 520px){
+  .auth-lang{ top: 10px; right: 10px; width: 66px; height: 26px; }
+  .auth-lang-opt{ font-size: 11px; }
+}
 /* Very small phones */
 @media (max-width: 360px){
   .auth-title{ font-size: 1.6rem; }

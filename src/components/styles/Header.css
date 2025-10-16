@@ -135,6 +135,15 @@
 }
 .hdr-lang-toggle:active{ transform: translateY(1px); }
 
+/* иконка внутри кнопки глаза */
+.auth-field.with-ico .toggle-visibility img,
+.auth-field.with-ico .toggle-visibility-ico{
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+
 .brand-short { display: none; }
 @media (max-width: 520px){
   .hdr-lang { display: none; }                  

@@ -1,6 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './styles/AuthScreen.css';
 import logo from '../assets/2.png';
+import eyeOpen from '../assets/eye-open.png';
+import eyeClosed from '../assets/eye-closed.png';
+
+import codeIco  from '../assets/key.png';
+import mailIco  from '../assets/arroba.png';
+import lockIco  from '../assets/padlock.png';
 
 import ResetPasswordModal from './ResetPasswordModal.jsx';
 import { useTranslation } from 'react-i18next';
@@ -406,7 +412,7 @@ export default function AuthScreen({ onAuthed }) {
                 {/* Email */}
                 <div className="auth-field with-ico">
                   <label htmlFor={`login-email-${nonce}`}></label>
-                  <span className="ico" aria-hidden>🖂</span>
+                  <img className="ico" aria-hidden src={mailIco} alt="" />
                   <input
                     id={`login-email-${nonce}`}
                     name={fieldName('email')}
@@ -424,7 +430,7 @@ export default function AuthScreen({ onAuthed }) {
                 {/* Password */}
                   <div className="auth-field with-ico">
                   <label htmlFor={`login-pass-${nonce}`}></label>
-                  <span className="ico" aria-hidden>ꗃ</span>
+                  <img className="ico" aria-hidden src={lockIco} alt="" />
                   <input
                     id={`login-pass-${nonce}`}
                     name={fieldName('password')}
@@ -442,13 +448,18 @@ export default function AuthScreen({ onAuthed }) {
                     className="toggle-visibility"
                     aria-label={showPass ? t('auth.hide_password') : t('auth.show_password')}
                     aria-pressed={showPass}
-                    onMouseDown={() => setShowPass(true)}    
-                    onMouseUp={() => setShowPass(false)}     
-                    onMouseLeave={() => setShowPass(false)}  
+                    onMouseDown={() => setShowPass(true)}
+                    onMouseUp={() => setShowPass(false)}
+                    onMouseLeave={() => setShowPass(false)}
                     onTouchStart={() => setShowPass(true)}
                     onTouchEnd={() => setShowPass(false)}
                   >
-                    {showPass ? '👁' : '👁'}
+                    <img
+                      src={showPass ? eyeOpen : eyeClosed}
+                      alt=""
+                      className="toggle-visibility-ico"
+                      draggable="false"
+                    />
                   </button>
                 </div>
 
@@ -459,7 +470,7 @@ export default function AuthScreen({ onAuthed }) {
                 {isDoctor && (
                   <div className="auth-field with-ico">
                     <label htmlFor={`doc-code-${nonce}`}></label>
-                    <span className="ico" aria-hidden>ꄗ</span>
+                    <img className="ico" aria-hidden src={codeIco} alt="" />
                     <input
                       id={`doc-code-${nonce}`}
                       type="password"
