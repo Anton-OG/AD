@@ -1,6 +1,6 @@
 // src/components/ResetPasswordModal.jsx
 import React, { useEffect, useRef, useState } from 'react';
-import './styles/ResetPasswordModal.css';
+import './styles/Modal.css';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../firebase';
 
@@ -52,9 +52,9 @@ export default function ResetPasswordModal({ initialEmail = '', onClose }) {
   };
 
   return (
-    <div className="reset-overlay" onMouseDown={overlayClick} role="dialog" aria-modal="true">
-      <div className="reset-window" onMouseDown={(e) => e.stopPropagation()}>
-        <h2 className="reset-title">{done ? 'Check your email' : 'Reset password'}</h2>
+    <div className="modal-overlay" onMouseDown={onClose}>
+      <div className="modal-window is-reset" onMouseDown={(e) => e.stopPropagation()}>
+         <h2 className="modal-title">{done ? 'Check your email' : 'Reset password'}</h2>
 
         {!done ? (
           <>
@@ -71,14 +71,14 @@ export default function ResetPasswordModal({ initialEmail = '', onClose }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={busy}
-                className="reset-input"
+                className="modal-input"
                 autoComplete="email"
                 inputMode="email"
                 required
               />
-              {error && <div className="reset-error" aria-live="polite">{error}</div>}
+              {error && <div className="modal-error" aria-live="polite">{error}</div>}
 
-              <div className="reset-actions">
+              <div className="modal-actions">
                 <button type="button" className="btn-secondary" onClick={onClose} disabled={busy}>
                   Cancel
                 </button>
@@ -90,10 +90,10 @@ export default function ResetPasswordModal({ initialEmail = '', onClose }) {
           </>
         ) : (
           <>
-            <p className="reset-text">
+            <p className="modal-text">
               If an account exists for <strong>{email}</strong>, a password reset link has been sent.
             </p>
-            <div className="reset-actions">
+            <div className="modal-actions">
             <button className="btn-primary" onClick={onClose}>Done</button>
             </div>
           </>

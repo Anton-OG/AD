@@ -109,19 +109,19 @@ export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
         const isFound = uniqueFound.includes(i);
         ctx.beginPath();
         ctx.arc(x, y, isFound ? 6 : 4, 0, Math.PI * 2);
-        ctx.fillStyle = isFound ? '#ff5555' : 'rgba(255,255,255,0.55)';
+        ctx.fillStyle = isFound ? '#00ff37ff' : 'rgba(255,255,255,0.55)';
         ctx.fill();
 
         
         const lx = x + 10;
         const ly = y - 10;
-        ctx.font = 'bold 14px system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
+        ctx.font = 'bold 20px system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'left';
         ctx.lineWidth = 4;
         ctx.strokeStyle = 'rgba(0,0,0,0.6)'; 
         ctx.strokeText(String(i), lx, ly);
-        ctx.fillStyle = isFound ? '#ffcc00' : '#e6e6e6';
+        ctx.fillStyle = isFound ? '#00ff2aff' : '#e6e6e6';
         ctx.fillText(String(i), lx, ly);
       }
     };
@@ -151,7 +151,7 @@ export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
         redrawBase();
 
        
-        ctx.strokeStyle = '#ff0040ff';
+        ctx.strokeStyle = '#ff0000ff';
         ctx.lineWidth = 2;
         for (let i = 1; i < stepIndex; i++) {
           const [x1, y1] = coordinates[found[i - 1] - 1];
@@ -221,7 +221,7 @@ export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
       <div className="semantic-graph-wrapper">
         <canvas ref={canvasRef} />
         <div className="replay-button-wrapper">
-          <button className="replay-button" onClick={() => setAnimSeed(x => x + 1)}>▶️ Replay animation</button>
+          <button className="replay-button" onClick={() => setAnimSeed(x => x + 1)}>▶ Replay animation</button>
         </div>
       </div>
 

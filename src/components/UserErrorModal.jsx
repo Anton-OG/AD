@@ -1,19 +1,20 @@
 import React from 'react';
-import '../components/styles/UserErrorModal.css';
+import '../components/styles/Modal.css';
 
 export default function UserErrorModal({ onClose, missingFields }) {
   return (
-    <div className="error-modal">
-      <div className="error-window">
-        <h2>Oops!</h2>
-        <p>Please complete the following fields:</p>
-        <ul style={{ textAlign: 'left', margin: '0 auto 16px auto', maxWidth: '300px' }}>
-          {missingFields.map((field, index) => (
-            <li key={index} style={{ color: '#ffcc00', marginBottom: '4px' }}>{field}</li>
-          ))}
-        </ul>
-        <button className="completion-button" onClick={onClose}>OK</button>
-      </div>
-    </div>
-  );
-}
+    <div className="modal-overlay">
+      <div className="modal-window is-error">
+        <h2 className="modal-title">Oops!</h2>
+        <p className="modal-text">Please complete the following fields:</p>
+        <ul className="modal-list">
+           {missingFields.map((field, index) => (
+             <li key={index} style={{ color: '#00ffffff', marginBottom: '4px' }}>{field}</li>
+           ))}
+         </ul>
+
+        <button className="btn btn-primary" onClick={onClose}>OK</button>
+       </div>
+     </div>
+   );
+ }

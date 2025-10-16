@@ -4,7 +4,7 @@ import { auth, db } from '../firebase';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import SemanticGraph from './SemanticGraph.jsx';
 
-// ---- вспомогательное ----
+
 function fmt(ts) {
   if (!ts) return '—';
   try {
@@ -15,7 +15,7 @@ function fmt(ts) {
   }
 }
 
-// если в БД нет numbersFound/numbersMissing (старые тесты), посчитаем из description
+
 const rawDictionary = [
   [1, ['girl','sister','kid','child','daughter','schoolgirl','female child','young girl','juvenile']],
   [2, ['shushing','silencing','warning','gesturing','alerting','signaling','pointing','communicating']],
@@ -89,7 +89,7 @@ export default function MyTests() {
     );
   }
 
-  // ===== Детальная страница выбранного теста (без Test ID и без Saved numbers) =====
+  
   if (selected) {
     return (
       <div className="case-details">
@@ -101,13 +101,13 @@ export default function MyTests() {
           </div>
         </div>
 
-        {/* Только визуализация результата: картинка с анимацией, словарь и ваш текст */}
+        
         <SemanticGraph userText={selected.description || ''} time={selected.time} />
       </div>
     );
   }
 
-  // ===== Список карточек =====
+  
   return (
     <div className="cases-wrap">
       <h2>My test cases</h2>

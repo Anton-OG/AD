@@ -69,6 +69,7 @@ export default function AuthScreen({ onAuthed }) {
   const [invalidAgeError, setInvalidAgeError] = useState(false);
   const [missingFields, setMissingFields] = useState([]);
   const [showReset, setShowReset] = useState(false);
+  const [showPass, setShowPass] = useState(false);
   useEffect(() => {
    const last = sessionStorage.getItem('authLastError');
     if (last) {
@@ -368,7 +369,7 @@ export default function AuthScreen({ onAuthed }) {
         >
           {mode === 'login' && (
   <>
-                {/* БРЕНД-БЛОК */}
+                {/* Logo */}
                 <div className="brand-box">
                   <img src={logo} alt="UrsaCortex" className="brand-logo-xl" />
                   <div className="brand-name">UC Diagnostics</div>
@@ -393,13 +394,13 @@ export default function AuthScreen({ onAuthed }) {
                 </div>
 
                 {/* Password */}
-                <div className="auth-field with-ico">
+                  <div className="auth-field with-ico">
                   <label htmlFor={`login-pass-${nonce}`}></label>
                   <span className="ico" aria-hidden>ꗃ</span>
                   <input
                     id={`login-pass-${nonce}`}
                     name={fieldName('password')}
-                    type="password"
+                    type={showPass ? 'text' : 'password'}
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -407,12 +408,26 @@ export default function AuthScreen({ onAuthed }) {
                     required
                     autoComplete="current-password"
                   />
+
+                  <button
+                    type="button"
+                    className="toggle-visibility"
+                    aria-label={showPass ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPass}
+                    onMouseDown={() => setShowPass(true)}    
+                    onMouseUp={() => setShowPass(false)}     
+                    onMouseLeave={() => setShowPass(false)}  
+                    onTouchStart={() => setShowPass(true)}
+                    onTouchEnd={() => setShowPass(false)}
+                  >
+                    {showPass ? '👁' : '👁'}
+                  </button>
                 </div>
 
                 
                
 
-                {/* Поле кода врача показываем ТОЛЬКО при включённом тумблере */}
+                
                 {isDoctor && (
                   <div className="auth-field with-ico">
                     <label htmlFor={`doc-code-${nonce}`}></label>
@@ -643,4 +658,3 @@ export default function AuthScreen({ onAuthed }) {
     </div>
   );
 }
-

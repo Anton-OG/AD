@@ -26,9 +26,9 @@
 }
 
 /* Compact paragraphs inside the left column */
-.description-text {
+.description-text-col {
   font-size: clamp(0.95rem, 1.05vw, 1.1rem);
-  color: #dddddd;
+  color: #00fff27a;
   line-height: 1.5;
   text-align: justify;
   max-width: 48rem;

@@ -15,14 +15,6 @@
   align-items: start;
 }
 
-/* General card background */
-.card-block{
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.2);
-  padding: 1rem 1.1rem;
-}
 
 /* ===== Metrics (left column) ===== */
 .semantic-metrics{
@@ -57,7 +49,7 @@
   padding: 10px 12px;
   border-radius: 8px;
   background: rgba(255,204,0,.06);
-  border: 1px solid rgba(255,204,0,.35);
+  border: 1px solid rgba(0, 255, 255, 0.35);
   color: #1EB4FC;
   font-weight: 800;
   display: flex;

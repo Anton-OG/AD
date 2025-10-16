@@ -10,7 +10,8 @@ import MyTests from './MyTests.jsx'
 import { submitUserData, updateTestNumbers } from '../submitData.js';
 
 export default function Dashboard({ user }) {
-  const [tab, setTab] = useState('info');          // left: Info / New test / My test cases
+  const [tab, setTab] = useState('info');  
+  const [casesKey, setCasesKey] = useState(0);        // left: Info / New test / My test cases
   const [wizardStep, setWizardStep] = useState(0); // New test: 0=Info, 1=Describe, 2=Results
   const [description, setDescription] = useState('');
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -19,6 +20,15 @@ export default function Dashboard({ user }) {
   const [showModal, setShowModal] = useState(false);
   const [testId, setTestId] = useState(null);
   const [pendingNumbers, setPendingNumbers] = useState(null); // {found, missing}
+
+ const resetNewFlow = useCallback(() => { setWizardStep(0); setDescription(''); setElapsedTime(0);setTestId(null); setPendingNumbers(null);
+
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
 
   const name = useMemo(() => user?.displayName || user?.email || 'User', [user]);
 
@@ -54,19 +64,9 @@ export default function Dashboard({ user }) {
     }
   }, [testId, pendingNumbers]);
 
-  useEffect(() => {
-    if (tab === 'new') {
-      setWizardStep(0);
-      setDescription('');
-      setElapsedTime(0);
-      setTestId(null);
-      setPendingNumbers(null);
-      if (timerRef.current) {                         
-             clearInterval(timerRef.current);
-        timerRef.current = null;
-        }
-  }
-  }, [tab]);
+   useEffect(() => {
+    if (tab === 'new') resetNewFlow();
+  }, [tab, resetNewFlow]);
 
   return (
     <div className="dash">
@@ -76,10 +76,14 @@ export default function Dashboard({ user }) {
           <button className="dash-item" data-active={tab === 'info'} onClick={() => setTab('info')}>
             <span className="dash-ico">ℹ️</span><span>Info</span>
           </button>
-          <button className="dash-item" data-active={tab === 'new'} onClick={() => setTab('new')}>
+          <button
+          className="dash-item"
+          data-active={tab === 'new'}
+          onClick={() => { setTab('new'); resetNewFlow(); }}
+        >
             <span className="dash-ico">🧬</span><span>New test</span>
           </button>
-          <button className="dash-item" data-active={tab === 'cases'} onClick={() => setTab('cases')}>
+           <button className="dash-item" data-active={tab === 'cases'} onClick={() => { setTab('cases'); setCasesKey(k => k + 1); }}>
             <span className="dash-ico">🗂️</span><span>My test cases</span>
           </button>
         </nav>
@@ -132,7 +136,7 @@ export default function Dashboard({ user }) {
 
         {tab === 'cases' && (
             <div className="tab-wrap">
-                <MyTests />
+              <MyTests key={casesKey} />
             </div>
             )}
       </section>
