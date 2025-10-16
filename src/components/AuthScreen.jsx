@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './styles/AuthScreen.css';
 import logo from '../assets/2.png';
-import UserErrorModal from './UserErrorModal.jsx';
+
 import ResetPasswordModal from './ResetPasswordModal.jsx';
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18n';
 
 import {
   signInWithEmailAndPassword,
@@ -14,36 +16,65 @@ import {
   sendEmailVerification,
   reload,
 } from 'firebase/auth';
+
 import { auth, db } from '../firebase.js';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+
+function LangSwitchAuth() {
+  const { i18n, t } = useTranslation();
+  const current = i18n.language?.slice(0,2) === 'sk' ? 'sk' : 'en';
+  const setLang = (code) => { i18n.changeLanguage(code); localStorage.setItem('lang', code); };
+  const onKey = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') setLang(current === 'en' ? 'sk' : 'en');
+    if (e.key === 'ArrowLeft') setLang('en');
+    if (e.key === 'ArrowRight') setLang('sk');
+  };
+  return (
+    <div className="auth-lang" role="radiogroup" aria-label={t('language')}>
+      {['en','sk'].map(code => (
+        <button
+         key={code}
+          type="button"
+          className="auth-lang-opt"
+          role="radio"
+          aria-checked={current === code}
+          data-active={current === code}
+          onClick={() => setLang(code)}
+          onKeyDown={onKey}
+        >
+          {code.toUpperCase()}
+        </button>
+      ))}
+      <span className="auth-lang-knob" data-pos={current} aria-hidden="true" />
+   </div>
+  );
+}
+
+
 
 const DOCTOR_CODE = 'YOUR_SECRET_DOCTOR_CODE';
 
 // Human-readable (EN) Firebase auth errors
 const humanizeAuthError = (err) => {
-  const code =
-    err?.code || (String(err?.message || '').match(/auth\/[a-z-]+/i) || [])[0];
+   const code = err?.code || (String(err?.message || '').match(/auth\/[a-z-]+/i) || [])[0];
   switch (code) {
     case 'auth/invalid-credential':
     case 'auth/wrong-password':
     case 'auth/user-not-found':
-      return 'Invalid email or password.';
+     return i18n.t('auth.incorrect_credentials');
     case 'auth/invalid-email':
-      return 'Invalid email address.';
-    case 'auth/email-already-in-use':
-      return 'An account with this email already exists.';
-    case 'auth/weak-password':
-      return 'Weak password (minimum 6 characters).';
+      return i18n.t('auth.invalid_email');
     case 'auth/too-many-requests':
-      return 'Too many attempts. Please try again later.';
+      return i18n.t('auth.too_many_requests');
     case 'auth/network-request-failed':
-      return 'Network error. Check your connection.';
+      return i18n.t('auth.network_error');
     default:
-      return 'Authentication error. Please try again.';
+      return i18n.t('auth.generic_error');
   }
 };
 
 export default function AuthScreen({ onAuthed }) {
+  const { t } = useTranslation();
   const [mode, setMode] = useState('login'); // 'login' | 'register'
   const [busy, setBusy] = useState(false);
   const [authError, setAuthError] = useState('');
@@ -150,7 +181,7 @@ export default function AuthScreen({ onAuthed }) {
         const handleSubmit = async (e) => {
    e.preventDefault();
    if (isDoctor && !doctorCode.trim()) {
-     setAuthError('Doctor code is required.');
+     setAuthError(i18n.t('auth.doctor_code_required'));
      return;
    }
     setAuthError('');
@@ -237,7 +268,7 @@ export default function AuthScreen({ onAuthed }) {
             handleCodeInApp: false,
           });
         } catch {}
-        await blockAndExplain(`We sent a verification link to ${em}. Please verify your email, then sign in.`);
+        await blockAndExplain(i18n.t('auth.verify_email_resent'));
         return;
       } catch (err) {
         console.error(err);
@@ -266,16 +297,14 @@ export default function AuthScreen({ onAuthed }) {
             handleCodeInApp: false,
           });
         } catch {}
-        await blockAndExplain('Please verify your email. We just re-sent the verification link.');
+        await blockAndExplain(i18n.t('auth.verify_email_resent'));
         return;
       }
 
       // allow only if profile document exists
       const exists = await userDocExists(cred.user.uid);
       if (!exists) {
-        await blockAndExplain(
-          'This account is no longer available. Please contact support.'
-        );
+        await blockAndExplain(i18n.t('auth.account_unavailable'));
         return;
       }
 
@@ -285,20 +314,20 @@ export default function AuthScreen({ onAuthed }) {
           const dref = doc(db, 'doctorCodes', cred.user.uid);
           const dsnap = await getDoc(dref);
           if (!dsnap.exists() || dsnap.data()?.active === false) {
-            await blockAndExplain(' Account is not configured. Contact Administrator.');
+            await blockAndExplain(i18n.t('auth.account_not_configured'));
             return;
           }
           const expected = dsnap.data().codeHash;
           const actual = await sha256Hex(doctorCode.trim());
           if (!doctorCode.trim() || expected !== actual) {
-            await blockAndExplain('Invalid doctor code.');
+            await blockAndExplain(i18n.t('auth.invalid_doctor_code'));
             return;
           }
           // Mark role as doctor on successful verification
           const doctorOk = true;
         } catch (e) {
           console.error(e);
-          await blockAndExplain('Doctor verification failed. Try again later.');
+          await blockAndExplain(i18n.t('auth.doctor_verification_failed'));
           return;
         }
       }
@@ -312,9 +341,9 @@ export default function AuthScreen({ onAuthed }) {
             code === 'auth/invalid-credential' ||
             code === 'auth/invalid-login-credentials'
           ) {
-            setAuthError('Incorrect email or password.');
+            setAuthError(i18n.t('auth.incorrect_credentials'));
           } else if (code === 'auth/user-not-found') {
-            setAuthError('No account found with this email.');
+            setAuthError(i18n.t('auth.no_account'));
           } else {
             // Fallback: check if email exists to give better hint  
             try {
@@ -322,9 +351,7 @@ export default function AuthScreen({ onAuthed }) {
                 auth,
                 email.trim().toLowerCase()
               );
-              setAuthError(methods.length === 0
-                ? 'No account found with this email.'
-                : humanizeAuthError(err));
+             setAuthError(methods.length === 0 ? i18n.t('auth.no_account') : humanizeAuthError(err));
             } catch {
               setAuthError(humanizeAuthError(err));
             }
@@ -337,7 +364,8 @@ export default function AuthScreen({ onAuthed }) {
   return (
     <div className="auth-wrap fade-in">
       <div className={`auth-card ${mode === 'login' ? 'is-login' : 'is-register'}`}>
-        <h1 className="auth-title">{mode === 'login' ? 'Sign in' : 'Create account'}</h1>
+        <LangSwitchAuth />
+        <h1 className="auth-title">{mode === 'login' ? t('sign_in') : t('sign_up')}</h1>
 
         <div className="auth-tabs">
           <button
@@ -346,7 +374,7 @@ export default function AuthScreen({ onAuthed }) {
             onClick={() => switchMode('login')}
             disabled={busy}
           >
-            Sign in
+            {t('sign_in')}
           </button>
           <button
             type="button"
@@ -354,7 +382,7 @@ export default function AuthScreen({ onAuthed }) {
             onClick={() => switchMode('register')}
             disabled={busy}
           >
-            Sign up
+            {t('sign_up')}
           </button>
         </div>
 
@@ -367,7 +395,7 @@ export default function AuthScreen({ onAuthed }) {
           autoCapitalize="none"
           spellCheck={false}
         >
-          {mode === 'login' && (
+          {mode === 'login' &&  (
   <>
                 {/* Logo */}
                 <div className="brand-box">
@@ -383,7 +411,7 @@ export default function AuthScreen({ onAuthed }) {
                     id={`login-email-${nonce}`}
                     name={fieldName('email')}
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder={t('auth.email_placeholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={busy}
@@ -401,7 +429,7 @@ export default function AuthScreen({ onAuthed }) {
                     id={`login-pass-${nonce}`}
                     name={fieldName('password')}
                     type={showPass ? 'text' : 'password'}
-                    placeholder="Enter your password"
+                    placeholder={t('auth.password_placeholder')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={busy}
@@ -412,7 +440,7 @@ export default function AuthScreen({ onAuthed }) {
                   <button
                     type="button"
                     className="toggle-visibility"
-                    aria-label={showPass ? 'Hide password' : 'Show password'}
+                    aria-label={showPass ? t('auth.hide_password') : t('auth.show_password')}
                     aria-pressed={showPass}
                     onMouseDown={() => setShowPass(true)}    
                     onMouseUp={() => setShowPass(false)}     
@@ -435,7 +463,7 @@ export default function AuthScreen({ onAuthed }) {
                     <input
                       id={`doc-code-${nonce}`}
                       type="password"
-                      placeholder="Enter your doctor code"
+                      placeholder={t('auth.doctor_code_placeholder')}
                       value={doctorCode}
                       onChange={(e)=>setDoctorCode(e.target.value)}
                       disabled={busy}
@@ -447,7 +475,7 @@ export default function AuthScreen({ onAuthed }) {
                 )}
                     <div className="auth-actions">
                   <button type="submit" className="primary-btn" disabled={busy}>
-                    {busy ? 'Signing in…' : 'Login'}
+                    {busy ? t('signing_in') : t('login')}
                   </button>
                 </div>
                 <div className="doctor-and-forgot">
@@ -459,7 +487,7 @@ export default function AuthScreen({ onAuthed }) {
                         disabled={busy}
                       />
                       <span className="box" aria-hidden="true"></span>
-                      <span className="text">I am a Doctor</span>
+                      <span className="text">{t('auth.im_doctor')}</span>
                     </label>
 
                      <a
@@ -467,7 +495,7 @@ export default function AuthScreen({ onAuthed }) {
                         href="#"
                         onClick={(e) => { e.preventDefault(); setShowReset(true); }}
                       >
-                      Forgot Password?
+                      {t('forgot')}
                     </a>
                   </div> 
                   {authError && (
@@ -489,7 +517,7 @@ export default function AuthScreen({ onAuthed }) {
                     id={`reg-first-${nonce}`}
                     name={fieldName('given-name')}
                     type="text"
-                    placeholder="Enter your first name"
+                    placeholder={t('reg.first_name_ph')}
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     disabled={busy}
@@ -502,7 +530,7 @@ export default function AuthScreen({ onAuthed }) {
                     id={`reg-last-${nonce}`}
                     name={fieldName('family-name')}
                     type="text"
-                    placeholder="Enter your last name"
+                    placeholder={t('reg.last_name_ph')}
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     disabled={busy}
@@ -521,7 +549,7 @@ export default function AuthScreen({ onAuthed }) {
                       onClick={() => setGender('male')}
                       disabled={busy}
                     >
-                      Male
+                      {t('reg.male')}
                     </button>
                     <button
                       type="button"
@@ -529,7 +557,7 @@ export default function AuthScreen({ onAuthed }) {
                       onClick={() => setGender('female')}
                       disabled={busy}
                     >
-                      Female
+                      {t('reg.female')}
                     </button>
                   </div>
                 </div>
@@ -545,7 +573,7 @@ export default function AuthScreen({ onAuthed }) {
                     disabled={busy}
                     required
                     autoComplete="bday"
-                    lang="en"
+                    lang={i18n.language}
                   />
                 </div>
               </div>
@@ -557,7 +585,7 @@ export default function AuthScreen({ onAuthed }) {
                     id={`reg-phone-${nonce}`}
                     name={fieldName('tel')}
                     type="tel"
-                    placeholder="+421 900 000 000"
+                    placeholder={t('reg.phone_ph')}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     disabled={busy}
@@ -572,7 +600,7 @@ export default function AuthScreen({ onAuthed }) {
                     id={`reg-email-${nonce}`}
                     name={fieldName('email')}
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder={t('auth.email_placeholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={busy}
@@ -590,7 +618,7 @@ export default function AuthScreen({ onAuthed }) {
                     id={`reg-pass-${nonce}`}
                     name={fieldName('new-password')}
                     type="password"
-                    placeholder="Create password"
+                    placeholder={t('reg.create_password')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={busy}
@@ -606,7 +634,7 @@ export default function AuthScreen({ onAuthed }) {
                     id={`reg-pass2-${nonce}`}
                     name={fieldName('confirm-password')}
                     type="password"
-                    placeholder="Repeat password"
+                    placeholder={t('reg.repeat_password')}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     disabled={busy}
@@ -624,13 +652,11 @@ export default function AuthScreen({ onAuthed }) {
                 </div>
               )}
 
-              <div className="auth-info">
-                This information will be used solely for research purposes and will remain anonymous.
-              </div>
+              <div className="auth-info">{t('reg.notice')}</div>
 
               <div className="auth-actions">
                 <button type="submit" className="primary-btn" disabled={busy}>
-                  {busy ? 'Creating…' : 'Sign up'}
+                   {busy ? t('reg.creating') : t('sign_up')}
                 </button>
               </div>
             </>

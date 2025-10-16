@@ -8,8 +8,11 @@ import SemanticGraph from './SemanticGraph.jsx';
 import CompletionModal from './CompletionModal.jsx';
 import MyTests from './MyTests.jsx'
 import { submitUserData, updateTestNumbers } from '../submitData.js';
+import { useTranslation } from 'react-i18next';
+
 
 export default function Dashboard({ user }) {
+  const {i18n, t } = useTranslation();
   const [tab, setTab] = useState('info');  
   const [casesKey, setCasesKey] = useState(0);        // left: Info / New test / My test cases
   const [wizardStep, setWizardStep] = useState(0); // New test: 0=Info, 1=Describe, 2=Results
@@ -74,20 +77,20 @@ export default function Dashboard({ user }) {
       <aside className="dash-sidebar">
         <nav className="dash-menu">
           <button className="dash-item" data-active={tab === 'info'} onClick={() => setTab('info')}>
-            <span className="dash-ico">ℹ️</span><span>Info</span>
+            <span className="dash-ico">ℹ️</span><span>{t('nav_info')}</span>
           </button>
           <button
           className="dash-item"
           data-active={tab === 'new'}
           onClick={() => { setTab('new'); resetNewFlow(); }}
         >
-            <span className="dash-ico">🧬</span><span>New test</span>
+            <span className="dash-ico">🧬</span><span>{t('nav_new_test')}</span>
           </button>
            <button className="dash-item" data-active={tab === 'cases'} onClick={() => { setTab('cases'); setCasesKey(k => k + 1); }}>
-            <span className="dash-ico">🗂️</span><span>My test cases</span>
+            <span className="dash-ico">🗂️</span><span>{t('nav_cases')}</span>
           </button>
         </nav>
-        <div className="dash-user">User: {name}</div>
+        <div className="dash-user"> {name}</div>
       </aside>
 
       {/* Central area */}

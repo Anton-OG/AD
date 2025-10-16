@@ -1,19 +1,16 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import '../components/styles/WelcomeScreen.css';
 import t1 from '../assets/t2.png';
 
 export default function WelcomeScreen({ onNext }) {
+  const { i18n, t  } = useTranslation();
   return (
     <div className="welcome-block fade-in">
-      <h1>Welcome to the Cognitive Perception Test!</h1>
-      <p className="welcome-paragraph">
-        Thank you for participating in this short test. It is part of a scientific project aimed at better understanding how people perceive everyday situations. 
-        Your participation helps us explore new ways to support early brain health research. 
-        The test is simple and will only take a few minutes. When you're ready, click “Continue” to begin.
-      </p>
-      <img src={t1} alt="Intro" className="welcome-image" />
+      <h1>{t('welcome_h1')}</h1>
+       <p className="welcome-paragraph">{t('welcome_body')}</p>
+      <img src={t1} alt={t('welcome_image_alt')} className="welcome-image" />
       <div className="welcome-button-container">
-        <button onClick={onNext} className="welcome-button">Continue</button>
       </div>
     </div>
   );

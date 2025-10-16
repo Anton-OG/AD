@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../components/styles/DescriptionTest.css';
 import t1 from '../assets/t1.jpg';
 import ErrorModal from './ErrorModal';
+import { useTranslation } from 'react-i18next';
 
 export default function DescriptionTest({
   description,
@@ -11,6 +12,7 @@ export default function DescriptionTest({
   timerRef,
   onSubmit
 }) {
+  const { i18n,t } = useTranslation();
   const textareaRef = useRef(null);
   const startTimeRef = useRef(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
@@ -48,28 +50,23 @@ export default function DescriptionTest({
 
   return (
     <div className="description-block fade-in">
-      <h1 className="description-title">Tell Us What You See</h1>
+      <h1 className="description-title">{t('desc.title')}</h1>
 
    
       <div className="description-grid">
         <div className="description-text-col">
           <div className="instruction-card">
-            <span className="instruction-badge">How to write</span>
+            <span className="instruction-badge">{t('desc.how_to_write')}</span>
             <ul className="instruction-list">
-              <li>
-                Describe everything you see in the picture — people, actions, objects, and interactions. 
-                Use full sentences. The more details, the better.
-              </li>
-              <li>
-                There are no right or wrong answers. Just describe what you see as clearly as you can. 
-                Your response will help us better understand how people perceive everyday situations.
-              </li>
+              <li>{t('desc.bullet1')}</li>
+              <li>{t('desc.bullet2')}</li>
+
             </ul>
           </div>
         </div>
 
         <div className="description-media">
-          <img src={t1} alt="Cognitive test" className="description-image" />
+          <img src={t1} alt={t('desc.image_alt')} className="description-image" />
         </div>
       </div>
 
@@ -78,20 +75,20 @@ export default function DescriptionTest({
         ref={textareaRef}
         className="description-textarea"
         rows="6"
-        placeholder="Start typing your description here..."
+        placeholder={t('desc.placeholder')}
         value={description}
         onChange={handleChange}
       />
 
    
-      {elapsedTime > 0 && (
-        <p className="description-timer">Elapsed time: {elapsedTime} seconds</p>
+       {elapsedTime > 0 && (
+        <p className="description-timer">{t('desc.elapsed', { seconds: elapsedTime })}</p>
       )}
 
       
       <div className="description-button-container">
         <button onClick={handleSubmit} className="description-button">
-          Submit my description
+          {t('desc.submit')}
         </button>
       </div>
 

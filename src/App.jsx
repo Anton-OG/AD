@@ -1,6 +1,7 @@
 // App.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
+import './i18n';
 
 import Header from './components/Header.jsx';
 import Footer from './components/Footer';

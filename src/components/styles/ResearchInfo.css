@@ -60,6 +60,7 @@
   background: #1EB4FC;
   color: #1d1d1d;
   cursor: pointer;
+  font-size: clamp(11px, 0.9rem + 0.5vw, 15px); 
   transition: transform .03s ease, background .15s ease, box-shadow .15s ease;
 }
 .info-button:hover{

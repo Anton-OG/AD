@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../components/styles/SemanticGraph.css';
 import t1 from '../assets/t1.jpg';
-
+import { useTranslation } from 'react-i18next';
 
 const rawDictionary = [
   [1, ['girl', 'sister', 'kid', 'child', 'daughter', 'schoolgirl', 'female child', 'young girl', 'juvenile']],
@@ -75,6 +75,7 @@ function highlightWords(text, vocab) {
 }
 
 export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
+  const { i18n,t } = useTranslation();
   const canvasRef = useRef(null);
   const [animSeed, setAnimSeed] = useState(0);
 
@@ -204,16 +205,16 @@ export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
       
 
       <div className="semantic-metrics">
-        <h3>Test Analysis Summary</h3>
+        <h3>{t('graph.title')}</h3>
         <div className="metrics-table">
-          <div className="metric-row"><span className="metric-label">🧠 Found categories (sequence):</span><span className="metric-value">{found.join(', ')}</span></div>
-          <div className="metric-row"><span className="metric-label">🔄 Transitions between fields:</span><span className="metric-value">{transitions}</span></div>
-          <div className="metric-row"><span className="metric-label">📉 Missing categories:</span><span className="metric-value">{missing.join(', ')}</span></div>
-          <div className="metric-row"><span className="metric-label">📈 Graph density:</span><span className="metric-value">{density.toFixed(3)}</span></div>
-          <div className="metric-row"><span className="metric-label">📏 Path distance:</span><span className="metric-value">{distance.toFixed(1)}</span></div>
+          <div className="metric-row"><span className="metric-label">{t('graph.found_seq')}</span><span className="metric-value">{found.join(', ')}</span></div>
+          <div className="metric-row"><span className="metric-label">{t('graph.transitions')}</span><span className="metric-value">{transitions}</span></div>
+          <div className="metric-row"><span className="metric-label">{t('graph.missing')}</span><span className="metric-value">{missing.join(', ')}</span></div>
+          <div className="metric-row"><span className="metric-label">{t('graph.density')}</span><span className="metric-value">{density.toFixed(3)}</span></div>
+          <div className="metric-row"><span className="metric-label">{t('graph.distance')}</span><span className="metric-value">{distance.toFixed(1)}</span></div>
         </div>
         <div className="highlight-index-box">
-          <span className="highlight-index-label">Cognitive impairment index:</span>
+          <span className="highlight-index-label">{t('graph.index_label')}</span>
           <span className="highlight-index-value">{index.toFixed(2)}</span>
         </div>
       </div>
@@ -221,13 +222,15 @@ export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
       <div className="semantic-graph-wrapper">
         <canvas ref={canvasRef} />
         <div className="replay-button-wrapper">
-          <button className="replay-button" onClick={() => setAnimSeed(x => x + 1)}>▶ Replay animation</button>
+       <button className="replay-button" onClick={() => setAnimSeed(x => x + 1)}>
+            {t('graph.replay')}
+         </button>
         </div>
       </div>
 
       <div className="semantic-io">
         <div className="dictionary-block">
-          <h3>Semantic Word Groups</h3>
+          <h3>{t('graph.dict_title')}</h3>
           <div className="semantic-dictionary">
             {rawDictionary.map(([num, words]) => (
               <div className="category-row" key={num}>
@@ -239,7 +242,7 @@ export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
         </div>
 
         <div className="usertext-block">
-          <h3>Your text</h3>
+         <h3>{t('graph.your_text')}</h3>
           <div className="usertext-box">
             {highlightWords(userText, [...dictionary.keys()])}
           </div>

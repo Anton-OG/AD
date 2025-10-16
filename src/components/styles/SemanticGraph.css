@@ -56,7 +56,12 @@
   justify-content: space-between;
   gap: 12px;
 }
-.highlight-index-label{ opacity:.95; }
+.highlight-index-label{
+  opacity: 0.95;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+}
 .highlight-index-value{ font-size: 1.2rem; }
 
 /* ===== Graph (right column) ===== */
