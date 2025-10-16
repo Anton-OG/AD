@@ -237,10 +237,10 @@ i18n
           },
 
           // Welcome / Info
-          welcome_h1: "Vitajte v teste kognitívneho vnímania!",
+          welcome_h1: "Vitajte na teste kognitívneho vnímania!",
           welcome_cta: "Pokračovať",
           welcome_body:
-            "Ďakujeme, že sa zúčastňujete tohto krátkeho testu. Test je súčasťou vedeckého projektu zameraného na lepšie pochopenie, ako ľudia vnímajú každodenné situácie. Vaša účasť nám pomáha hľadať nové spôsoby podpory výskumu včasného zdravia mozgu. Test je jednoduchý a zaberie iba niekoľko minút. Keď budete pripravení, kliknite na „Nový test“ a začnite.",
+            "Ďakujeme, že sa zúčastňujete tohto krátkeho testu. Test je súčasťou vedeckého projektu zameraného na lepšie pochopenie toho, ako ľudia vnímajú každodenné situácie. Vaša účasť nám pomáha hľadať nové spôsoby, ako podporiť výskum včasnej starostlivosti o zdravie mozgu. Test je jednoduchý a zaberie len niekoľko minút. Keď budete pripravení, kliknite na tlačidlo „Nový test“ a začnite.",
           welcome_image_alt: "Úvodná ilustrácia",
           info_title: "O výskumnom projekte",
           info_cta: "Začať test",

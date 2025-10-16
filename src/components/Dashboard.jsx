@@ -1,6 +1,12 @@
 import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import './styles/Dashboard.css';
 
+import infoIco from '../assets/info.png';
+import newTestIco from '../assets/new-test.png';
+import casesIco from '../assets/cases.png';
+
+
+
 import WelcomeScreen from './WelcomeScreen.jsx';
 import ResearchInfo from './ResearchInfo.jsx';
 import DescriptionTest from './DescriptionTest.jsx';
@@ -77,18 +83,14 @@ export default function Dashboard({ user }) {
       <aside className="dash-sidebar">
         <nav className="dash-menu">
           <button className="dash-item" data-active={tab === 'info'} onClick={() => setTab('info')}>
-            <span className="dash-ico">ℹ️</span><span>{t('nav_info')}</span>
+            <span className="dash-ico"><img src={infoIco} alt="" /></span><span>{t('nav_info')}</span>
           </button>
-          <button
-          className="dash-item"
-          data-active={tab === 'new'}
-          onClick={() => { setTab('new'); resetNewFlow(); }}
-        >
-            <span className="dash-ico">🧬</span><span>{t('nav_new_test')}</span>
+         <button className="dash-item" data-active={tab === 'new'} onClick={() => { setTab('new'); resetNewFlow(); }}>
+            <span className="dash-ico"><img src={newTestIco} alt="" /></span><span>{t('nav_new_test')}</span>
           </button>
-           <button className="dash-item" data-active={tab === 'cases'} onClick={() => { setTab('cases'); setCasesKey(k => k + 1); }}>
-            <span className="dash-ico">🗂️</span><span>{t('nav_cases')}</span>
-          </button>
+            <button className="dash-item" data-active={tab === 'cases'} onClick={() => { setTab('cases'); setCasesKey(k => k + 1); }}>
+              <span className="dash-ico"><img src={casesIco} alt="" /></span><span>{t('nav_cases')}</span>
+            </button>
         </nav>
         <div className="dash-user"> {name}</div>
       </aside>

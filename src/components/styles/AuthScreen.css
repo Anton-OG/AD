@@ -346,10 +346,10 @@
 .auth-field.with-ico .ico {
     position: absolute;
   left: 12px;
-  top: 50%;
+  top: 55%;
   transform: translateY(-50%);
-  width: 18px;              /* подгони под свой PNG */
-  height: 18px;
+  width: 20px;              /* подгони под свой PNG */
+  height: 20px;
   display: block;
   opacity: .95;
   pointer-events: none;
@@ -362,15 +362,24 @@
 .auth-field.with-ico .toggle-visibility{
   position: absolute;
   right: 10px;
-  top: 50%;
+  top: 55%;
   transform: translateY(-50%);
   background: transparent;
   border: 0;
-  font-size: 18px;
-  color: var(--ink-muted);
-  padding: 6px;
+  padding: 6px;            /* размер кликабельной области */
   cursor: pointer;
+  display: inline-flex;     /* чтобы центрировать картинку внутри */
+  align-items: center;
+  justify-content: center;
+  line-height: 0;           /* убирает лишние пробелы вокруг img */
   user-select: none;
+}
+.auth-field.with-ico .toggle-visibility img{
+  width: 20px;              /* меняй под свой PNG */
+  height: 20px;
+  display: block;
+  pointer-events: none;     /* кликаем по кнопке, не по картинке */
+  object-fit: contain;      /* аккуратное вписывание, если пропорции другие */
 }
 .auth-field.with-ico .toggle-visibility:hover{ color: var(--accent); }
 

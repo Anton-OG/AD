@@ -47,6 +47,13 @@
   border-radius: 999px;
   background: rgba(255,255,255,.08);
 }
+.dash-menu .dash-item .dash-ico{ position: relative; }
+.dash-menu .dash-item .dash-ico img{
+  position: absolute;
+  top: 52%; left: 47%;
+  width: 30px; height: 30px;
+  transform: translate(-50%, -50%) translate(2px, -1px);
+}
 
 .dash-item:hover{
   background: rgba(255,255,255,.06);
@@ -103,8 +110,13 @@
 }
 
 /* Circle icon */
-.dash-menu .dash-item .dash-ico{
-  width: 36px;
-  height: 36px;
-  font-size: 20px;           /* to make emoji/icon larger as well */
+.dash-item .dash-ico img{
+  width: 30px;        /* настрой под себя */
+  height: 30px;
+  display: block;
+  object-fit: contain;
+  pointer-events: none; /* кликаем по кнопке, не по картинке */
+}
+@media (max-width: 960px){
+  .dash-menu .dash-item .dash-ico img{ width: 18px; height: 18px; }
 }
