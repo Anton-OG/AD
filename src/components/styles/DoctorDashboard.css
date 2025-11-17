@@ -1,0 +1,185 @@
+/* =============================
+   DoctorDashboard — стиль как у Dashboard
+   ============================= */
+
+/* Основная сетка — идентична Dashboard.css */
+.doctor-dashboard {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  min-height: calc(100dvh - 120px);
+}
+
+/* ==== Left menu ==== */
+.doctor-dashboard .dash-sidebar {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+  padding: 18px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.doctor-dashboard .dash-menu {
+  display: grid;
+  gap: 8px;
+}
+
+.doctor-dashboard .dash-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #e8e8e8;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: background .15s ease, transform .03s ease;
+}
+
+.doctor-dashboard .dash-item:hover {
+  background: rgba(255,255,255,.06);
+}
+
+.doctor-dashboard .dash-item:active {
+  transform: translateY(1px);
+}
+
+.doctor-dashboard .dash-item[data-active="true"] {
+  background: rgba(0, 255, 234, 0.16);
+  outline: 1px solid rgba(0, 247, 255, 0.38);
+  font-size: 16px;
+}
+
+.doctor-dashboard .dash-item .dash-ico {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+}
+
+.doctor-dashboard .dash-item .dash-ico img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+/* ==== User panel ==== */
+.doctor-dashboard .dash-user {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: .2px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.doctor-dashboard .user-gear {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.doctor-dashboard .user-gear-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform .14s ease;
+}
+
+.doctor-dashboard .user-gear:hover .user-gear-icon {
+  transform: scale(1.14);
+}
+
+/* ==== Content area ==== */
+.doctor-dashboard .dash-content {
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+  padding: 18px;
+  overflow: hidden;
+}
+
+.doctor-dashboard .tab-wrap {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* ==== Patients table ==== */
+.patients-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  color: #e8e8e8;
+}
+
+.patients-table th, 
+.patients-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.patients-table tr:hover {
+  background: rgba(255,255,255,.06);
+  cursor: pointer;
+}
+
+/* ==== Search bar ==== */
+.search-bar {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px 14px 10px 38px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color: #fff;
+  outline: none;
+  transition: border-color .15s ease;
+}
+
+.search-bar input::placeholder {
+  color: rgba(255,255,255,.4);
+}
+
+.search-bar input:focus {
+  border-color: rgba(0, 255, 234, 0.35);
+}
+
+.search-bar .search-icon {
+  width: 20px;
+  opacity: .8;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ==== Responsive ==== */
+@media (max-width: 900px) {
+  .doctor-dashboard {
+    grid-template-columns: 1fr;
+  }
+  .doctor-dashboard .dash-sidebar {
+    order: 2;
+  }
+  .doctor-dashboard .dash-content {
+    order: 1;
+  }
+}

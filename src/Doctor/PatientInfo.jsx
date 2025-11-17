@@ -1,50 +1,40 @@
 import React, { useEffect, useState } from 'react';
-  import { collection, getDocs } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
-
-
-
-
-export default function AllUsers() {
+export default function PatientInfo({ patientId }) {
+  const [patient, setPatient] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    async function loadUsers() {
+    if (!patientId) return;
+
+    async function load() {
       setLoading(true);
-      try {
-        const snap = await getDocs(collection(db, 'users'));
-        setUsers(snap.docs.map(doc => ({ uid: doc.id, ...doc.data() })));
-      } catch (e) {
-  console.log("🔥 FIRESTORE ERROR:", e);
-}
-        setUsers([]);
-      } finally {
-        setLoading(false);
+      const snap = await getDoc(doc(db, 'users', patientId));
+      if (snap.exists()) {
+        setPatient(snap.data());
       }
+      setLoading(false);
     }
 
-    loadUsers();
-  }, []);
+    load();
+  }, [patientId]);
 
-  if (loading) return <div>Loading users...</div>;
+  if (!patientId) return null;
+  if (loading) return <div className="patient-info">Loading...</div>;
+  if (!patient) return <div className="patient-info">User not found.</div>;
 
   return (
-    <div>
-      
-      {users.length === 0 ? (
-        <div>No users found.</div>
-      ) : (
-        <ul>
-          {users.map(u => (
-            <li key={u.uid}>
-              <strong>UID:</strong> {u.uid} | <strong>Name:</strong> {u.firstName ?? '—'} {u.lastName ?? '—'} | <strong>Email:</strong> {u.email ?? '—'} | <strong>Phone:</strong> {u.phone ?? '—'}
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="patient-info">
+      <h3>Patient details</h3>
+
+      <p><strong>Name:</strong> {patient.firstName} {patient.lastName}</p>
+      <p><strong>Email:</strong> {patient.email}</p>
+      <p><strong>Phone:</strong> {patient.phone || "—"}</p>
+      <p><strong>Gender:</strong> {patient.gender}</p>
+      <p><strong>Age:</strong> {patient.age}</p>
+      <p><strong>Registered:</strong> {patient.createdAt?.toDate().toLocaleString() ?? "—"}</p>
     </div>
   );
-  
 }

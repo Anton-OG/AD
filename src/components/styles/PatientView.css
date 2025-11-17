@@ -1,0 +1,99 @@
+.patient-page {
+  width: 100%;
+  color: #e8e8e8;
+}
+
+.patient-top {
+  margin-bottom: 16px;
+}
+
+.back-btn {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+
+.patient-container {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 30px;
+}
+
+.patient-card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.patient-name {
+  color: #1EB4FC;
+  margin-bottom: 14px;
+}
+
+.patient-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 8px 40px;
+}
+
+.labels p {
+  font-weight: 600;
+}
+
+.values p {
+  opacity: 0.9;
+}
+
+.edit-btn-area {
+  text-align: right;
+  margin-top: 12px;
+}
+
+.edit-btn {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: #1EB4FC;
+}
+
+.patient-right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.right-btn {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 14px;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #1EB4FC;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.right-btn-disabled {
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+  padding: 20px 24px;
+  color: rgba(255,255,255,.3);
+  font-size: 20px;
+  font-weight: 700;
+  cursor: default;
+}
+
+.right-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
