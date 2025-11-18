@@ -82,13 +82,12 @@
   color: #e0e0e0;
 }
 
-/* кнопки */
+
 .pm-buttons {
   display: flex;
   justify-content: space-between;
   margin-top: 22px;
 }
-
 .pm-btn {
   padding: 10px 20px;
   border-radius: 12px;
