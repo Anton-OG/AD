@@ -44,7 +44,17 @@ function analyzeText(rawText) {
   const clean = (rawText || '').toLowerCase().replace(/[^\w\s]/g, '');
   const words = clean.split(/\s+/).filter(Boolean);
   const found = words.map(w => dictionary.get(w)).filter(Boolean);
-
+if (found.length === 0) {
+  return {
+    found,
+    transitions: 0,
+    missing: rawDictionary.map(([n]) => n),
+    density: 0,
+    distance: 0,
+    index: 0,
+    words: []
+  };
+}
   const transitions = found.reduce((sum, curr, i, arr) =>
     i === 0 ? sum : sum + (getQuadrant(curr) !== getQuadrant(arr[i - 1]) ? 1 : 0), 0);
 
@@ -60,7 +70,30 @@ function analyzeText(rawText) {
     totalDistance += Math.hypot(x2 - x1, y2 - y1);
   }
 
-  const index = (1 - density) * 0.5 + (transitions / Math.max(1, (found.length - 1) || 1)) * 0.5;
+  
+            // coverage: сколько категорий найдено (0..1)
+            const coverage = unique.length / rawDictionary.length;
+
+            // coherence: связность (0..1)
+            const transitionsNorm = found.length > 1 
+              ? transitions / (found.length - 1)
+              : 0;
+
+            const coherence = 1 - transitionsNorm;
+
+            // richness: насколько слова разнообразны (0..1)
+            const richness = found.length > 0 
+              ? (unique.length / found.length)
+              : 0;
+
+            // итоговый индекс 0..10
+            const index = 10 * (
+              0.5 * coverage +
+              0.3 * coherence +
+              0.2 * richness
+            );
+
+
   const matched = words.filter(w => dictionary.has(w));
 
   return { found, transitions, missing, density, distance: totalDistance, index, words: matched };
@@ -83,13 +116,16 @@ export default function SemanticGraph({ userText = '', onNumbersExtracted }) {
   const uniqueFound = [...new Set(found)]; 
 
   
-  useEffect(() => {
-    if (typeof onNumbersExtracted === 'function') {
-      onNumbersExtracted({ found: uniqueFound, missing });
-    }
-    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userText]);
+      useEffect(() => {
+        if (typeof onNumbersExtracted === "function") {
+          onNumbersExtracted({
+            found: uniqueFound,
+            missing,
+            index
+          });
+        }
+      }, [userText]);
+
 
  
   useEffect(() => {

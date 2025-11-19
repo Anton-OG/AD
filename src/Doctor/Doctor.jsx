@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../components/styles/DoctorDashboard.css";
 
+import PatientTests from "./PatientTests.jsx";
 import PatientView from "./PatientView.jsx";
 import searchIcon from "./assets/search_icon.png";
 import patientsIcon from "./assets/Patients.png";
@@ -58,12 +59,11 @@ export default function Doctor({ user }) {
     useEffect(() => {
       async function load() {
         const snap = await getDocs(
-          query(
-            collection(db, "tests"),
-            where("patientId", "==", patient.id),
-            where("type", "==", "AD")
-          )
-        );
+        query(
+          collection(db, "users", patient.id, "tests"),
+          where("type", "==", "AD")
+        )
+      );
         setTests(snap.docs.map(d => ({ id: d.id, ...d.data() })));
       }
       load();
@@ -89,7 +89,7 @@ export default function Doctor({ user }) {
               <tbody>
                 {tests.map(t => (
                   <tr key={t.id}>
-                    <td>{t.date}</td>
+                  <td>{t.createdAt?.toDate().toLocaleString() ?? "—"}</td>
                     <td>{t.score}</td>
                   </tr>
                 ))}
@@ -199,13 +199,12 @@ export default function Doctor({ user }) {
             />
           )}
 
-          {/* AD history */}
-          {selectedPatient && testPage === "ad" && (
-            <ADHistory
-              patient={selectedPatient}
-              onBack={() => setTestPage(null)}
-            />
-          )}
+         {selectedPatient && testPage === "ad" && (
+    <PatientTests
+        patientId={selectedPatient.id}
+        onBack={() => setTestPage(null)}
+    />
+      )}
 
         </div>
       </main>

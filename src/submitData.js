@@ -9,7 +9,9 @@ import {
   increment,
 } from 'firebase/firestore';
 
-
+// ---------------------------
+// Create initial test record
+// ---------------------------
 export async function submitUserData({ description, time }) {
   const user = auth.currentUser;
   if (!user) throw new Error('Not authenticated');
@@ -24,7 +26,6 @@ export async function submitUserData({ description, time }) {
   const testsCol = collection(db, 'users', user.uid, 'tests');
   const ref = await addDoc(testsCol, testDoc);
 
-  
   await setDoc(
     doc(db, 'users', user.uid),
     {
@@ -34,15 +35,23 @@ export async function submitUserData({ description, time }) {
     { merge: true }
   );
 
-  return ref.id;
+  return ref.id; // testId
 }
 
-
-export async function updateTestNumbers({ testId, numbersFound = [], numbersMissing = [] }) {
+// ---------------------------
+// Update test with numbers & score
+// ---------------------------
+export async function updateTestNumbers({
+  testId,
+  numbersFound = [],
+  numbersMissing = [],
+  score = null,        // ← ДОБАВИЛИ СЮДА
+}) {
   const user = auth.currentUser;
   if (!user) throw new Error('Not authenticated');
   if (!testId) throw new Error('testId is required');
 
+  // sanitize arrays
   const sanitize = (arr) =>
     Array.from(new Set((arr || [])
       .map(v => Number(v))
@@ -52,8 +61,14 @@ export async function updateTestNumbers({ testId, numbersFound = [], numbersMiss
   const payload = {
     numbersFound: sanitize(numbersFound),
     numbersMissing: sanitize(numbersMissing),
+    score: Number.isFinite(score) ? Number(score) : null,
+    type: "AD",
     updatedAt: serverTimestamp(),
   };
 
-  await setDoc(doc(db, 'users', user.uid, 'tests', testId), payload, { merge: true });
+  await setDoc(
+    doc(db, 'users', user.uid, 'tests', testId),
+    payload,
+    { merge: true }
+  );
 }

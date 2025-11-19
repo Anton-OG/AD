@@ -20,8 +20,9 @@ export default function App() {
   const [loading, setLoading] = useState(true);       // firebase init
   const [roleLoading, setRoleLoading] = useState(true); // check doctor role
 
-  // 💀 КОСТЫЛЬ: задержка рендера после логина
-  const [postLoginDelay, setPostLoginDelay] = useState(true);
+  //  КОСТЫЛЬ: задержка рендера после логина
+  const [postLoginDelay, setPostLoginDelay] = useState(false);
+
 
   // =============================
   // AUTH LISTENER
@@ -49,7 +50,12 @@ export default function App() {
 
       setRoleLoading(false);
       setLoading(false);
-
+        try {
+          const userSnap = await getDoc(doc(db, "users", u.uid));
+          setUserDoc(userSnap.exists() ? userSnap.data() : null);
+        } catch {
+          setUserDoc(null);
+        }
       
       setTimeout(() => {
         setPostLoginDelay(false);

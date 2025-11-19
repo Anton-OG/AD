@@ -89,7 +89,7 @@ export default function PatientEditModal({ patient, onClose, onSaved }) {
             checked={validated}
             onChange={() => setValidated((v) => !v)}
           />
-          <span>Activate account (emailVerified)</span>
+          <span>Activate account </span>
         </div>
 
         <div className="pm-buttons">

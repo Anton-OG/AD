@@ -1,17 +1,63 @@
+import { useState, useEffect } from "react";
 import "../components/styles/PatientView.css";
-import mocaIcon from "./assets/approval.png";
+
 import adIcon from "./assets/approval.png";
-import statsIcon from "./assets/Statistics.png";
-import { useState } from "react";
+
 import PatientEditModal from "./PatientEditModal.jsx";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+  limit
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function PatientView({ patient, onBack, onOpenAd }) {
   const [editing, setEditing] = useState(false);
   const [localPatient, setLocalPatient] = useState(patient);
 
+  const [lastAd, setLastAd] = useState(null);
+
+  // Load last AD test from Firestore
+  useEffect(() => {
+    async function loadLastAD() {
+      try {
+       const q = query(
+          collection(db, "users", localPatient.id, "tests"),
+          where("type", "==", "AD"),
+          orderBy("createdAt", "desc"),
+          limit(1)
+        );
+
+
+        const snap = await getDocs(q);
+
+        if (!snap.empty) {
+          const t = snap.docs[0].data();
+          const created = t.createdAt?.toDate
+            ? t.createdAt.toDate().toLocaleString()
+            : "—";
+
+          setLastAd({
+            score: t.score ?? null,
+            date: created
+          });
+        }
+      } catch (e) {
+        console.error("Error loading last AD test:", e);
+      }
+    }
+
+    if (localPatient?.id) {
+      loadLastAD();
+    }
+  }, [localPatient.id]);
+
   if (!localPatient) return null;
 
-  // Refresh local data after saving
+  // After saving in the modal
   const handleSaved = (updated) => {
     setLocalPatient({ ...localPatient, ...updated });
     setEditing(false);
@@ -19,14 +65,14 @@ export default function PatientView({ patient, onBack, onOpenAd }) {
 
   return (
     <div className="patient-page fade-in">
-
       <div className="patient-top">
-        <button className="back-btn" onClick={onBack}>← Back</button>
+        <button className="back-btn" onClick={onBack}>
+          ← Back
+        </button>
       </div>
 
       <div className="patient-container">
-
-        {/* Left card */}
+        {/* LEFT CARD */}
         <div className="patient-card">
           <h2 className="patient-name">
             {localPatient.firstName} {localPatient.lastName}
@@ -36,6 +82,8 @@ export default function PatientView({ patient, onBack, onOpenAd }) {
             <div className="labels">
               <p>Email</p>
               <p>Phone</p>
+              <p>Gender</p>
+              <p>Age</p>
               <p>Registration date</p>
               <p>Last AD test</p>
               <p>AD score</p>
@@ -45,9 +93,23 @@ export default function PatientView({ patient, onBack, onOpenAd }) {
             <div className="values">
               <p>{localPatient.email}</p>
               <p>{localPatient.phone || "—"}</p>
-              <p>{localPatient.createdAt?.toDate().toISOString().split("T")[0]}</p>
-              <p>{localPatient.lastAD || "—"}</p>
-              <p>{localPatient.adScore || "—"}</p>
+              <p>{localPatient.gender || "—"}</p>
+              <p>{localPatient.age || "—"}</p>
+
+              {/* Registration date */}
+              <p>
+                {localPatient.createdAt?.toDate
+                  ? localPatient.createdAt.toDate().toISOString().split("T")[0]
+                  : "—"}
+              </p>
+
+              {/* LAST AD TEST DATE */}
+              <p>{lastAd ? lastAd.date : "—"}</p>
+
+              {/* LAST AD SCORE */}
+              <p>{lastAd ? lastAd.score?.toFixed(2) : "—"}</p>
+
+              {/* VALIDATION */}
               <p>{localPatient.validated ? "✔ Active" : "—"}</p>
             </div>
           </div>
@@ -59,9 +121,8 @@ export default function PatientView({ patient, onBack, onOpenAd }) {
           </div>
         </div>
 
-        {/* Right column */}
+        {/* RIGHT PANEL */}
         <div className="patient-right-panel">
-
           <button className="right-btn" onClick={onOpenAd}>
             <span>AD assessment history</span>
             <img src={adIcon} className="right-img" alt="" />
@@ -74,12 +135,9 @@ export default function PatientView({ patient, onBack, onOpenAd }) {
           <button className="right-btn-disabled">
             <span>Patient Statistics</span>
           </button>
-
         </div>
-
       </div>
 
-      {/* Edit modal */}
       {editing && (
         <PatientEditModal
           patient={localPatient}

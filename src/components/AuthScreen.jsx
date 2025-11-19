@@ -132,7 +132,8 @@ export default function AuthScreen({ onAuthed }) {
 
   // helper: check if Firestore profile exists
   const userDocExists = async (uid) => {
-    const snap = await getDoc(doc(db, 'users', uid));
+    const snap = await getDoc(doc(db, "users", cred.user.uid));
+    const profile = snap.data() || {};
     return snap.exists();
   };
 
@@ -293,19 +294,20 @@ export default function AuthScreen({ onAuthed }) {
       if (isDoctor) sessionStorage.setItem('doctorIntent', '1');
      const cred = await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
      
-      // block if email is not verified
-      try { await reload(cred.user); } catch {}
-      if (!cred.user.emailVerified) {
-        try {
-          auth.useDeviceLanguage?.();
-          await sendEmailVerification(cred.user, {
-            url: `${window.location.origin}/`,
-            handleCodeInApp: false,
-          });
-        } catch {}
-        await blockAndExplain(i18n.t('auth.verify_email_resent'));
-        return;
-      }
+    // --------- ACCOUNT ACTIVATION LOGIC ----------
+          try { await reload(cred.user); } catch {}
+
+          // Load Firestore profile
+          const snap = await getDoc(doc(db, "users", cred.user.uid));
+          const profile = snap.data() || {};
+
+          // If email NOT verified AND NOT validated → block login
+          if (!cred.user.emailVerified && !profile.validated) {
+            setAuthError("Your account is not activated. Please verify your email or contact your doctor.");
+            await signOut(auth); // остаёмся на login
+            return;
+          }
+
 
       // allow only if profile document exists
       const exists = await userDocExists(cred.user.uid);
