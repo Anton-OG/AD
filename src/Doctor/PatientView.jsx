@@ -24,40 +24,44 @@ export default function PatientView({ patient, onBack, onOpenAd }) {
   useEffect(() => {
     async function loadLastAD() {
       try {
-       const q = query(
+        const q = query(
           collection(db, "users", localPatient.id, "tests"),
           where("type", "==", "AD"),
-          orderBy("createdAt", "desc"),
+        //orderBy("createdAt", "desc"),
           limit(1)
         );
-
 
         const snap = await getDocs(q);
 
         if (!snap.empty) {
           const t = snap.docs[0].data();
-          const created = t.createdAt?.toDate
-            ? t.createdAt.toDate().toLocaleString()
-            : "—";
+
+          // createdAt как timestamp
+          const created =
+            t.createdAt?.toDate
+              ? t.createdAt.toDate().toLocaleString()
+              : "—";
 
           setLastAd({
-            score: t.score ?? null,
+            score:
+              typeof t.score === "number"
+                ? t.score.toFixed(2)
+                : "—",
             date: created
           });
+        } else {
+          setLastAd(null);
         }
       } catch (e) {
         console.error("Error loading last AD test:", e);
       }
     }
 
-    if (localPatient?.id) {
-      loadLastAD();
-    }
+    if (localPatient?.id) loadLastAD();
   }, [localPatient.id]);
 
   if (!localPatient) return null;
 
-  // After saving in the modal
   const handleSaved = (updated) => {
     setLocalPatient({ ...localPatient, ...updated });
     setEditing(false);
@@ -72,7 +76,6 @@ export default function PatientView({ patient, onBack, onOpenAd }) {
       </div>
 
       <div className="patient-container">
-        {/* LEFT CARD */}
         <div className="patient-card">
           <h2 className="patient-name">
             {localPatient.firstName} {localPatient.lastName}
@@ -96,20 +99,21 @@ export default function PatientView({ patient, onBack, onOpenAd }) {
               <p>{localPatient.gender || "—"}</p>
               <p>{localPatient.age || "—"}</p>
 
-              {/* Registration date */}
               <p>
                 {localPatient.createdAt?.toDate
-                  ? localPatient.createdAt.toDate().toISOString().split("T")[0]
+                  ? localPatient.createdAt
+                      .toDate()
+                      .toISOString()
+                      .split("T")[0]
                   : "—"}
               </p>
 
               {/* LAST AD TEST DATE */}
-              <p>{lastAd ? lastAd.date : "—"}</p>
+              <p>{lastAd?.date ?? "—"}</p>
 
               {/* LAST AD SCORE */}
-              <p>{lastAd ? lastAd.score?.toFixed(2) : "—"}</p>
+              <p>{lastAd?.score ?? "—"}</p>
 
-              {/* VALIDATION */}
               <p>{localPatient.validated ? "✔ Active" : "—"}</p>
             </div>
           </div>
@@ -121,7 +125,6 @@ export default function PatientView({ patient, onBack, onOpenAd }) {
           </div>
         </div>
 
-        {/* RIGHT PANEL */}
         <div className="patient-right-panel">
           <button className="right-btn" onClick={onOpenAd}>
             <span>AD assessment history</span>
