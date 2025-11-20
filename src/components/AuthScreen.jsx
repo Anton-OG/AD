@@ -313,20 +313,23 @@ export default function AuthScreen({ onAuthed }) {
 
       if (isDoctor) sessionStorage.setItem('doctorIntent', '1');
      const cred = await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
-     
+     const snap = await getDoc(doc(db, "users", cred.user.uid));
+    const data = snap.data();
       // block if email is not verified
-      try { await reload(cred.user); } catch {}
-      if (!cred.user.emailVerified) {
-        try {
-          auth.useDeviceLanguage?.();
-          await sendEmailVerification(cred.user, {
-            url: `${window.location.origin}/`,
-            handleCodeInApp: false,
-          });
-        } catch {}
-        await blockAndExplain(i18n.t('auth.verify_email_resent'));
-        return;
-      }
+    if (!data?.validated) {
+  try { await reload(cred.user); } catch {}
+  if (!cred.user.emailVerified) {
+    try {
+      auth.useDeviceLanguage?.();
+      await sendEmailVerification(cred.user, {
+        url: `${window.location.origin}/`,
+        handleCodeInApp: false,
+      });
+    } catch {}
+    await blockAndExplain(i18n.t('auth.verify_email_resent'));
+    return;
+  }
+}
 
       // allow only if profile document exists
       const exists = await userDocExists(cred.user.uid);
@@ -360,6 +363,13 @@ export default function AuthScreen({ onAuthed }) {
       }
 
       onAuthed?.(cred.user, { doctorSessionOk: isDoctor ? true : false });
+
+
+            if (isDoctor) {
+          sessionStorage.setItem("doctorSessionOk", "1");
+      } else {
+          sessionStorage.removeItem("doctorSessionOk");
+      }
     } catch (err) {
       console.error(err);
       const code = err?.code || '';

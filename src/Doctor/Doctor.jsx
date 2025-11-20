@@ -29,15 +29,30 @@ export default function Doctor({ user }) {
   const doctorName = user?.displayName || user?.email;
 
   // Загрузка пользователей
-  useEffect(() => {
-    async function load() {
-      const snap = await getDocs(collection(db, "users"));
-      const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      setPatients(list);
-      setFiltered(list);
-    }
-    load();
-  }, []);
+useEffect(() => {
+  async function load() {
+    const snap = await getDocs(collection(db, "users"));
+
+    const list = snap.docs
+      .map(d => {
+        const data = d.data();
+        return {
+          id: d.id,
+          ...data,
+          validated: data.validated ?? false,
+          emailVerified: data.emailVerified ?? false,
+        };
+      })
+      // ⭐ Не показываем админов в списке
+      .filter(user => user.role !== "admin");
+
+    setPatients(list);
+    setFiltered(list);
+  }
+
+  load();
+}, []);
+
 
   // Поиск
   useEffect(() => {

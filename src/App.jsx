@@ -15,13 +15,15 @@ import { doc, getDoc } from 'firebase/firestore';
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [isDoctor, setIsDoctor] = useState(false);
+  const [role, setRole] = useState(null);
 
-  const [loading, setLoading] = useState(true);       // firebase init
-  const [roleLoading, setRoleLoading] = useState(true); // check doctor role
-
-  // 💀 КОСТЫЛЬ: задержка рендера после логина
+  const [loading, setLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(true);
   const [postLoginDelay, setPostLoginDelay] = useState(true);
+
+  // ⭐ NEW: Firestore profile
+  const [profile, setProfile] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   // =============================
   // AUTH LISTENER
@@ -30,34 +32,47 @@ export default function App() {
     const unsub = onAuthStateChanged(auth, async (u) => {
       if (!u) {
         setUser(null);
-        setIsDoctor(false);
-        setLoading(false);
+        setRole(null);
+        setProfile(null);
         setRoleLoading(false);
+        setLoading(false);
         setPostLoginDelay(false);
         return;
       }
 
       setUser(u);
+
       setRoleLoading(true);
-
       try {
-        const snap = await getDoc(doc(db, "doctorCodes", u.uid));
-        setIsDoctor(snap.exists());
+        const snap = await getDoc(doc(db, "users", u.uid));
+        const data = snap.data();
+        setRole(data?.role || "user");
       } catch {
-        setIsDoctor(false);
+        setRole("user");
       }
-
       setRoleLoading(false);
-      setLoading(false);
 
-      
-      setTimeout(() => {
-        setPostLoginDelay(false);
-      }, 100);  
+      setLoading(false);
+      setTimeout(() => setPostLoginDelay(false), 100);
     });
 
     return () => unsub();
   }, []);
+
+  // =============================
+  // LOAD FIRESTORE PROFILE
+  // =============================
+  useEffect(() => {
+    if (!user) return;
+
+    async function loadProfile() {
+      const snap = await getDoc(doc(db, "users", user.uid));
+      setProfile(snap.data());
+      setProfileLoading(false);
+    }
+
+    loadProfile();
+  }, [user]);
 
   // =============================
   // LOGOUT
@@ -65,14 +80,24 @@ export default function App() {
   const handleLogout = async () => {
     try { await signOut(auth); } catch {}
     setUser(null);
-    setIsDoctor(false);
+    setRole(null);
+    setProfile(null);
     setPostLoginDelay(false);
   };
 
   // =============================
-  // СПЛЭШ ПОКА ЗАДЕРЖКА ИЛИ ЛОАДИНГ
+  // GLOBAL SPLASH
   // =============================
-  if (loading || roleLoading || postLoginDelay) {
+if (loading || roleLoading || postLoginDelay || (user && profileLoading)) {
+      console.log({
+    loading,
+    roleLoading,
+    postLoginDelay,
+    profileLoading,
+    user,
+    role,
+    profile
+  });
     return (
       <div className="splash">
         <div className="spinner" />
@@ -88,7 +113,15 @@ export default function App() {
       <div className="app-shell">
         <main className="app-main">
           <div className="app-container">
-            <AuthScreen />
+            <AuthScreen
+              onAuthed={(user, extra) => {
+                if (extra?.doctorSessionOk) {
+                  sessionStorage.setItem("doctorSessionOk", "1");
+                } else {
+                  sessionStorage.removeItem("doctorSessionOk");
+                }
+              }}
+            />
           </div>
         </main>
         <Footer />
@@ -97,31 +130,70 @@ export default function App() {
   }
 
   // =============================
-  // LOGGED IN
+  // FIRESTORE VALIDATION CHECK
   // =============================
-if (!auth.currentUser.emailVerified) {
+// 1. Если доктор активировал — сразу пропускаем
+if (profile?.validated === true) {
+  // ничего не делаем — просто продолжаем вниз,
+  // НО НЕ ПРОВЕРЯЕМ emailVerified
+} 
+// 2. Если профиль НЕ активирован доктором → требуем подтверждение email
+else if (!auth.currentUser.emailVerified) {
   return (
     <div className="app-shell">
       <main className="app-main">
         <div className="app-container">
           <AuthScreen forceMessage="Please verify your email to continue." />
-                  </div>
+        </div>
       </main>
       <Footer />
     </div>
   );
 }
-return (
-  <div className="app-shell">
-    <Header user={user} onLogout={handleLogout} />
 
-    <main className="app-main">
-      <div className="app-container">
-        {isDoctor ? <Doctor user={user} /> : <Dashboard user={user} />}
+
+  // =============================
+  // DOCTOR MODE PRIORITY LOGIC
+  // =============================
+  const doctorIntent = sessionStorage.getItem("doctorIntent") === "1";
+  const doctorOk = sessionStorage.getItem("doctorSessionOk") === "1";
+
+  if (doctorIntent) {
+    if (doctorOk && role === "admin") {
+      return (
+        <div className="app-shell">
+          <Header user={user} onLogout={handleLogout} />
+          <main className="app-main">
+            <div className="app-container">
+              <Doctor user={user} />
+            </div>
+          </main>
+          <Footer />
+        </div>
+      );
+    }
+
+    return (
+      <div className="splash">
+        <div className="spinner" />
       </div>
-    </main>
+    );
+  }
 
-    <Footer />
-  </div>
-);
+  // =============================
+  // NORMAL USER FLOW
+  // =============================
+  return (
+    <div className="app-shell">
+      <Header user={user} onLogout={handleLogout} />
+      <main className="app-main">
+        <div className="app-container">
+          {role === "admin" && doctorOk
+            ? <Doctor user={user} />
+            : <Dashboard user={user} />}
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
 }
