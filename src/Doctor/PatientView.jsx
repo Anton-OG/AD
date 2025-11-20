@@ -89,7 +89,7 @@ export default function PatientView({ patient, onBack, onOpenAd }) {
               <p>Age</p>
               <p>Registration date</p>
               <p>Last AD test</p>
-              <p>AD score</p>
+              <p>Last AD score</p>
               <p>Validation</p>
             </div>
 
