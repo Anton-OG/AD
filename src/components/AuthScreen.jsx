@@ -311,7 +311,11 @@ export default function AuthScreen({ onAuthed }) {
     try {
       setBusy(true);
 
-      if (isDoctor) sessionStorage.setItem('doctorIntent', '1');
+     if (isDoctor) {
+      sessionStorage.setItem('doctorIntent', '1');
+    } else {
+      sessionStorage.removeItem('doctorIntent');   // ← ДОБАВИТЬ ЭТО
+    }
      const cred = await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
      const snap = await getDoc(doc(db, "users", cred.user.uid));
     const data = snap.data();
@@ -365,8 +369,10 @@ export default function AuthScreen({ onAuthed }) {
       onAuthed?.(cred.user, { doctorSessionOk: isDoctor ? true : false });
 
 
-            if (isDoctor) {
+          if (isDoctor) {
           sessionStorage.setItem("doctorSessionOk", "1");
+
+          window.location.reload();
       } else {
           sessionStorage.removeItem("doctorSessionOk");
       }

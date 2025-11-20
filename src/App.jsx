@@ -83,6 +83,8 @@ export default function App() {
     setRole(null);
     setProfile(null);
     setPostLoginDelay(false);
+    sessionStorage.removeItem("doctorIntent");
+    sessionStorage.removeItem("doctorSessionOk");
   };
 
   // =============================
