@@ -2,7 +2,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-// сохраняем/читаем выбранный язык
+// read / save selected language
 const saved = localStorage.getItem('lang') || 'en';
 
 i18n
@@ -12,6 +12,9 @@ i18n
     fallbackLng: 'en',
     interpolation: { escapeValue: false },
     resources: {
+      // ===============================
+      // ENGLISH
+      // ===============================
       en: {
         translation: {
           // Global / header
@@ -43,31 +46,39 @@ i18n
             network_error: "Network error. Check your connection.",
             generic_error: "Authentication error. Please try again.",
 
-            verify_email_resent: "Please verify your email. We just re-sent the verification link.",
-            account_unavailable: "This account is no longer available. Please contact support.",
-            account_not_configured: "Account is not configured. Contact Administrator.",
+            verify_email_resent:
+              "Please verify your email. We just re-sent the verification link.",
+            account_unavailable:
+              "This account is no longer available. Please contact support.",
+            account_not_configured:
+              "Account is not configured. Contact Administrator.",
             invalid_doctor_code: "Invalid doctor code.",
-            doctor_verification_failed: "Doctor verification failed. Try again later.",
+            doctor_verification_failed:
+              "Doctor verification failed. Try again later.",
             doctor_code_required: "Doctor code is required.",
-            email_in_use: "An account with this email already exists."
+            email_in_use: "An account with this email already exists.",
+            weak_password: "Password must be at least 6 characters."
           },
 
           // Reset password modal
           reset: {
             title: "Reset password",
             title_done: "Check your email",
-            subtitle: "Enter the email you used to register. We’ll send you a link to create a new password.",
+            subtitle:
+              "Enter the email you used to register. We’ll send you a link to create a new password.",
             email_placeholder: "your@email.com",
             cancel: "Cancel",
             send_link: "Send reset link",
             sending: "Sending…",
-            sent_blind: "If an account exists for this email, we've sent a reset link.",
+            sent_blind:
+              "If an account exists for this email, we've sent a reset link.",
             done: "Done",
 
-            // Доп. ключи для UX
+            // Extra UX keys
             enter_email: "Please enter your email.",
             error_generic: "Could not send reset email. Please try again.",
-            sent_blind_for: "If an account exists for {{email}}, a password reset link has been sent."
+            sent_blind_for:
+              "If an account exists for {{email}}, a password reset link has been sent."
           },
 
           // Welcome / Info
@@ -78,8 +89,10 @@ i18n
           welcome_image_alt: "Intro illustration",
           info_title: "About this research project",
           info_cta: "Start test",
-          info_p1: "This test is part of a research study that explores how people understand images and everyday situations. We are especially interested in how this relates to memory and thinking abilities.",
-          info_p2: "This test is part of a research study exploring how people interpret images and everyday situations. We are especially interested in how this relates to memory and cognitive abilities. Our goal is to discover new ways to support the early detection of conditions like Alzheimer’s disease. The information you provide may help us train artificial intelligence (AI) tools to better understand early changes in brain function. All responses are anonymous and used solely for research purposes.",
+          info_p1:
+            "This test is part of a research study that explores how people understand images and everyday situations. We are especially interested in how this relates to memory and thinking abilities.",
+          info_p2:
+            "This test is part of a research study exploring how people interpret images and everyday situations. We are especially interested in how this relates to memory and cognitive abilities. Our goal is to discover new ways to support the early detection of conditions like Alzheimer’s disease. The information you provide may help us train artificial intelligence (AI) tools to better understand early changes in brain function. All responses are anonymous and used solely for research purposes.",
           info_image_alt: "Research study",
 
           // Navigation (Dashboard)
@@ -124,11 +137,14 @@ i18n
             passwords_mismatch: "Passwords do not match.",
             age_range_error: "Age must be between 8 and 89 years"
           },
+
           desc: {
             title: "Tell Us What You See",
             how_to_write: "What you need to do",
-            bullet1: "Describe everything you see in the picture — people, actions, objects, and interactions. Use full sentences. The more details, the better.",
-            bullet2: "There are no right or wrong answers. Just describe what you see as clearly as you can. Your response will help us better understand how people perceive everyday situations.",
+            bullet1:
+              "Describe everything you see in the picture — people, actions, objects, and interactions. Use full sentences. The more details, the better.",
+            bullet2:
+              "There are no right or wrong answers. Just describe what you see as clearly as you can. Your response will help us better understand how people perceive everyday situations.",
             image_alt: "Cognitive test image",
             placeholder: "Start typing your description here...",
             elapsed: "Elapsed time: {{seconds}} seconds",
@@ -138,19 +154,22 @@ i18n
             error_title: "Submission Error",
             error_body: "You must enter a description before submitting.",
             ok: "OK"
-            },
-            user_error: {
+          },
+
+          user_error: {
             title: "Oops!",
             subtitle: "Please complete the following fields:",
             ok: "OK"
-            },
-            completion: {
+          },
+
+          completion: {
             title: "Thank you for taking part!",
             success: "You’ve successfully completed the test.",
             total_time: "Total time: {{seconds}} seconds",
             done: "Done"
-            },
-            graph: {
+          },
+
+          graph: {
             title: "Test Analysis Summary",
             found_seq: "🧠 Found categories (sequence):",
             transitions: "🔄 Transitions between fields:",
@@ -161,53 +180,59 @@ i18n
             replay: "▶ Replay animation",
             dict_title: "Semantic Word Groups",
             your_text: "Your text"
-            },
-            cases: {
-                back: "Back to list",
-                empty_prefix: "You have no tests yet. Run a",
-                empty_suffix: "to see it here.",
-                open_details: "Open test details",
-                test_n: "Test {{n}}"
-                },
-                units: {
-                seconds_short: "s"
-                },
-                settings: {
-                        title: "Settings",
-                        first_name: "First name",
-                        last_name: "Last name",
-                        phone: "Phone",
-                        save_profile: "Save profile",
+          },
 
-                        email_section: "Change e-mail",
-                        email_placeholder: "new-email@example.com",
-                        send_email_change: "Send confirmation e-mail",
+          cases: {
+            back: "Back to list",
+            empty_prefix: "You have no tests yet. Run a",
+            empty_suffix: "to see it here.",
+            open_details: "Open test details",
+            test_n: "Test {{n}}"
+          },
 
-                        password_section: "Password",
-                        send_password_reset: "Send password reset e-mail",
+          units: {
+            seconds_short: "s"
+          },
 
-                        saved: "Changes saved.",
-                        error_save: "Couldn't save profile. Please try again.",
+          settings: {
+            title: "Settings",
+            first_name: "First name",
+            last_name: "Last name",
+            phone: "Phone",
+            save_profile: "Save profile",
 
-                        email_enter: "Enter a new e-mail.",
-                        email_sent: "We've sent a confirmation to your new e-mail. Follow the link in the message to finish the change.",
-                        email_requires_recent_login: "To change e-mail you need to sign in again. Please sign out and sign back in.",
-                        email_invalid: "Invalid e-mail address.",
-                        email_in_use: "This e-mail is already in use.",
-                        email_change_error: "Couldn't send the confirmation e-mail.",
+            email_section: "Change e-mail",
+            email_placeholder: "new-email@example.com",
+            send_email_change: "Send confirmation e-mail",
 
-                        pass_sent: "We've sent a password reset e-mail to your current address.",
-                        pass_error: "Couldn't send the password reset e-mail.",
+            password_section: "Password",
+            send_password_reset: "Send password reset e-mail",
 
-                        open_aria: "Open profile settings",
-                        close_aria: "Close"
-                        }
+            saved: "Changes saved.",
+            error_save: "Couldn't save profile. Please try again.",
 
+            email_enter: "Enter a new e-mail.",
+            email_sent:
+              "We've sent a confirmation to your new e-mail. Follow the link in the message to finish the change.",
+            email_requires_recent_login:
+              "To change e-mail you need to sign in again. Please sign out and sign back in.",
+            email_invalid: "Invalid e-mail address.",
+            email_in_use: "This e-mail is already in use.",
+            email_change_error: "Couldn't send the confirmation e-mail.",
 
+            pass_sent:
+              "We've sent a password reset e-mail to your current address.",
+            pass_error: "Couldn't send the password reset e-mail.",
+
+            open_aria: "Open profile settings",
+            close_aria: "Close"
+          }
         }
       },
 
-      // SK ----------------------------------------------------------------SK----------------------------------------------------------------SK----------------------------------------------------------------SK----------------------------------------------------------------SK    
+      // ===============================
+      // SLOVAK
+      // ===============================
       sk: {
         translation: {
           // Global / header
@@ -231,7 +256,6 @@ i18n
             hide_password: "Skryť heslo",
             im_doctor: "Som lekár",
 
-            // Auth errors & notices
             incorrect_credentials: "Nesprávny e-mail alebo heslo.",
             no_account: "Pre tento e-mail sa nenašiel žiadny účet.",
             invalid_email: "Neplatná e-mailová adresa.",
@@ -239,11 +263,18 @@ i18n
             network_error: "Chyba siete. Skontrolujte svoje pripojenie.",
             generic_error: "Chyba overenia. Skúste to znova.",
 
-            verify_email_resent: "Prosím, potvrďte svoj e-mail. Práve sme znova poslali overovací odkaz.",
-            account_unavailable: "Tento účet už nie je dostupný. Kontaktujte podporu.",
-            account_not_configured: "Účet nie je nastavený. Kontaktujte administrátora.",
+            // fixed: proper Slovak text
+            weak_password: "Heslo musí mať aspoň 6 znakov.",
+
+            verify_email_resent:
+              "Prosím, potvrďte svoj e-mail. Práve sme znova poslali overovací odkaz.",
+            account_unavailable:
+              "Tento účet už nie je dostupný. Kontaktujte podporu.",
+            account_not_configured:
+              "Účet nie je nastavený. Kontaktujte administrátora.",
             invalid_doctor_code: "Neplatný kód lekára.",
-            doctor_verification_failed: "Overenie lekára zlyhalo. Skúste to neskôr.",
+            doctor_verification_failed:
+              "Overenie lekára zlyhalo. Skúste to neskôr.",
             doctor_code_required: "Kód lekára je povinný.",
             email_in_use: "Účet s týmto e-mailom už existuje."
           },
@@ -258,13 +289,15 @@ i18n
             cancel: "Zrušiť",
             send_link: "Poslať odkaz na obnovenie",
             sending: "Odosielanie…",
-            sent_blind: "Ak pre tento e-mail existuje účet, poslali sme odkaz na obnovenie.",
+            sent_blind:
+              "Ak pre tento e-mail existuje účet, poslali sme odkaz na obnovenie.",
             done: "Hotovo",
 
-            // Доп. ключи для UX
             enter_email: "Zadajte, prosím, svoj e-mail.",
-            error_generic: "Nepodarilo sa odoslať e-mail na obnovenie. Skúste to znova.",
-            sent_blind_for: "Ak pre {{email}} existuje účet, bol odoslaný odkaz na obnovenie hesla."
+            error_generic:
+              "Nepodarilo sa odoslať e-mail na obnovenie. Skúste to znova.",
+            sent_blind_for:
+              "Ak pre {{email}} existuje účet, bol odoslaný odkaz na obnovenie hesla."
           },
 
           // Welcome / Info
@@ -275,10 +308,12 @@ i18n
           welcome_image_alt: "Úvodná ilustrácia",
           info_title: "O výskumnom projekte",
           info_cta: "Začať test",
-          info_p1: "Tento test je súčasťou výskumnej štúdie, ktorá skúma, ako ľudia rozumejú obrázkom a každodenným situáciám. Zaujíma nás najmä súvis s pamäťou a myslením.",
-          info_p2: "Tento test je súčasťou výskumnej štúdie zameranej na to, ako ľudia rozumejú obrázkom a každodenným situáciám. Zaujíma nás najmä súvis s pamäťou, myslením a ďalšími kognitívnymi schopnosťami. Naším cieľom je hľadať nové spôsoby podpory včasného záchytu ochorení, ako je Alzheimerova choroba. Informácie, ktoré poskytnete, môžu pomôcť pri tréningu nástrojov umelej inteligencie (AI) na lepšie rozpoznávanie skorých zmien v činnosti mozgu. Vaše odpovede sú anonymné a budú použité výlučne na výskumné účely.",
+          info_p1:
+            "Tento test je súčasťou výskumnej štúdie, ktorá skúma, ako ľudia rozumejú obrázkom a každodenným situáciám. Zaujíma nás najmä súvis s pamäťou a myslením.",
+          info_p2:
+            "Tento test je súčasťou výskumnej štúdie zameranej na to, ako ľudia rozumejú obrázkom a každodenným situáciám. Zaujíma nás najmä súvis s pamäťou, myslením a ďalšími kognitívnymi schopnosťami. Naším cieľom je hľadať nové spôsoby podpory včasného záchytu ochorení, ako je Alzheimerova choroba. Informácie, ktoré poskytnete, môžu pomôcť pri tréningu nástrojov umelej inteligencie (AI) na lepšie rozpoznávanie skorých zmien v činnosti mozgu. Vaše odpovede sú anonymné a budú použité výlučne na výskumné účely.",
           info_image_alt: "Výskumná štúdia",
-          
+
           // Navigation (Dashboard)
           nav_info: "Informácie",
           nav_new_test: "Nový test",
@@ -294,7 +329,6 @@ i18n
 
           // Registration (Sign up)
           reg: {
-            // Field labels
             first_name: "Meno",
             last_name: "Priezvisko",
             gender: "Pohlavie",
@@ -303,51 +337,53 @@ i18n
             password: "Heslo",
             confirm_password: "Potvrdenie hesla",
 
-            // Placeholders
             first_name_ph: "Zadajte svoje meno",
             last_name_ph: "Zadajte svoje priezvisko",
             phone_ph: "Zadajte telefón (voliteľné)",
             create_password: "Vytvorte heslo",
             repeat_password: "Zopakujte heslo",
 
-            // Gender buttons
             male: "Muž",
             female: "Žena",
 
-            // UI text & errors
             notice:
               "Tieto údaje budú použité len na výskumné účely a zostanú anonymné.",
             creating: "Vytváranie…",
             passwords_mismatch: "Heslá sa nezhodujú.",
             age_range_error: "Vek musí byť medzi 8 a 89 rokov"
           },
+
           desc: {
             title: "Povedzte nám, čo vidíte",
             how_to_write: "Čo musíte spraviť",
-            bullet1: "Opíšte všetko, čo na obrázku vidíte — osoby, činnosti, objekty a interakcie. Používajte celé vety. Čím viac detailov, tým lepšie.",
-            bullet2: "Neexistujú správne ani nesprávne odpovede. Jednoducho čo najjasnejšie opíšte, čo vidíte. Vaša odpoveď nám pomôže lepšie pochopiť, ako ľudia vnímajú každodenné situácie.",
+            bullet1:
+              "Opíšte všetko, čo na obrázku vidíte — osoby, činnosti, objekty a interakcie. Používajte celé vety. Čím viac detailov, tým lepšie.",
+            bullet2:
+              "Neexistujú správne ani nesprávne odpovede. Jednoducho čo najjasnejšie opíšte, čo vidíte. Vaša odpoveď nám pomôže lepšie pochopiť, ako ľudia vnímajú každodenné situácie.",
             image_alt: "Obrázok kognitívneho testu",
             placeholder: "Začnite písať svoj opis…",
             elapsed: "Uplynutý čas: {{seconds}} s",
             submit: "Odoslať opis",
 
-            // Error modal
             error_title: "Chyba odoslania",
             error_body: "Pred odoslaním musíte zadať opis.",
             ok: "OK"
-            },
-            user_error: {
+          },
+
+          user_error: {
             title: "Ups!",
             subtitle: "Prosím, vyplňte nasledujúce polia:",
             ok: "OK"
-            },
-            completion: {
+          },
+
+          completion: {
             title: "Ďakujeme za účasť!",
             success: "Test ste úspešne dokončili.",
             total_time: "Celkový čas: {{seconds}} s",
             done: "Hotovo"
-            },
-            graph: {
+          },
+
+          graph: {
             title: "Zhrnutie analýzy testovania",
             found_seq: "🧠 Nájdené kategórie (poradie):",
             transitions: "🔄 Prechody medzi oblasťami:",
@@ -358,52 +394,53 @@ i18n
             replay: "▶ Prehrať animáciu",
             dict_title: "Sémantické polia",
             your_text: "Váš text"
-            },
-            cases: {
+          },
+
+          cases: {
             back: "Späť na zoznam",
             empty_prefix: "Zatiaľ nemáte žiadne testy. Spustite",
             empty_suffix: "aby sa zobrazil tu.",
             open_details: "Otvoriť detaily testu",
             test_n: "Test {{n}}"
-            },
-            units: {
+          },
+
+          units: {
             seconds_short: "s"
-            },
+          },
 
-                "settings": {
-             
-                title: "Nastavenia",
-                first_name: "Meno",
-                last_name: "Priezvisko",
-                phone: "Telefón",
-                save_profile: "Uložiť profil",
+          settings: {
+            title: "Nastavenia",
+            first_name: "Meno",
+            last_name: "Priezvisko",
+            phone: "Telefón",
+            save_profile: "Uložiť profil",
 
-                email_section: "Zmeniť e-mail",
-                email_placeholder: "novy-email@priklad.sk",
-                send_email_change: "Poslať potvrdzovací e-mail",
+            email_section: "Zmeniť e-mail",
+            email_placeholder: "novy-email@priklad.sk",
+            send_email_change: "Poslať potvrdzovací e-mail",
 
-                password_section: "Heslo",
-                send_password_reset: "Poslať e-mail na zmenu hesla",
+            password_section: "Heslo",
+            send_password_reset: "Poslať e-mail na zmenu hesla",
 
-                saved: "Zmeny boli uložené.",
-                error_save: "Profil sa nepodarilo uložiť. Skúste znova.",
+            saved: "Zmeny boli uložené.",
+            error_save: "Profil sa nepodarilo uložiť. Skúste znova.",
 
-                email_enter: "Zadajte nový e-mail.",
-                email_sent: "Odoslali sme potvrdenie na váš nový e-mail. Dokončite zmenu cez odkaz v správe.",
-                email_requires_recent_login: "Na zmenu e-mailu sa musíte znova prihlásiť. Odhláste sa a prihláste sa späť.",
-                email_invalid: "Neplatná e-mailová adresa.",
-                email_in_use: "Tento e-mail sa už používa.",
-                email_change_error: "Potvrdzovací e-mail sa nepodarilo odoslať.",
+            email_enter: "Zadajte nový e-mail.",
+            email_sent:
+              "Odoslali sme potvrdenie na váš nový e-mail. Dokončite zmenu cez odkaz v správe.",
+            email_requires_recent_login:
+              "Na zmenu e-mailu sa musíte znova prihlásiť. Odhláste sa a prihláste sa späť.",
+            email_invalid: "Neplatná e-mailová adresa.",
+            email_in_use: "Tento e-mail sa už používa.",
+            email_change_error: "Potvrdzovací e-mail sa nepodarilo odoslať.",
 
-                pass_sent: "Odoslali sme e-mail na obnovenie hesla na vašu aktuálnu adresu.",
-                pass_error: "E-mail na zmenu hesla sa nepodarilo odoslať.",
+            pass_sent:
+              "Odoslali sme e-mail na obnovenie hesla na vašu aktuálnu adresu.",
+            pass_error: "E-mail na zmenu hesla sa nepodarilo odoslať.",
 
-                open_aria: "Otvoriť nastavenia profilu",
-                close_aria: "Zavrieť"
-
-
-
-            },
+            open_aria: "Otvoriť nastavenia profilu",
+            close_aria: "Zavrieť"
+          }
         }
       }
     }

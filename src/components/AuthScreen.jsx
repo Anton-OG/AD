@@ -3,7 +3,7 @@ import './styles/AuthScreen.css';
 import logo from '../assets/2.png';
 import eyeOpen from '../assets/eye-open.png';
 import eyeClosed from '../assets/eye-closed.png';
-
+import UserErrorModal from './UserErrorModal.jsx';
 import codeIco  from '../assets/key.png';
 import mailIco  from '../assets/arroba.png';
 import lockIco  from '../assets/padlock.png';
@@ -63,17 +63,38 @@ const DOCTOR_CODE = 'YOUR_SECRET_DOCTOR_CODE';
 // Human-readable (EN) Firebase auth errors
 const humanizeAuthError = (err) => {
    const code = err?.code || (String(err?.message || '').match(/auth\/[a-z-]+/i) || [])[0];
-  switch (code) {
-    case 'auth/invalid-credential':
+    switch (code) {
+    // Логин неправильный
     case 'auth/wrong-password':
+    case 'auth/invalid-credential':
+    case 'auth/invalid-login-credentials':
+      return i18n.t('auth.incorrect_credentials');
+
+    // Пользователь не найден
     case 'auth/user-not-found':
-     return i18n.t('auth.incorrect_credentials');
+      return i18n.t('auth.no_account');
+
+    // Слишком слабый пароль на регистрации (<6)
+    case 'auth/weak-password':
+      return i18n.t('auth.weak_password');
+
+    // Уже существует email
+    case 'auth/email-already-in-use':
+      return i18n.t('auth.email_in_use');
+
+    // Неверный формат email
     case 'auth/invalid-email':
       return i18n.t('auth.invalid_email');
+
+    // Много попыток входа
     case 'auth/too-many-requests':
       return i18n.t('auth.too_many_requests');
+
+    // Проблема с интернетом
     case 'auth/network-request-failed':
       return i18n.t('auth.network_error');
+
+    // fallback
     default:
       return i18n.t('auth.generic_error');
   }
@@ -132,8 +153,7 @@ export default function AuthScreen({ onAuthed }) {
 
   // helper: check if Firestore profile exists
   const userDocExists = async (uid) => {
-    const snap = await getDoc(doc(db, "users", cred.user.uid));
-    const profile = snap.data() || {};
+    const snap = await getDoc(doc(db, 'users', uid));
     return snap.exists();
   };
 
@@ -294,20 +314,19 @@ export default function AuthScreen({ onAuthed }) {
       if (isDoctor) sessionStorage.setItem('doctorIntent', '1');
      const cred = await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
      
-    // --------- ACCOUNT ACTIVATION LOGIC ----------
-          try { await reload(cred.user); } catch {}
-
-          // Load Firestore profile
-          const snap = await getDoc(doc(db, "users", cred.user.uid));
-          const profile = snap.data() || {};
-
-          // If email NOT verified AND NOT validated → block login
-          if (!cred.user.emailVerified && !profile.validated) {
-            setAuthError("Your account is not activated. Please verify your email or contact your doctor.");
-            await signOut(auth); // остаёмся на login
-            return;
-          }
-
+      // block if email is not verified
+      try { await reload(cred.user); } catch {}
+      if (!cred.user.emailVerified) {
+        try {
+          auth.useDeviceLanguage?.();
+          await sendEmailVerification(cred.user, {
+            url: `${window.location.origin}/`,
+            handleCodeInApp: false,
+          });
+        } catch {}
+        await blockAndExplain(i18n.t('auth.verify_email_resent'));
+        return;
+      }
 
       // allow only if profile document exists
       const exists = await userDocExists(cred.user.uid);

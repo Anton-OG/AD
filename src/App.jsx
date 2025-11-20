@@ -20,9 +20,8 @@ export default function App() {
   const [loading, setLoading] = useState(true);       // firebase init
   const [roleLoading, setRoleLoading] = useState(true); // check doctor role
 
-  //  КОСТЫЛЬ: задержка рендера после логина
-  const [postLoginDelay, setPostLoginDelay] = useState(false);
-
+  // 💀 КОСТЫЛЬ: задержка рендера после логина
+  const [postLoginDelay, setPostLoginDelay] = useState(true);
 
   // =============================
   // AUTH LISTENER
@@ -50,12 +49,7 @@ export default function App() {
 
       setRoleLoading(false);
       setLoading(false);
-        try {
-          const userSnap = await getDoc(doc(db, "users", u.uid));
-          setUserDoc(userSnap.exists() ? userSnap.data() : null);
-        } catch {
-          setUserDoc(null);
-        }
+
       
       setTimeout(() => {
         setPostLoginDelay(false);
@@ -105,17 +99,29 @@ export default function App() {
   // =============================
   // LOGGED IN
   // =============================
+if (!auth.currentUser.emailVerified) {
   return (
     <div className="app-shell">
-      <Header user={user} onLogout={handleLogout} />
-
       <main className="app-main">
         <div className="app-container">
-          {isDoctor ? <Doctor user={user} /> : <Dashboard user={user} />}
-        </div>
+          <AuthScreen forceMessage="Please verify your email to continue." />
+                  </div>
       </main>
-
       <Footer />
     </div>
   );
+}
+return (
+  <div className="app-shell">
+    <Header user={user} onLogout={handleLogout} />
+
+    <main className="app-main">
+      <div className="app-container">
+        {isDoctor ? <Doctor user={user} /> : <Dashboard user={user} />}
+      </div>
+    </main>
+
+    <Footer />
+  </div>
+);
 }
